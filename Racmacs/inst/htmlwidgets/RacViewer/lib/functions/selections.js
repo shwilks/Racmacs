@@ -176,12 +176,17 @@ Racmacs.Point.prototype.select = function(){
             // Mark all points
             viewer.updatePointStyles();
 
-        }
+            // Hide all other blobs
+            viewer.points.map( point => point.hideBlob() );
+
+        }        
+
+        // Show this blob
+        this.showBlob();
 
         // Show bootstrap
-        if(viewer.bootstrap_shown){
-            this.showBootstrap();
-        }
+        this.showBootstrapPoints();
+        this.showBootstrapContours();
 
         // Mark browser record
         if(this.browserRecord){
@@ -232,11 +237,16 @@ Racmacs.Point.prototype.deselect = function(){
                 viewer.hideErrorLines();
                 viewer.showErrorLines();
             }
+
+            // Show all blobs
+            viewer.points.map( point => point.showBlob() );
+
             viewer.updatePointStyles();
         }
 
         // Hide bootstrap
-        this.hideBootstrap();
+        this.hideBootstrapPoints();
+        this.hideBootstrapContours();
 
         // Mark browser record
         if(this.browserRecord){

@@ -126,9 +126,22 @@ view.default <- function(x,
 #' @export
 #'
 view.rac <- function(map,
-                     ...){
+                     ...,
+                     .jsCode = NULL,
+                     .jsData = NULL){
 
-  view_map(map, ...)
+  # View the map data in the viewer
+  widget <- RacViewer(map = map,
+                      hide_control_panel = TRUE,
+                      ...)
+
+  # Execute any additional javascript code
+  if(!is.null(.jsCode)){
+    widget <- onRender(widget, .jsCode, .jsData)
+  }
+
+  # Return the widget as an output
+  widget
 
 }
 

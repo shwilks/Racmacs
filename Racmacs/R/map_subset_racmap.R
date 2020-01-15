@@ -5,30 +5,41 @@ removeAntigens.racmap <- function(map, antigen_indices){
   property_bindings <- list_property_function_bindings()
   property_bindings <- property_bindings[substr(property_bindings$property, 1, 3) == "ag_",,drop=F]
 
-  # Deal with HI table
-  map$table <- map$table[-antigen_indices,,drop=FALSE]
-
   # Update antigen properties
-  for(x in seq_len(nrow(property_bindings))){
+  for(x in which(property_bindings$object != "optimization")){
+
     property <- property_bindings$property[x]
     format   <- property_bindings$format[x]
-    if(!is.null(map[[property]])){
-      if(format == "matrix") map[[property]] <- map[[property]][-antigen_indices,,drop=FALSE]
-      if(format == "vector") map[[property]] <- map[[property]][-antigen_indices]
-    }
+    getter   <- get(property_bindings$method[x])
+    setter   <- get(paste0(property_bindings$method[x], "<-"))
+
+    value <- getter(map)
+    if(format == "matrix") value_subset <- value[-antigen_indices,,drop=FALSE]
+    if(format == "vector") value_subset <- value[-antigen_indices]
+    map <- setter(map, value = value_subset, .check = FALSE)
+
   }
 
   # Update optimization properties
-  map$optimizations <- lapply(map$optimizations, function(optimization){
+  for(optimnum in seq_len(numOptimizations(map))){
     for(x in which(property_bindings$object == "optimization")){
+
       property <- property_bindings$property[x]
       format   <- property_bindings$format[x]
-      if(!is.null(map[[property]])){
-        if(format == "matrix") optimization[[property]] <- optimization[[property]][-antigen_indices,,drop=FALSE]
-        if(format == "vector") optimization[[property]] <- optimization[[property]][-antigen_indices]
-      }
+      getter   <- get(property_bindings$method[x])
+      setter   <- get(paste0(property_bindings$method[x], "<-"))
+
+      value <- getter(map, optimization_number = optimnum, .name = FALSE)
+      if(format == "matrix") value_subset <- value[-antigen_indices,,drop=FALSE]
+      if(format == "vector") value_subset <- value[-antigen_indices]
+      map <- setter(map, optimization_number = optimnum, value = value_subset, .check = FALSE)
+
     }
-    optimization
+  }
+
+  # Deal with HI table
+  titerTableLayers(map) <- lapply(titerTableLayers(map), function(tablelayer){
+    tablelayer[-antigen_indices,,drop=FALSE]
   })
 
   # Return the map
@@ -42,39 +53,45 @@ removeSera.racmap <- function(map, sera_indices){
   property_bindings <- list_property_function_bindings()
   property_bindings <- property_bindings[substr(property_bindings$property, 1, 3) == "sr_",,drop=F]
 
-  # Deal with HI table
-  map$table <- map$table[,-sera_indices,drop=FALSE]
-
-  # Deal with colbases
-  map$colbases <- map$colbases[-sera_indices]
-
   # Update antigen properties
-  for(x in seq_len(nrow(property_bindings))){
+  for(x in which(property_bindings$object != "optimization")){
+
     property <- property_bindings$property[x]
     format   <- property_bindings$format[x]
-    if(!is.null(map[[property]])){
-      if(format == "matrix") map[[property]] <- map[[property]][-sera_indices,,drop=FALSE]
-      if(format == "vector") map[[property]] <- map[[property]][-sera_indices]
-    }
+    getter   <- get(property_bindings$method[x])
+    setter   <- get(paste0(property_bindings$method[x], "<-"))
+
+    value <- getter(map)
+    if(format == "matrix") value_subset <- value[-sera_indices,,drop=FALSE]
+    if(format == "vector") value_subset <- value[-sera_indices]
+    map <- setter(map, value = value_subset, .check = FALSE)
+
   }
 
   # Update optimization properties
-  map$optimizations <- lapply(map$optimizations, function(optimization){
-
+  for(optimnum in seq_len(numOptimizations(map))){
     for(x in which(property_bindings$object == "optimization")){
+
       property <- property_bindings$property[x]
       format   <- property_bindings$format[x]
-      if(!is.null(map[[property]])){
-        if(format == "matrix") optimization[[property]] <- optimization[[property]][-sera_indices,,drop=FALSE]
-        if(format == "vector") optimization[[property]] <- optimization[[property]][-sera_indices]
-      }
+      getter   <- get(property_bindings$method[x])
+      setter   <- get(paste0(property_bindings$method[x], "<-"))
+
+      value <- getter(map, optimization_number = optimnum, .name = FALSE)
+      if(format == "matrix") value_subset <- value[-sera_indices,,drop=FALSE]
+      if(format == "vector") value_subset <- value[-sera_indices]
+      map <- setter(map, optimization_number = optimnum, value = value_subset, .check = FALSE)
+
     }
 
     # Deal with colbases
-    optimization$colbases <- optimization$colbases[-sera_indices]
+    colBases(map, optimization_number = optimnum, .check = FALSE) <- colBases(map, optimization_number = optimnum)[-sera_indices]
 
-    optimization
+  }
 
+  # Deal with HI table
+  titerTableLayers(map) <- lapply(titerTableLayers(map), function(tablelayer){
+    tablelayer[,-sera_indices,drop=FALSE]
   })
 
   # Return the map

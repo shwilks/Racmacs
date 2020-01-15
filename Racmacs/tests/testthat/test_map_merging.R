@@ -1,26 +1,67 @@
 
 library(Racmacs)
-set.seed(100)
+library(testthat)
+setwd("~/Dropbox/labbook/packages/Racmacs/Racmacs/")
+invisible(lapply(rev(list.files("R", full.names = T)), source))
 
-testthat::context("Merging maps")
+context("Merging maps")
 
 # Set number of dimensions
 num_dim <- 2
 
-# Generate HI table
-generate_hi <- function(num_ags,
-                        num_sr){
+logtoraw <- function(x){
+  x[!is.na(x)] <- 2^x[!is.na(x)]*10
+  x[is.na(x)]  <- "*"
+  x[x == "5"]  <- "<10"
+  x
+}
 
-  titer_table <- matrix(
-    data = runif(n = num_ags*num_sr, min = -1, max = 10),
-    nrow = num_ags,
-    ncol = num_sr
-  )
+for(maptype in c("racmap", 'racchart')){
 
-  titer_table <- round(titer_table)
-  titer_table <- convert2raw(titer_table)
-  titer_table[sample(length(titer_table), 6)] <- "*"
-  titer_table
+  if(maptype == "racmap"){
+    mapmaker  <- acmap
+    mapreader <- read.acmap
+  } else {
+    mapmaker  <- acmap.cpp
+    mapreader <- read.acmap.cpp
+  }
+
+  map0 <- mapmaker(table = matrix(logtoraw(-1:4),   3, 2))
+  map1 <- mapmaker(table = matrix(logtoraw(-1:4+1), 3, 2))
+  map2 <- mapmaker(table = matrix(logtoraw(-1:4+2), 3, 2))
+  map3 <- mapmaker(table = matrix(logtoraw(-1:4+3), 3, 2))
+  map4 <- mapmaker(table = matrix(logtoraw(-1:4+4), 3, 2))
+
+
+  test_that("Reading in titers from a map", {
+    map <- mapreader(test_path("../testdata/testmap_merge.ace"))
+    expect_equal(
+      titerTableLayers(map0),
+      list(unname(titerTable(map0)))
+    )
+    expect_equal(
+      unname(titerTable(map0)),
+      matrix(logtoraw(-1:4),   3, 2)
+    )
+  })
+
+  test_that("Titers from flat maps", {
+
+    expect_equal(unname(titerTable(map2)), matrix(logtoraw(-1:4+2), 3, 2))
+    expect_equal(titerTableLayers(map2), list(matrix(logtoraw(-1:4+2), 3, 2)))
+
+  })
+
+  test_that("Merging titers", {
+
+    map13 <- mergeMaps(map1, map3)
+    expect_equal(unname(titerTable(map13)), matrix(logtoraw(-1:4+2), 3, 2))
+    expect_equal(titerTableLayers(map13), list(
+      matrix(logtoraw(-1:4+1), 3, 2),
+      matrix(logtoraw(-1:4+3), 3, 2)
+    ))
+
+  })
 
 }
 
@@ -53,24 +94,23 @@ chart3 <- acmap.cpp(
 )
 
 # Generating merge reports
-testthat::test_that("Merge reports", {
+test_that("Merge reports", {
 
-  testthat::expect_message(mergeReport(chart1, chart2))
+  expect_message(mergeReport(chart1, chart2))
 
 })
 
 # Merge tables
-testthat::test_that("Merge error", {
+test_that("Merge error", {
 
-  testthat::expect_error({ mergeMaps(chart1,
-                                     chart2,
-                                     method = "merge") })
+  expect_error({ mergeMaps(chart1,
+                           chart2,
+                           method = "merge") })
 
 })
 
-
 # Table merge
-testthat::test_that("Merge tables", {
+test_that("Merge tables", {
 
   chart1_nooptimization <- removeOptimizations(cloneMap(chart1))
   chart2_nooptimization <- removeOptimizations(cloneMap(chart2))
@@ -83,13 +123,13 @@ testthat::test_that("Merge tables", {
                                       chart2_nooptimization,
                                       method = "table")
 
-  testthat::expect_equal(merge12, merge12nooptimizations)
+  expect_equal(merge12, merge12nooptimizations)
 
 })
 
 
 # Frozen merge
-testthat::test_that("Frozen and overlay merge", {
+test_that("Frozen and overlay merge", {
 
   frozen_merge12 <- mergeMaps(chart1,
                               chart2,
@@ -101,22 +141,22 @@ testthat::test_that("Frozen and overlay merge", {
 
   frozen_merge12 <- relaxMap(frozen_merge12)
 
-  testthat::expect_equal(mapStress(frozen_merge12), mapStress(overlay_merge12))
+  expect_equal(mapStress(frozen_merge12), mapStress(overlay_merge12))
 
 })
 
 
 
 # Incremental merge
-testthat::test_that("Incremental merge", {
+test_that("Incremental merge", {
 
   incremental_merge12 <- mergeMaps(chart1,
                                    chart2,
                                    method = "incremental",
                                    optimizations = 4)
 
-  testthat::expect_equal(numOptimizations(incremental_merge12), 4)
-  testthat::expect_error({
+  expect_equal(numOptimizations(incremental_merge12), 4)
+  expect_error({
     mergeMaps(chart1,
               chart2,
               method = "overlay",

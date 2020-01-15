@@ -82,7 +82,7 @@ Racmacs.Viewer.prototype.loadMapData = function(){
     this.browsers.antigens.populate();
     this.browsers.sera.populate();
 
-    // Update filers
+    // Update filters
     this.filter.update();
 
     // Update list of projections
@@ -104,7 +104,7 @@ Racmacs.Viewer.prototype.loadMapData = function(){
     }
 
     // Populate the plot with any plotting data
-    if(plotdata.length){
+    if(plotdata && plotdata.length){
         this.scene.populatePlot({
             plot: plotdata
         });

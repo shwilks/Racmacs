@@ -8,9 +8,9 @@
 \usage{
 mergeReport(map1, map2, passage_matching = "auto")
 
-mergeMaps(map1, map2, method = "table", passage_matching = "auto",
-  optimization_number_map1 = NULL, optimization_number_map2 = NULL,
-  optimizations = 100)
+mergeMaps(..., method = "table", passage_matching = "auto",
+  minimum_column_basis = "none", number_of_optimizations = 100,
+  number_of_dimensions)
 }
 \arguments{
 \item{map1}{The first map}
@@ -47,7 +47,7 @@ points that are in the merged-in map and not in the first map are
 randomized and resulting layout relaxed.
 }
 
-\subsection{Method 'frozen'}{
+\subsection{Method 'overlay'}{
 This takes the default or specified optimization from the second map and
 realigns it to the default or specifed optimization of the first map using
 procrustes, then points that are found just in the second map receive
@@ -56,7 +56,7 @@ first and the second map placed to their middle positions between the first
 map layout and realigned second map layout.
 }
 
-\subsection{Method 'overlay'}{
-Frozen merge followed by relaxation of the resulting optimization.
+\subsection{Method 'overlay-relax'}{
+Overlay merge followed by relaxation of the resulting optimization.
 }
 }

@@ -24,7 +24,7 @@
 #' randomized and resulting layout relaxed.
 #' }
 #'
-#' \subsection{Method 'frozen'}{
+#' \subsection{Method 'overlay'}{
 #' This takes the default or specified optimization from the second map and
 #' realigns it to the default or specifed optimization of the first map using
 #' procrustes, then points that are found just in the second map receive
@@ -33,8 +33,8 @@
 #' map layout and realigned second map layout.
 #' }
 #'
-#' \subsection{Method 'overlay'}{
-#' Frozen merge followed by relaxation of the resulting optimization.
+#' \subsection{Method 'overlay-relax'}{
+#' Overlay merge followed by relaxation of the resulting optimization.
 #' }
 #'
 #' @return Returns the merged map data or merge report.
@@ -62,91 +62,149 @@ mergeReport <- function(map1,
 
 #' @rdname merging_maps
 #' @export
-mergeMaps <- function(map1,
-                      map2,
-                      method = "table",
-                      passage_matching = "auto",
-                      optimization_number_map1 = NULL,
-                      optimization_number_map2 = NULL,
-                      optimizations = 100){
+mergeMaps <- function(...,
+                      method                  = "table",
+                      passage_matching        = "auto",
+                      minimum_column_basis    = "none",
+                      number_of_optimizations = 100,
+                      number_of_dimensions){
 
   # Check that optimizations isn't specified with one of the other methods
-  if(!missing(optimizations) && method != "incremental"){
+  if(!missing(number_of_optimizations) && method %in% c("incremental", "reoptimized-merge")){
     stop("Number of optimizations is only relevant for the merging method 'incremental'.")
   }
 
-  # Keep a record of the map class
-  map1_class <- class(map1)[1]
+  # Create a list of maps
+  maps <- list(...)
 
-  # Convert or clone the maps
-  if(class(map1)[1] == "racmap") map1 <- as.cpp(map1)
-  else                           map1 <- cloneMap(map1)
-  if(class(map2)[1] == "racmap") map2 <- as.cpp(map2)
-  else                           map2 <- cloneMap(map2)
+  # Keep a record of the main map class
+  map1_class <- class(maps[[1]])
+
+  # Clone the maps
+  maps <- lapply(maps, cloneMap)
 
   # Keep only the required optimizations
-  if(method != "none" && method != "table"){
-    if(is.null(optimization_number_map1)) optimization_number_map1 <- selectedOptimization(map1)
-    map1 <- keepSingleOptimization(map1, optimization_number_map1)
-    if(method != "incremental"){
-      if(is.null(optimization_number_map2)) optimization_number_map2 <- selectedOptimization(map2)
-      map2 <- keepSingleOptimization(map2, optimization_number_map2)
-    }
+  if(method %in% c("table", "reoptimized-merge")) {
+    maps <- lapply(maps, removeOptimizations)
+  } else if(method == "incremental-merge") {
+    maps[[1]]            <- keepSingleOptimization(maps)
+    maps[2:length(maps)] <- lapply(maps[2:length(maps)], removeOptimizations)
+  } else {
+    maps <- lapply(maps, function(map){
+      if(numOptimizations(map) > 1) keepSingleOptimization(map)
+      else                          map
+    })
   }
 
+  # Convert the maps to cpp
+  maps <- lapply(maps, as.cpp)
+
   # Merge the charts
-  if(method == "incremental"){
+  merged_chart <- maps[[1]]$chart
 
-    if(isTRUE(getOption("Racmacs.parallel"))) threads <- 0
-    else                                      threads <- 1
+  if(method == "table"){
 
-    if(passage_matching != "auto") stop("Only automatic passage matching is supported for incremental merges.")
+    # Table merging
+    for(x in 2:length(maps)){
+      merged_chart <- acmacs.r::acmacs.merge(
+        chart1 = merged_chart,
+        chart2 = maps[[x]]$chart,
+        match  = passage_matching,
+        merge  = 1
+      )
+    }
 
-    merged_chart <- acmacs.r::acmacs.merge_incremental(
-      chart1        = map1$chart,
-      chart2        = map2$chart,
-      optimizations = optimizations,
-      threads       = threads
+  } else if(method == "reoptimized-merge"){
+
+    # Reoptimized merging
+    for(x in 2:length(maps)){
+      merged_chart <- acmacs.r::acmacs.merge(
+        chart1 = merged_chart,
+        chart2 = maps[[x]]$chart,
+        match  = passage_matching,
+        merge  = 1
+      )
+    }
+
+    merged_chart$relax_many(
+      minimum_column_basis,
+      number_of_dimensions,
+      number_of_optimizations,
+      FALSE
     )
 
-  } else if(method == "frozen"){
+  } else if(method == "incremental-merge"){
 
-    merged_chart <- acmacs.r::acmacs.merge(
-      chart1 = map1$chart,
-      chart2 = map2$chart,
-      match  = passage_matching,
-      merge  = "overlay"
-    )
+    # Incremental merging
+    for(x in 2:length(maps)){
+      merged_chart <- acmacs.r::acmacs.merge(
+        chart1 = merged_chart,
+        chart2 = maps[[x]]$chart,
+        match  = passage_matching,
+        merge  = 2
+      )
+      merged_chart$relax_incremental(number_of_optimizations, FALSE)
+    }
 
-  } else if(method == "overlay"){
+  } else if(method == "frozen-overlay"
+            || method == "relaxed-overlay"){
 
-    merged_chart <- acmacs.r::acmacs.merge(
-      chart1 = map1$chart,
-      chart2 = map2$chart,
-      match  = passage_matching,
-      merge  = "overlay"
-    )
-    merged_chart$projections[[1]]$relax()
+    # Frozen overlay
+    if(length(maps) > 2){
+      stop("A maximum of 2 maps can be merged with the frozen-overlay method at a time")
+    }
 
-  } else if(method == "table"){
+    for(x in 2:length(maps)){
+      if(numOptimizations(maps[[x]]) == 0){
+        stop("Cannot perform a overlay merge because the second map does not have any optimizations")
+      }
+      merged_chart <- acmacs.r::acmacs.merge(
+        chart1 = merged_chart,
+        chart2 = maps[[x]]$chart,
+        match  = passage_matching,
+        merge  = 3
+      )
+    }
 
-    merged_chart <- acmacs.r::acmacs.merge(
-      chart1 = map1$chart,
-      chart2 = map2$chart,
-      match  = passage_matching,
-      merge  = "none"
-    )
+    # Frozen overlay with relaxation
+    if(method == "relaxed-overlay"){
+      merged_chart$projections[[1]]$relax()
+    }
+
+  } else if(method == "frozen-merge"){
+
+    # Frozen merge
+    if(length(maps) > 2){
+      stop("A maximum of 2 maps can be merged with the frozen-merge method at a time")
+    }
+
+    for(x in 2:length(maps)){
+      # if(maps[[x]]$chart$number_of_projections  == 0){
+      #   maps[[x]]$chart$relax_many(
+      #     merged_chart$projections[[1]]$minimum_column_basis,
+      #     merged_chart$projections[[1]]$number_of_dimensions,
+      #     number_of_optimizations,
+      #     FALSE
+      #   )
+      # }
+      merged_chart <- acmacs.r::acmacs.merge(
+        chart1 = merged_chart,
+        chart2 = maps[[x]]$chart,
+        match  = passage_matching,
+        merge  = 5
+      )
+    }
 
   } else {
 
-    stop("'merge' must be one of 'table', 'incremental', 'frozen', 'overlay'.")
+    stop("'merge' must be one of 'table', 'reoptimized-merge', 'incremental-merge', 'frozen-overlay', 'relaxed-overlay', 'frozen-merge'.")
 
   }
 
   # Return a new map
-  merged_map <- acmap.new(chart = merged_chart)
+  merged_map <- racchart.new(chart = merged_chart)
   if(method != "table")      selectedOptimization(merged_map) <- 1
-  if(map1_class == "racmap") merged_map <- as.list(merged_map)
+  if("racmap" %in% map1_class) merged_map <- as.list(merged_map)
   merged_map
 
 }
