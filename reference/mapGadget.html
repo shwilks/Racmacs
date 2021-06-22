@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • Racmacs</title>
+<title>Open a shiny gadget to view the map — mapGadget • Racmacs</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Open a shiny gadget to view the map — mapGadget" />
+<meta property="og:description" content="This function is equivalent to running runGUI() and loading a map file, but this
+takes the acmap object to open as an input argument." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -68,7 +70,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -123,42 +125,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/acorg/Racmacs/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Open a shiny gadget to view the map</h1>
+    <small class="dont-index">Source: <a href='https://github.com/acorg/Racmacs/blob/master/R/shiny_gadget.R'><code>R/shiny_gadget.R</code></a></small>
+    <div class="hidden name"><code>mapGadget.Rd</code></div>
     </div>
 
-    <div id="racmacs-1111" class="section level1">
-<h1 class="page-header" data-toc-text="1.1.11">
-<a href="#racmacs-1111" class="anchor"></a>Racmacs 1.1.11</h1>
-<ul>
-<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
-<li>Added test and correction for error where coordinates of under-constrained points were set to NaN for the first optimization run only, not all.</li>
-<li>Added integrated support for setting antigen reactivity adjustments</li>
-<li>Fixed error displaying bootstrap and triangulation blobs for maps that had been rotated</li>
-<li>Bootstrap blobs will now show when doing a standard map plot</li>
-<li>Added ability to control grid size when calculating bootstrap blobs, controlling how finely they are calculated</li>
-<li>Added function <code>optimizeAgReactivityAdjustments()</code> for optimizing antigen reactivity adjustments</li>
-<li>Added function <code><a href="../reference/colBases.html">agReactivityAdjustments()</a></code> for getting and setting reactivity adjustments</li>
-<li>Updated threejs library</li>
-<li>Fixed bug where points were displayed in incorrect positions in the viewer when the webgl maximum point size had been reached</li>
-<li>Added button to toggle point labels on and off</li>
-<li>Fixed error where ace files with no plotspec field would not read in</li>
-<li>Allow logical specification of antigens and sera for functions like <code><a href="../reference/removePoints.html">removeAntigens()</a></code>
-</li>
-<li>Check you do not try and remove all antigens or sera</li>
-<li>Added option to show map stress in plot</li>
-<li>Added ability to relax map points directly from the javascript viewer</li>
-<li>Added the function <code><a href="../reference/mapGadget.html">mapGadget()</a></code> for opening up a map object in the GUI</li>
-</ul>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>This function is equivalent to running <code><a href='runGUI.html'>runGUI()</a></code> and loading a map file, but this
+takes the acmap object to open as an input argument.</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>mapGadget</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>map</th>
+      <td><p>The acmap object to open in the GUI</p></td>
+    </tr>
+    </table>
+
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 

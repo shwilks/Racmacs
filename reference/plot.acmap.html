@@ -144,11 +144,12 @@
   plot_labels <span class='op'>=</span> <span class='cn'>FALSE</span>,
   plot_blobs <span class='op'>=</span> <span class='cn'>TRUE</span>,
   show_procrustes <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  plot_stress <span class='op'>=</span> <span class='cn'>FALSE</span>,
   grid.col <span class='op'>=</span> <span class='st'>"grey90"</span>,
   grid.margin.col <span class='op'>=</span> <span class='va'>grid.col</span>,
   fill.alpha <span class='op'>=</span> <span class='fl'>0.8</span>,
   outline.alpha <span class='op'>=</span> <span class='fl'>0.8</span>,
-  label.offset <span class='op'>=</span> <span class='fl'>0.5</span>,
+  label.offset <span class='op'>=</span> <span class='fl'>0</span>,
   padding <span class='op'>=</span> <span class='fl'>1</span>,
   cex <span class='op'>=</span> <span class='fl'>1</span>,
   <span class='va'>...</span>
@@ -193,6 +194,10 @@
     <tr>
       <th>show_procrustes</th>
       <td><p>logical, should procrustes lines be shown, if present</p></td>
+    </tr>
+    <tr>
+      <th>plot_stress</th>
+      <td><p>logical, should map stress be plotted in lower left corner</p></td>
     </tr>
     <tr>
       <th>grid.col</th>
