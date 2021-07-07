@@ -145,8 +145,10 @@
   plot_blobs <span class='op'>=</span> <span class='cn'>TRUE</span>,
   show_procrustes <span class='op'>=</span> <span class='cn'>TRUE</span>,
   plot_stress <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  indicate_outliers <span class='op'>=</span> <span class='cn'>TRUE</span>,
   grid.col <span class='op'>=</span> <span class='st'>"grey90"</span>,
   grid.margin.col <span class='op'>=</span> <span class='va'>grid.col</span>,
+  outlier.arrow.col <span class='op'>=</span> <span class='va'>grid.col</span>,
   fill.alpha <span class='op'>=</span> <span class='fl'>0.8</span>,
   outline.alpha <span class='op'>=</span> <span class='fl'>0.8</span>,
   label.offset <span class='op'>=</span> <span class='fl'>0</span>,
@@ -200,12 +202,21 @@
       <td><p>logical, should map stress be plotted in lower left corner</p></td>
     </tr>
     <tr>
+      <th>indicate_outliers</th>
+      <td><p>logical, should points outside of plot limits be
+indicated with an arrow</p></td>
+    </tr>
+    <tr>
       <th>grid.col</th>
       <td><p>grid line color</p></td>
     </tr>
     <tr>
       <th>grid.margin.col</th>
       <td><p>grid margin color</p></td>
+    </tr>
+    <tr>
+      <th>outlier.arrow.col</th>
+      <td><p>outlier arrow color</p></td>
     </tr>
     <tr>
       <th>fill.alpha</th>
