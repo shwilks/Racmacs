@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Getting and setting point plotting styles — ptStyles • Racmacs</title>
+<title>Return an html formatted merge report — htmlMergeReport • Racmacs</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Getting and setting point plotting styles — ptStyles" />
-<meta property="og:description" content="These functions get and set the styles to use for each point when plotting." />
+<meta property="og:title" content="Return an html formatted merge report — htmlMergeReport" />
+<meta property="og:description" content="Prints an html formatted table merge report of a set of merged maps, visualising
+with colors how different titers have been merged together." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -124,70 +125,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Getting and setting point plotting styles</h1>
-    <small class="dont-index">Source: <a href='https://github.com/acorg/Racmacs/blob/master/R/map_props_plotspec.R'><code>R/map_props_plotspec.R</code></a></small>
-    <div class="hidden name"><code>ptStyles.Rd</code></div>
+    <h1>Return an html formatted merge report</h1>
+    <small class="dont-index">Source: <a href='https://github.com/acorg/Racmacs/blob/master/R/map_merge.R'><code>R/map_merge.R</code></a></small>
+    <div class="hidden name"><code>htmlMergeReport.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>These functions get and set the styles to use for each point when plotting.</p>
+    <p>Prints an html formatted table merge report of a set of merged maps, visualising
+with colors how different titers have been merged together.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>agShown</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srShown</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agShown</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srShown</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agSize</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srSize</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agSize</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srSize</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agFill</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srFill</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agFill</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srFill</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agOutline</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srOutline</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agOutline</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srOutline</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agOutlineWidth</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srOutlineWidth</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agOutlineWidth</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srOutlineWidth</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agRotation</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srRotation</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agRotation</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srRotation</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agAspect</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srAspect</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agAspect</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srAspect</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>agShape</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>srShape</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span>
-<span class='fu'>agShape</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span>
-<span class='fu'>srShape</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span> <span class='op'>&lt;-</span> <span class='va'>value</span></pre>
+    <pre class="usage"><span class='fu'>htmlMergeReport</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>map</th>
-      <td><p>The acmap data object</p></td>
-    </tr>
-    <tr>
-      <th>value</th>
-      <td><p>New value to set</p></td>
+      <td><p>An acmap object that was the result of merging several maps</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Returns either the requested attribute when using a getter function or the updated</p>
-<p>acmap object when using the setter function.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Other map point style functions: 
-<code><a href='applyPlotspec.html'>applyPlotspec</a>()</code>,
-<code><a href='ptDrawingOrder.html'>ptDrawingOrder</a>()</code></p></div>
+    <div class='dont-index'><p>Other map merging functions: 
+<code><a href='RacMerge.options.html'>RacMerge.options</a>()</code>,
+<code><a href='mergeMaps.html'>mergeMaps</a>()</code>,
+<code><a href='mergeReport.html'>mergeReport</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

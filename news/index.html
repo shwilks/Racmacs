@@ -194,6 +194,11 @@
 <a href="#racmacs-1116" class="anchor"></a>Racmacs 1.1.16</h1>
 <ul>
 <li>Fix error when minimum column basis is set to higher than any measurable titer</li>
+<li>Points not included in a procrustes will now be faded out when plotted with <code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>, similar to the behaviour already implemented in the <code><a href="../reference/view.html">view()</a></code> function.</li>
+<li>Added the ability to set merge options when merging maps, controlling for example how much standard deviation there has to be between merged titers before the merged titer gets excluded as unreliable.</li>
+<li>Added <code><a href="../reference/mergeReport.html">mergeReport()</a></code> and <code><a href="../reference/htmlMergeReport.html">htmlMergeReport()</a></code> to output formatted tables showing how different titers have been merged in a merged map.</li>
+<li>Functions like <code><a href="../reference/logtiterTable.html">logtiterTable()</a></code> and <code><a href="../reference/mergeMaps.html">mergeMaps()</a></code> now take account of the dilutionStepsize map setting</li>
+<li>Implement a new titer type ‘.’, like ’*’ but to represent titers that are missing as a result of antigen sera combinations not being present in merged tables</li>
 </ul>
 </div>
   </div>
