@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.16</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.17</span>
       </span>
     </div>
 
@@ -200,6 +200,19 @@
 <li>Functions like <code><a href="../reference/logtiterTable.html">logtiterTable()</a></code> and <code><a href="../reference/mergeMaps.html">mergeMaps()</a></code> now take account of the dilutionStepsize map setting</li>
 <li>Implement a new titer type ‘.’, like ’*’ but to represent titers that are missing as a result of antigen sera combinations not being present in merged tables</li>
 <li>Fix error calculating bootstrap blobs and showing from a bootstrapped map where “resample” method was used</li>
+</ul>
+</div>
+    <div id="racmacs-1117" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.17">
+<a href="#racmacs-1117" class="anchor"></a>Racmacs 1.1.17</h1>
+<ul>
+<li>Added <code><a href="../reference/htmlMergeReport.html">htmlMergeReport()</a></code> showing how titers were merged as a formatted html table.</li>
+<li>Added <code><a href="../reference/htmlTiterTable.html">htmlTiterTable()</a></code> for visualizing an html formatted titer table</li>
+<li>Added functions for getting titers after applying antigen reactivity adjustments set with <code>agReactivityAdjustments()&lt;-</code>, namely <code><a href="../reference/adjustedTiterTable.html">adjustedTiterTable()</a></code>, <code><a href="../reference/adjustedLogTiterTable.html">adjustedLogTiterTable()</a></code>, <code><a href="../reference/htmlAdjustedTiterTable.html">htmlAdjustedTiterTable()</a></code>
+</li>
+<li>Details are no longer saved in map json if they are map defaults</li>
+<li>Added an option to round titers to the nearest unit when outputting (for e.g. listmds compatibility)</li>
+<li>Adds the ability to apply and set scaling on an optimization</li>
 </ul>
 </div>
   </div>
