@@ -22,6 +22,7 @@ Racmacs.Data = class Data {
         this.titertable = this.getTable();
         this.logtitertable = Racmacs.utils.logTiters(this.titertable);
         this.pnum = 0;
+        this.dilutionstepsize_cache = this.dilutionStepsize();
     }
 
     // Set the projection
@@ -172,6 +173,30 @@ Racmacs.Data = class Data {
 
     }
 
+    setTiter(ag, sr, value){
+
+        // Set titer table record
+        if (this.titertable) this.titertable[ag][sr] = value;
+
+        // If table data provided as a list of objects
+        if(this.data.c.t.d) {
+            this.data.c.t.d[ag][sr.toString()] = value;
+        } else {
+            this.data.c.t.l[ag][sr] = value;
+        }
+
+        // Update the column bases cache
+        this.update_colbases();
+
+        // Update the logtiter cache
+        this.logtitertable = Racmacs.utils.logTiters(this.titertable);
+
+        // Log the change in the console
+        console.log("Titer data updated");
+
+
+    }
+
     logtable(){
         return(this.logtitertable);
     }
@@ -265,6 +290,15 @@ Racmacs.Data = class Data {
                 return(0);
             }
         }
+    }
+
+    setAgReactivityAdjustment(i, value){
+        let pnum = this.projection();
+        if (!this.data.c.x) this.data.c.x = {};
+        if (!this.data.c.x.p) this.data.c.x.p = Array(this.numProjections()).fill({});
+        if (!this.data.c.x.p[pnum].r) this.data.c.x.p[pnum].r = Array(this.numAntigens()).fill(0);
+        this.data.c.x.p[pnum].r[i] = value;
+        this.update_colbases();
     }
 
     ptBaseCoords(i){
@@ -509,6 +543,15 @@ Racmacs.Data = class Data {
             ];
         }
         return(lim);
+    }
+
+    // Extras
+    dilutionStepsize(){
+        if (this.data.c.x && this.data.c.x.ds !== undefined) {
+            return(this.data.c.x.ds);
+        } else {
+            return(1);
+        }
     }
 
 }
