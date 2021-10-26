@@ -85,7 +85,7 @@ random starting conditions will be added to the acmap object." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.19</span>
       </span>
     </div>
 
@@ -148,6 +148,7 @@ random starting conditions will be added to the acmap object.</p>
   ag_reactivity_adjustments <span class='op'>=</span> <span class='cn'>NULL</span>,
   titer_weights <span class='op'>=</span> <span class='cn'>NULL</span>,
   sort_optimizations <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  check_convergence <span class='op'>=</span> <span class='cn'>TRUE</span>,
   verbose <span class='op'>=</span> <span class='cn'>TRUE</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -190,6 +191,11 @@ amounts when calculating column bases and table distances.</p></td>
       <th>sort_optimizations</th>
       <td><p>Should optimizations be sorted by stress
 afterwards?</p></td>
+    </tr>
+    <tr>
+      <th>check_convergence</th>
+      <td><p>Should a basic check for convergence of lowest stress
+optimization runs onto a similar solution.</p></td>
     </tr>
     <tr>
       <th>verbose</th>

@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.19</span>
       </span>
     </div>
 
@@ -227,6 +227,18 @@
 <li>Fix the map viewer stress calculations to account for the new “dilution stepsize” setting</li>
 <li>Add option to get and set antigen reactivity in the viewer</li>
 <li>Fix an error that was causing NAs to appear in transformed coordinates in linux builds</li>
+</ul>
+</div>
+    <div id="racmacs-1119" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.19">
+<a href="#racmacs-1119" class="anchor"></a>Racmacs 1.1.19</h1>
+<ul>
+<li>Add option to <code><a href="../reference/procrustesData.html">procrustesData()</a></code> to included only specific antigens or sera, as can already be done for <code><a href="../reference/procrustesMap.html">procrustesMap()</a></code>
+</li>
+<li>Add methods to calculate point leverage, the effect of removing different strains and sera from the map, <code><a href="../reference/ptLeverage.html">agLeverage()</a></code>, <code><a href="../reference/ptLeverage.html">srLeverage()</a></code>, <code><a href="../reference/ptLeverage.html">titerLeverage()</a></code>
+</li>
+<li>Change the <code><a href="../reference/view.acmap.html">view.acmap()</a></code> method to allow for an option <code>num_optimizations</code> to specify how many optimizations to send to the viewer.</li>
+<li>Add an option for and basic check by default for convergence of solutions when running map optimizations.</li>
 </ul>
 </div>
   </div>

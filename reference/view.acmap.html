@@ -82,7 +82,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.18</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.19</span>
       </span>
     </div>
 
@@ -144,7 +144,7 @@
   select_sr <span class='op'>=</span> <span class='cn'>NULL</span>,
   show_procrustes <span class='op'>=</span> <span class='cn'>NULL</span>,
   show_diagnostics <span class='op'>=</span> <span class='cn'>NULL</span>,
-  keep_all_optimization_runs <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  num_optimizations <span class='op'>=</span> <span class='fl'>1</span>,
   options <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
@@ -191,10 +191,9 @@ procrustes lines be shown by default?</p></td>
 stress blobs or hemisphering, should it be shown by default?</p></td>
     </tr>
     <tr>
-      <th>keep_all_optimization_runs</th>
-      <td><p>Should information on all the optimization
-runs be kept in the viewer, or just view the currently selected
-optimisation run.</p></td>
+      <th>num_optimizations</th>
+      <td><p>Number of optimization runs to send to the viewer
+for inclusion in the "optimizations" pane.</p></td>
     </tr>
     <tr>
       <th>options</th>
