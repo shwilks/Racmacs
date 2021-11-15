@@ -135,6 +135,7 @@ SHLIB_OPENMP_CXXFLAGS=-fopenmp
 SHLIB_OPENMP_FCFLAGS=-fopenmp
 SHLIB_OPENMP_FFLAGS=-fopenmp</code></pre>
 <p>Now when you try and install and build the package from source things should be setup to use g++, with support for OpenMP parallization now included.</p>
+<p>Finally, to check whether your version of Racmacs has been compiled to work in parallel or not you can run the command <code>Racmacs:::parallel_mode()</code>, which should return <code>TRUE</code>. It’s not a problem if it returns <code>FALSE</code>, optimization code just won’t run in parallel so will take a bit longer.</p>
 </div>
 </div>
 </div>
