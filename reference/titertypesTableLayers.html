@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Subset an antigenic map — subsetMap • Racmacs</title>
+<title>Return a list of titertypes tables — titertypesTableLayers • Racmacs</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,8 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Subset an antigenic map — subsetMap" />
-<meta property="og:description" content="Subset an antigenic map to contain only specified antigens and sera" />
+<meta property="og:title" content="Return a list of titertypes tables — titertypesTableLayers" />
+<meta property="og:description" content="Return a list of titertypes tables" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -124,55 +124,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Subset an antigenic map</h1>
-    <small class="dont-index">Source: <a href='https://github.com/acorg/Racmacs/blob/master/R/map_subset.R'><code>R/map_subset.R</code></a></small>
-    <div class="hidden name"><code>subsetMap.Rd</code></div>
+    <h1>Return a list of titertypes tables</h1>
+    <small class="dont-index">Source: <a href='https://github.com/acorg/Racmacs/blob/master/R/map_props.R'><code>R/map_props.R</code></a></small>
+    <div class="hidden name"><code>titertypesTableLayers.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Subset an antigenic map to contain only specified antigens and sera</p>
+    <p>Return a list of titertypes tables</p>
     </div>
 
-    <pre class="usage"><span class='fu'>subsetMap</span><span class='op'>(</span><span class='va'>map</span>, antigens <span class='op'>=</span> <span class='cn'>TRUE</span>, sera <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>titertypesTableLayers</span><span class='op'>(</span><span class='va'>map</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>map</th>
-      <td><p>The antigenic map object</p></td>
-    </tr>
-    <tr>
-      <th>antigens</th>
-      <td><p>Antigens to keep, defaults to all.</p></td>
-    </tr>
-    <tr>
-      <th>sera</th>
-      <td><p>Sera to keep, defaults to all.</p></td>
+      <td><p>An acmap data object</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Returns a new antigenic map containing only match antigens and sera</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other functions for working with map data: 
-<code><a href='acmap.html'>acmap</a>()</code>,
-<code><a href='addOptimization.html'>addOptimization</a>()</code>,
-<code><a href='as.json.html'>as.json</a>()</code>,
-<code><a href='edit_agNames.html'>edit_agNames</a>()</code>,
-<code><a href='edit_srNames.html'>edit_srNames</a>()</code>,
-<code><a href='keepBestOptimization.html'>keepBestOptimization</a>()</code>,
-<code><a href='keepSingleOptimization.html'>keepSingleOptimization</a>()</code>,
-<code><a href='layerNames.html'>layerNames</a>()</code>,
-<code><a href='orderPoints.html'>orderPoints</a></code>,
-<code><a href='read.acmap.html'>read.acmap</a>()</code>,
-<code><a href='read.titerTable.html'>read.titerTable</a>()</code>,
-<code><a href='removePoints.html'>removePoints</a></code>,
-<code><a href='save.acmap.html'>save.acmap</a>()</code>,
-<code><a href='save.coords.html'>save.coords</a>()</code>,
-<code><a href='save.titerTable.html'>save.titerTable</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

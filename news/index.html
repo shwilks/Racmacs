@@ -262,6 +262,13 @@
 <li>Full precision used in rapidjson when parsing doubles to load and save maps</li>
 <li>Added <code><a href="../reference/acmapAttributes.html">numSeraGroups()</a></code> function</li>
 <li>Added “extra” field for antigens and sera, and corresponding <code><a href="../reference/agAttributes.html">agExtra()</a></code> and <code><a href="../reference/srAttributes.html">srExtra()</a></code> functions</li>
+<li>Antigen and serum groups will now be maintained and merged when running <code><a href="../reference/mergeMaps.html">mergeMaps()</a></code>
+</li>
+<li>Where maps have shared <code><a href="../reference/dilutionStepsize.html">dilutionStepsize()</a></code> settings, this will be applied to the merged map. Alternatively a warning will be issued and a default setting of 1 applied where they have different <code><a href="../reference/dilutionStepsize.html">dilutionStepsize()</a></code> settings.</li>
+<li>Add attribute getter <code><a href="../reference/acmapAttributes.html">numLayers()</a></code> for returning the number of titer table layers in a map.</li>
+<li>
+<code>titerTable()&lt;-</code> will now throw an error if the titer table applied does not have the same dimensions as the map in terms of number of antigens and sera</li>
+<li>When maps are merged the <code>mapName</code> will be used to name the titer table layers, layer names can also be get and set directly using the new <code><a href="../reference/layerNames.html">layerNames()</a></code> function</li>
 </ul>
 </div>
   </div>
