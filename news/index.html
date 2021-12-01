@@ -81,7 +81,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.21</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.22</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@
 <li>Bootstrap blobs will now show when doing a standard map plot</li>
 <li>Added ability to control grid size when calculating bootstrap blobs, controlling how finely they are calculated</li>
 <li>Added function <code>optimizeAgReactivityAdjustments()</code> for optimizing antigen reactivity adjustments</li>
-<li>Added function <code><a href="../reference/colBases.html">agReactivityAdjustments()</a></code> for getting and setting reactivity adjustments</li>
+<li>Added function <code><a href="../reference/agReactivityAdjustments.html">agReactivityAdjustments()</a></code> for getting and setting reactivity adjustments</li>
 <li>Updated threejs library</li>
 <li>Fixed bug where points were displayed in incorrect positions in the viewer when the webgl maximum point size had been reached</li>
 <li>Added button to toggle point labels on and off</li>
@@ -269,6 +269,14 @@
 <li>
 <code>titerTable()&lt;-</code> will now throw an error if the titer table applied does not have the same dimensions as the map in terms of number of antigens and sera</li>
 <li>When maps are merged the <code>mapName</code> will be used to name the titer table layers, layer names can also be get and set directly using the new <code><a href="../reference/layerNames.html">layerNames()</a></code> function</li>
+</ul>
+</div>
+    <div id="racmacs-1122" class="section level1">
+<h1 class="page-header" data-toc-text="1.1.22">
+<a href="#racmacs-1122" class="anchor"></a>Racmacs 1.1.22</h1>
+<ul>
+<li>
+<code>agReactivityAdjustments</code> now becomes a property of the base acmap object rather than individual optimization runs</li>
 </ul>
 </div>
   </div>
