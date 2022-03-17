@@ -100,6 +100,9 @@
     <loc>https://acorg.github.io/Racmacs/reference/blob.html</loc>
   </url>
   <url>
+    <loc>https://acorg.github.io/Racmacs/reference/blobsize.html</loc>
+  </url>
+  <url>
     <loc>https://acorg.github.io/Racmacs/reference/bootstrapBlobs.html</loc>
   </url>
   <url>
@@ -112,7 +115,7 @@
     <loc>https://acorg.github.io/Racmacs/reference/colBases.html</loc>
   </url>
   <url>
-    <loc>https://acorg.github.io/Racmacs/reference/deprecated_functions.html</loc>
+    <loc>https://acorg.github.io/Racmacs/reference/deprecated_fn.html</loc>
   </url>
   <url>
     <loc>https://acorg.github.io/Racmacs/reference/dilutionStepsize.html</loc>
@@ -277,7 +280,7 @@
     <loc>https://acorg.github.io/Racmacs/reference/ptStyles.html</loc>
   </url>
   <url>
-    <loc>https://acorg.github.io/Racmacs/reference/ptTriangulationBlobsize.html</loc>
+    <loc>https://acorg.github.io/Racmacs/reference/ptTriangulationBlob.html</loc>
   </url>
   <url>
     <loc>https://acorg.github.io/Racmacs/reference/randomizeCoords.html</loc>
