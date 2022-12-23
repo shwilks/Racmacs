@@ -18,7 +18,7 @@ returning a list of option settings."><meta property="og:image" content="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.38</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.40</span>
       </span>
     </div>
 
@@ -64,37 +64,52 @@ returning a list of option settings.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">RacOptimizer.options</span><span class="op">(</span>
-  dim_annealing <span class="op">=</span> <span class="cn">FALSE</span>,
-  method <span class="op">=</span> <span class="st">"L-BFGS"</span>,
-  maxit <span class="op">=</span> <span class="fl">1000</span>,
-  num_cores <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,
-  report_progress <span class="op">=</span> <span class="cn">NULL</span>,
-  ignore_disconnected <span class="op">=</span> <span class="cn">FALSE</span>,
-  progress_bar_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">width</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">RacOptimizer.options</span><span class="op">(</span></span>
+<span>  dim_annealing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"L-BFGS"</span>,</span>
+<span>  maxit <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  num_cores <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  report_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ignore_disconnected <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  progress_bar_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">width</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>dim_annealing</dt>
 <dd><p>Should dimensional annealing be performed</p></dd>
+
+
 <dt>method</dt>
 <dd><p>The optimization method to use</p></dd>
+
+
 <dt>maxit</dt>
 <dd><p>The maximum number of iterations to use in the optimizer</p></dd>
+
+
 <dt>num_cores</dt>
 <dd><p>The number of cores to run in parallel</p></dd>
+
+
 <dt>report_progress</dt>
 <dd><p>Should progress be reported</p></dd>
+
+
 <dt>ignore_disconnected</dt>
 <dd><p>Should the check for disconnected points be skipped</p></dd>
+
+
 <dt>progress_bar_length</dt>
 <dd><p>Progress bar length when progress is reported</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a named list of optimizer options</p>
+    
+
+<p>Returns a named list of optimizer options</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -122,11 +137,11 @@ settings like <code>maxit</code> see the underlying optimizer documentation at
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Sam Wilks.</p>
+  <p></p><p>Developed by S. H. Wilks.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -18,7 +18,7 @@ returning a list of option settings."><meta property="og:image" content="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.38</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1.40</span>
       </span>
     </div>
 
@@ -64,7 +64,7 @@ returning a list of option settings.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">RacMerge.options</span><span class="op">(</span>sd_limit <span class="op">=</span> <span class="fl">1</span>, dilution_stepsize <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">RacMerge.options</span><span class="op">(</span>sd_limit <span class="op">=</span> <span class="fl">1</span>, dilution_stepsize <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,13 +73,18 @@ returning a list of option settings.</p>
 <dd><p>When merging titers, titers that have a standard deviation of
 this amount or greater on the log2 scale will be set to "*" and excluded,
 set to NA to always simply take the GMT regardless of log titer standard deviation</p></dd>
+
+
 <dt>dilution_stepsize</dt>
 <dd><p>The dilution stepsize to assume when merging titers (see
 <code><a href="dilutionStepsize.html">dilutionStepsize()</a></code>)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Returns a named list of merging options</p>
+    
+
+<p>Returns a named list of merging options</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -98,11 +103,11 @@ set to NA to always simply take the GMT regardless of log titer standard deviati
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Sam Wilks.</p>
+  <p></p><p>Developed by S. H. Wilks.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -259,8 +259,16 @@ Racmacs.Viewer.prototype.load = function(
         // Update the stress
         this.updateStress(this.data.stress());
 
+        // Set viewpoint
+        if(options.translation) this.scene.setTranslation(options.translation);
+        if(options.rotation)    this.scene.setRotation(options.rotation);
+        if(options.zoom)        this.camera.setZoom(options.zoom);
+
         // Note that content is now loaded
         this.contentLoaded = true;
+
+        // Hack to resize points
+        this.resizePoints(1.0);
 
     }
 

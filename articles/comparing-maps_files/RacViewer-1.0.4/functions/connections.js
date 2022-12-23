@@ -241,9 +241,9 @@ Racmacs.Point.prototype.showConnections = function(){
 					b : Array(connectiondata.coords.length).fill(0)
 				},
 				mat : "line",
-	            lwd : 1,
-	            segments : true
+	            lwd : 1
 			},
+			segments : true,
 			viewer : this.viewer
 		});
 
@@ -398,9 +398,9 @@ Racmacs.Point.prototype.showErrors = function(){
 					b : errordata.colors.b
 				},
 				mat : "line",
-	            lwd : 1,
-	            segments : true
+	            lwd : 1
 			},
+			segments : true,
 			viewer : this.viewer
 		});
 
