@@ -118,14 +118,13 @@
 </h4>
 <p>Racmacs uses <a href="https://www.openmp.org" class="external-link">OpenMP</a> instructions to specify when code can be run in parallel to increase performance. The resulting speed-up can be significant, but you need to check whether the compiler you use supports OpenMP.</p>
 <p>The default compiler on mac systems for example is <code>clang</code> which does not support OpenMP and will fail anyway by default because it does not include a fortran compiler by default.</p>
-<p><br><strong>Installing gcc and a fortran compiler</strong><br>
+<p><strong>Installing gcc and a fortran compiler</strong><br>
 The solution for both OpenMP support and provision of a fortran compiler on a mac system is to follow the guidance from the <a href="https://mac.r-project.org/tools/" class="external-link">R project page for mac</a> and install the official GNU Fortran binaries from F.X.Coudert found <a href="https://github.com/fxcoudert/gfortran-for-macOS/releases" class="external-link">here</a>.</p>
 <p>Note that you have to install the correct version according to your hardware e.g. an intel or M1 mac, and for your correct OS. Also if you have an M1 mac, make sure that you have installed the M1 version of the R installer and not the intel one, otherwise loading the package will fail since R will have been compiled for an intel system and Racmacs for an M1 system.</p>
 <p>The easiest method of installation is through finding the appropriate .dmg file which will contain an automatic installer for you rather than the .tar.xz source versions where you will have to deal with installation yourself.</p>
-<p><br><strong>Changing the default compiler in R</strong><br>
+<p><strong>Changing the default compiler in R</strong><br>
 Once you have installed your fortran compiler and the packaged gcc compiler you need to change the default compiler in R. To do this you specify it in your local <code>Makevars</code> file. This exists in the <code>.R</code> folder in your home folder, i.e. <code>~/.R/Makevars</code>. It is possible you will have to create the <code>.R</code> folder and the <code>Makevars</code> text file.</p>
 <p>Once done, add the following lines to the <code>Makevars</code> file and update the paths to the appropriate path for each of the respective executables, for example:</p>
-<p><br></p>
 <pre><code>CC=/usr/local/gfortran/bin/gcc
 CXX=/usr/local/gfortran/bin/g++
 CXX1X=/usr/local/gfortran/bin/g++
@@ -139,7 +138,7 @@ SHLIB_OPENMP_CFLAGS=-fopenmp
 SHLIB_OPENMP_CXXFLAGS=-fopenmp
 SHLIB_OPENMP_FCFLAGS=-fopenmp
 SHLIB_OPENMP_FFLAGS=-fopenmp</code></pre>
-<p><br> Now when you try and install and build the package from source things should be setup to use g++, with support for OpenMP parallization now included.</p>
+<p>Now when you try and install and build the package from source things should be setup to use g++, with support for OpenMP parallelization now included.</p>
 <p>Finally, to check whether your version of Racmacs has been compiled to work in parallel or not you can run the command <code>Racmacs:::parallel_mode()</code>, which should return <code>TRUE</code>. It’s not a problem if it returns <code>FALSE</code>, optimization code just won’t run in parallel so will take a bit longer.</p>
 </div>
 </div>
