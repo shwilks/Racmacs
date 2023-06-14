@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.4</span>
       </span>
     </div>
 
@@ -72,6 +72,7 @@
 <span>  plot_sr <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  plot_labels <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot_blobs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  point_opacity <span class="op">=</span> <span class="st">"automatic"</span>,</span>
 <span>  show_procrustes <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show_error_lines <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  plot_stress <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -81,6 +82,11 @@
 <span>  outlier.arrow.col <span class="op">=</span> <span class="va">grid.col</span>,</span>
 <span>  fill.alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
 <span>  outline.alpha <span class="op">=</span> <span class="fl">0.8</span>,</span>
+<span>  procrustes.lwd <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  procrustes.col <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  procrustes.arr.type <span class="op">=</span> <span class="st">"triangle"</span>,</span>
+<span>  procrustes.arr.length <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>  procrustes.arr.width <span class="op">=</span> <span class="fl">0.15</span>,</span>
 <span>  label.offset <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  padding <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  cex <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -124,6 +130,13 @@
 <dd><p>logical, should stress blobs be plotted if present</p></dd>
 
 
+<dt>point_opacity</dt>
+<dd><p>Either "automatic" or "fixed". "fixed" fixes point
+opacity to match those in <code>ptFill()</code> and <code>ptOutline()</code> and will not be
+altered in procrustes plots or by the fill.alpha and outline.alpha
+parameters.</p></dd>
+
+
 <dt>show_procrustes</dt>
 <dd><p>logical, should procrustes lines be shown, if present</p></dd>
 
@@ -161,6 +174,26 @@ plot margin, default is "arrowheads".</p></dd>
 
 <dt>outline.alpha</dt>
 <dd><p>alpha for point outline</p></dd>
+
+
+<dt>procrustes.lwd</dt>
+<dd><p>procrustes arrow line width</p></dd>
+
+
+<dt>procrustes.col</dt>
+<dd><p>procrustes arrow color</p></dd>
+
+
+<dt>procrustes.arr.type</dt>
+<dd><p>procrustes arrow type (see <code><a href="https://rdrr.io/pkg/shape/man/Arrows.html" class="external-link">shape::Arrows()</a></code>)</p></dd>
+
+
+<dt>procrustes.arr.length</dt>
+<dd><p>procrustes arrow length (see <code><a href="https://rdrr.io/pkg/shape/man/Arrows.html" class="external-link">shape::Arrows()</a></code>)</p></dd>
+
+
+<dt>procrustes.arr.width</dt>
+<dd><p>procrustes arrow width (see <code><a href="https://rdrr.io/pkg/shape/man/Arrows.html" class="external-link">shape::Arrows()</a></code>)</p></dd>
 
 
 <dt>label.offset</dt>
