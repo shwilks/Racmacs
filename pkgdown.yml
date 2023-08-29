@@ -5,10 +5,11 @@ articles:
   adding-sequences: adding-sequences.html
   assessing_map_uncertainty: assessing_map_uncertainty.html
   comparing-maps: comparing-maps.html
+  customising-map-appearance: customising-map-appearance.html
   intro-to-antigenic-cartography: intro-to-antigenic-cartography.html
   making-a-map-from-scratch: making-a-map-from-scratch.html
   merging-maps: merging-maps.html
-last_built: 2023-06-14T15:03Z
+last_built: 2023-08-29T05:34Z
 urls:
   reference: https://acorg.github.io/Racmacs/reference
   article: https://acorg.github.io/Racmacs/articles
