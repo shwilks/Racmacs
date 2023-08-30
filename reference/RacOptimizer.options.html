@@ -18,7 +18,7 @@ returning a list of option settings."><meta property="og:image" content="https:/
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">Racmacs</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2.6</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@ returning a list of option settings.</p>
 <span>  max_line_search_trials <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  min_step <span class="op">=</span> <span class="fl">1e-20</span>,</span>
 <span>  max_step <span class="op">=</span> <span class="fl">1e+20</span>,</span>
-<span>  num_cores <span class="op">=</span> <span class="fu">parallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/parallel/detectCores.html" class="external-link">detectCores</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  num_cores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"RacOptimizer.num_cores"</span><span class="op">)</span>,</span>
 <span>  report_progress <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ignore_disconnected <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  progress_bar_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">width</span></span>
@@ -130,7 +130,7 @@ returning a list of option settings.</p>
 
 
 <dt>num_cores</dt>
-<dd><p>The number of cores to run in parallel</p></dd>
+<dd><p>The number of cores to run in parallel when running optimizations</p></dd>
 
 
 <dt>report_progress</dt>
@@ -156,7 +156,7 @@ returning a list of option settings.</p>
     <p>For more details, for example on "dimensional annealing" see
 <code><a href="../articles/intro-to-antigenic-cartography.html">vignette("intro-to-antigenic-cartography")</a></code>. For details on optimizer
 settings like <code>maxit</code> see the underlying optimizer documentation at
-<a href="http://ensmallen.org" class="external-link">ensmallen.org</a>.</p>
+<a href="https://ensmallen.org/" class="external-link">ensmallen.org</a>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
