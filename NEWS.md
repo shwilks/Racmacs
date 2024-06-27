@@ -1,5 +1,6 @@
 # Racmacs 1.2.9
 * Use a safer format for errors and messages
+* Remove `ellipsis` dependency and use `rlang` instead
 
 # Racmacs 1.2.8
 * Function `splitTiterLayers()` now exported.
