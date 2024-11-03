@@ -111,11 +111,13 @@ optimizeMap <- function(
   )
 
   # Set disconnected point coordinates to NaN
-  for (n in seq_len(numOptimizations(map))) {
-    opt_stress <- optStress(map, n)
-    agBaseCoords(map, n)[ag_disconnected,] <- NaN
-    srBaseCoords(map, n)[sr_disconnected,] <- NaN
-    optStress(map, n) <- opt_stress
+  if (!options$ignore_underconstrained) {
+    for (n in seq_len(numOptimizations(map))) {
+      opt_stress <- optStress(map, n)
+      agBaseCoords(map, n)[ag_disconnected,] <- NaN
+      srBaseCoords(map, n)[sr_disconnected,] <- NaN
+      optStress(map, n) <- opt_stress
+    }
   }
 
   # Output finishing messages
@@ -246,6 +248,7 @@ make.acmap <- function(
 #' @param num_cores The number of cores to run in parallel when running optimizations
 #' @param report_progress Should progress be reported
 #' @param ignore_disconnected Should the check for disconnected points be skipped
+#' @param ignore_underconstrained If set to FALSE (default) under-constrained point coordinates will be set to NaN
 #' @param progress_bar_length Progress bar length when progress is reported
 #'
 #' @details For more details, for example on "dimensional annealing" see
@@ -273,6 +276,7 @@ RacOptimizer.options <- function(
   num_cores = getOption("RacOptimizer.num_cores"),
   report_progress = NULL,
   ignore_disconnected = FALSE,
+  ignore_underconstrained = FALSE,
   progress_bar_length = options()$width
 ) {
 
@@ -316,6 +320,7 @@ RacOptimizer.options <- function(
     max_step = max_step,
     num_cores = num_cores,
     ignore_disconnected = ignore_disconnected,
+    ignore_underconstrained = ignore_underconstrained,
     report_progress = report_progress,
     progress_bar_length = progress_bar_length
   )
