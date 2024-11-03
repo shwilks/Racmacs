@@ -54,15 +54,15 @@ View a racmap object in the interactive viewer.
 }
 \seealso{
 Other functions to view maps: 
-\code{\link{RacViewer.options}()},
 \code{\link{RacViewer}()},
+\code{\link{RacViewer.options}()},
 \code{\link{export_viewer}()},
 \code{\link{ggplot.acmap}()},
 \code{\link{mapGadget}()},
 \code{\link{plot.acmap}()},
 \code{\link{setLegend}()},
-\code{\link{view.default}()},
-\code{\link{view}()}
+\code{\link{view}()},
+\code{\link{view.default}()}
 
 Other shiny app functions: 
 \code{\link{RacViewer-shiny}},

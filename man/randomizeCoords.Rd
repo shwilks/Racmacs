@@ -29,7 +29,7 @@ Other map optimization functions:
 \code{\link{make.acmap}()},
 \code{\link{moveTrappedPoints}()},
 \code{\link{optimizeMap}()},
-\code{\link{relaxMapOneStep}()},
-\code{\link{relaxMap}()}
+\code{\link{relaxMap}()},
+\code{\link{relaxMapOneStep}()}
 }
 \concept{map optimization functions}

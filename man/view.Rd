@@ -22,8 +22,8 @@ S3 method for viewing objects
 }
 \seealso{
 Other functions to view maps: 
-\code{\link{RacViewer.options}()},
 \code{\link{RacViewer}()},
+\code{\link{RacViewer.options}()},
 \code{\link{export_viewer}()},
 \code{\link{ggplot.acmap}()},
 \code{\link{mapGadget}()},

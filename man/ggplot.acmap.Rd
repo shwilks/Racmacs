@@ -95,14 +95,14 @@ Method for plotting an antigenic map as a ggplot object
 }
 \seealso{
 Other functions to view maps: 
-\code{\link{RacViewer.options}()},
 \code{\link{RacViewer}()},
+\code{\link{RacViewer.options}()},
 \code{\link{export_viewer}()},
 \code{\link{mapGadget}()},
 \code{\link{plot.acmap}()},
 \code{\link{setLegend}()},
+\code{\link{view}()},
 \code{\link{view.acmap}()},
-\code{\link{view.default}()},
-\code{\link{view}()}
+\code{\link{view.default}()}
 }
 \concept{functions to view maps}

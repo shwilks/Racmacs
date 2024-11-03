@@ -19,14 +19,14 @@ Default method for viewing objects
 }
 \seealso{
 Other functions to view maps: 
-\code{\link{RacViewer.options}()},
 \code{\link{RacViewer}()},
+\code{\link{RacViewer.options}()},
 \code{\link{export_viewer}()},
 \code{\link{ggplot.acmap}()},
 \code{\link{mapGadget}()},
 \code{\link{plot.acmap}()},
 \code{\link{setLegend}()},
-\code{\link{view.acmap}()},
-\code{\link{view}()}
+\code{\link{view}()},
+\code{\link{view.acmap}()}
 }
 \concept{functions to view maps}

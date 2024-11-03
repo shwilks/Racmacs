@@ -19,6 +19,7 @@ RacOptimizer.options(
   num_cores = getOption("RacOptimizer.num_cores"),
   report_progress = NULL,
   ignore_disconnected = FALSE,
+  ignore_underconstrained = FALSE,
   progress_bar_length = options()$width
 )
 }
@@ -51,6 +52,8 @@ RacOptimizer.options(
 
 \item{ignore_disconnected}{Should the check for disconnected points be skipped}
 
+\item{ignore_underconstrained}{If set to FALSE (default) under-constrained point coordinates will be set to NaN}
+
 \item{progress_bar_length}{Progress bar length when progress is reported}
 }
 \value{
@@ -72,7 +75,7 @@ Other map optimization functions:
 \code{\link{moveTrappedPoints}()},
 \code{\link{optimizeMap}()},
 \code{\link{randomizeCoords}()},
-\code{\link{relaxMapOneStep}()},
-\code{\link{relaxMap}()}
+\code{\link{relaxMap}()},
+\code{\link{relaxMapOneStep}()}
 }
 \concept{map optimization functions}

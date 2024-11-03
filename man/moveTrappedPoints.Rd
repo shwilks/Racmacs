@@ -47,7 +47,7 @@ Other map optimization functions:
 \code{\link{make.acmap}()},
 \code{\link{optimizeMap}()},
 \code{\link{randomizeCoords}()},
-\code{\link{relaxMapOneStep}()},
-\code{\link{relaxMap}()}
+\code{\link{relaxMap}()},
+\code{\link{relaxMapOneStep}()}
 }
 \concept{map optimization functions}

@@ -39,7 +39,7 @@ Other map attribute functions:
 \code{\link{logtiterTableLayers}()},
 \code{\link{mapDescription}()},
 \code{\link{mapName}()},
-\code{\link{titerTableLayers}()},
-\code{\link{titerTable}()}
+\code{\link{titerTable}()},
+\code{\link{titerTableLayers}()}
 }
 \concept{map attribute functions}

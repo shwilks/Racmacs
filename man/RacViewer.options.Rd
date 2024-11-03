@@ -68,8 +68,8 @@ Other functions to view maps:
 \code{\link{mapGadget}()},
 \code{\link{plot.acmap}()},
 \code{\link{setLegend}()},
+\code{\link{view}()},
 \code{\link{view.acmap}()},
-\code{\link{view.default}()},
-\code{\link{view}()}
+\code{\link{view.default}()}
 }
 \concept{functions to view maps}

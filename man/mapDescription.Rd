@@ -29,8 +29,8 @@ Other map attribute functions:
 \code{\link{dilutionStepsize}()},
 \code{\link{logtiterTableLayers}()},
 \code{\link{mapName}()},
+\code{\link{titerTable}()},
 \code{\link{titerTableFlat}()},
-\code{\link{titerTableLayers}()},
-\code{\link{titerTable}()}
+\code{\link{titerTableLayers}()}
 }
 \concept{map attribute functions}
