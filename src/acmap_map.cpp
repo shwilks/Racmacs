@@ -398,6 +398,12 @@ bool AcMap::isdefault(
   else if (attribute == "details") {
     return(details == "");
   }
+  else if (attribute == "type") {
+    return(type == "");
+  }
+  else if (attribute == "subtype") {
+    return(subtype == "");
+  }
   else if (attribute == "virus") {
     return(virus == "");
   }
@@ -406,6 +412,9 @@ bool AcMap::isdefault(
   }
   else if (attribute == "rbcs") {
     return(rbcs == "");
+  }
+  else if (attribute == "created") {
+    return(created == "");
   }
   else if (attribute == "layer_names") {
     int i = 0;

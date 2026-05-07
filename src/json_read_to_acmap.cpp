@@ -71,6 +71,10 @@ AcMap json_to_acmap(
   int num_points = num_antigens + num_sera;
   AcMap map(num_antigens, num_sera);
 
+  // Read in created date if present
+  if(doc.HasMember("?created") && map.created == ""){
+    map.created = doc["?created"].GetString();
+  }
 
   // == INFO ============================
   if(c.HasMember("i")){
@@ -79,7 +83,9 @@ AcMap json_to_acmap(
     if(i.HasMember("N")){ map.name = i["N"].GetString(); }
     if(i.HasMember("A")){ map.assay = i["A"].GetString(); }
     if(i.HasMember("D")){ map.details = i["D"].GetString(); }
-    if(i.HasMember("V")){ map.virus = i["V"].GetString(); }
+    if(i.HasMember("V")){ map.type = i["V"].GetString(); }
+    if(i.HasMember("s")){ map.subtype = i["s"].GetString(); }
+    if(i.HasMember("v")){ map.virus = i["v"].GetString(); }
     if(i.HasMember("l")){ map.laboratory = i["l"].GetString(); }
     if(i.HasMember("r")){ map.rbcs = i["r"].GetString(); }
 

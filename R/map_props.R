@@ -78,6 +78,46 @@ mapDetails <- function(map) {
   map
 }
 
+#' Getting and setting the map type
+#'
+#' @name mapType
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapType", "mapType<-"),
+#'   args    = c("map")
+#' )
+#'
+mapType <- function(map) {
+  check.acmap(map)
+  map$type
+}
+
+`mapType<-` <- function(map, value) {
+  check.acmap(map)
+  map$type <- value
+  map
+}
+
+#' Getting and setting the map subtype
+#'
+#' @name mapSubtype
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapSubtype", "mapSubtype<-"),
+#'   args    = c("map")
+#' )
+#'
+mapSubtype <- function(map) {
+  check.acmap(map)
+  map$subtype
+}
+
+`mapSubtype<-` <- function(map, value) {
+  check.acmap(map)
+  map$subtype <- value
+  map
+}
+
 #' Getting and setting the map virus type
 #'
 #' @name mapVirus
@@ -135,6 +175,26 @@ mapRBCs <- function(map) {
 `mapRBCs<-` <- function(map, value) {
   check.acmap(map)
   map$rbcs <- value
+  map
+}
+
+#' Getting and setting map created metadata
+#'
+#' @name mapCreated
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapCreated", "mapCreated<-"),
+#'   args    = c("map")
+#' )
+#'
+mapCreated <- function(map) {
+  check.acmap(map)
+  map$created
+}
+
+`mapCreated<-` <- function(map, value) {
+  check.acmap(map)
+  map$created <- value
   map
 }
 

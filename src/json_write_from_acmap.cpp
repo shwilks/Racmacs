@@ -32,7 +32,7 @@ std::string acmap_to_json(
   // Add basic info
   doc.AddMember("_", "-*- js-indent-level: 2 -*-", allocator);  // json info..?
   doc.AddMember("  version", "acmacs-ace-v1", allocator);       // Version info
-  doc.AddMember("?created", "", allocator);                     // Comment field
+  if (!map.isdefault("created")) doc.AddMember("?created", jsonifya(map.created, allocator), allocator);
 
   // Map information
   Value c(kObjectType);
@@ -45,9 +45,11 @@ std::string acmap_to_json(
   i.AddMember("N", jsonifya(map.name, allocator), allocator);
   if (!map.isdefault("assay"))      i.AddMember("A", jsonifya(map.assay, allocator), allocator);
   if (!map.isdefault("details"))    i.AddMember("D", jsonifya(map.details, allocator), allocator);
-  if (!map.isdefault("virus"))      i.AddMember("V", jsonifya(map.virus, allocator), allocator);
+  if (!map.isdefault("type"))       i.AddMember("V", jsonifya(map.type, allocator), allocator);
+  if (!map.isdefault("subtype"))    i.AddMember("s", jsonifya(map.subtype, allocator), allocator);
+  if (!map.isdefault("virus"))      i.AddMember("v", jsonifya(map.virus, allocator), allocator);
   if (!map.isdefault("laboratory")) i.AddMember("l", jsonifya(map.laboratory, allocator), allocator);
-  if (!map.isdefault("rbcs"))        i.AddMember("r", jsonifya(map.rbcs, allocator), allocator);
+  if (!map.isdefault("rbcs"))       i.AddMember("r", jsonifya(map.rbcs, allocator), allocator);
 
   // == ANTIGENS ========================
   Value a(kArrayType);

@@ -160,26 +160,35 @@ test_that("Map saves and loads additional map info attributes", {
 
   mapAssay(map) <- "HI"
   mapDetails(map) <- "Ferret post-infection"
-  mapVirus(map) <- "A(H3N2)"
+  mapType(map) <- "A"
+  mapSubtype(map) <- "H3N2"
+  mapVirus(map) <- "influenza"
   mapLaboratory(map) <- "VIDRL"
   mapRBCs(map) <- "Turkey"
+  mapCreated(map) <- "2026-05-07"
 
   temp <- tempfile(fileext = ".ace")
   save.acmap(map, temp)
 
   json <- jsonlite::read_json(temp)
+  expect_equal(json[["?created"]], "2026-05-07")
   expect_equal(json$c$i$A, "HI")
   expect_equal(json$c$i$D, "Ferret post-infection")
-  expect_equal(json$c$i$V, "A(H3N2)")
+  expect_equal(json$c$i$V, "A")
+  expect_equal(json$c$i$s, "H3N2")
+  expect_equal(json$c$i$v, "influenza")
   expect_equal(json$c$i$l, "VIDRL")
   expect_equal(json$c$i$r, "Turkey")
 
   map_loaded <- read.acmap(temp)
   expect_equal(mapAssay(map_loaded), "HI")
   expect_equal(mapDetails(map_loaded), "Ferret post-infection")
-  expect_equal(mapVirus(map_loaded), "A(H3N2)")
+  expect_equal(mapType(map_loaded), "A")
+  expect_equal(mapSubtype(map_loaded), "H3N2")
+  expect_equal(mapVirus(map_loaded), "influenza")
   expect_equal(mapLaboratory(map_loaded), "VIDRL")
   expect_equal(mapRBCs(map_loaded), "Turkey")
+  expect_equal(mapCreated(map_loaded), "2026-05-07")
 })
 
 test_that("Map does not save values when they are default", {

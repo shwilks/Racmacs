@@ -24,9 +24,12 @@ class AcMap {
     std::string description;
     std::string assay;
     std::string details;
+    std::string type;
+    std::string subtype;
     std::string virus;
     std::string laboratory;
     std::string rbcs;
+    std::string created;
     double dilution_stepsize;
     std::vector<AcOptimization> optimizations;
     std::vector<AcAntigen> antigens;
