@@ -110,6 +110,7 @@ AcMap json_to_acmap(
     if(ag.HasMember("S")) map.antigens[i].set_strings( ag["S"].GetString() );
     if(ag.HasMember("C")) map.antigens[i].set_continent( ag["C"].GetString() );
     if(ag.HasMember("B")) map.antigens[i].set_nucleotidesequence( ag["B"].GetString() );
+    if(ag.HasMember("comment")) map.antigens[i].set_comment( ag["comment"].GetString() );
 
     // set_reference
     // set_name_full

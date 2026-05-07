@@ -25,6 +25,7 @@ std::string AcPoint::get_reassortant() const { return reassortant; }
 std::string AcPoint::get_strings() const { return strings; }
 std::string AcPoint::get_continent() const { return continent; }
 std::string AcPoint::get_nucleotidesequence() const { return nucleotidesequence; }
+std::string AcPoint::get_comment() const { return comment; }
 
 void AcPoint::set_type( std::string value ){ type = value; }
 void AcPoint::set_name( std::string value ){ name = value; }
@@ -45,6 +46,7 @@ void AcPoint::set_reassortant( std::string value ){ reassortant = value; }
 void AcPoint::set_strings( std::string value ){ strings = value; }
 void AcPoint::set_continent( std::string value ){ continent = value; }
 void AcPoint::set_nucleotidesequence( std::string value ){ nucleotidesequence = value; }
+void AcPoint::set_comment( std::string value ){ comment = value; }
 
 // Get IDs for matching
 std::string AcPoint::get_match_id() const {
@@ -90,6 +92,8 @@ bool AcPoint::isdefault(std::string attribute) {
     return(continent == "");
   } else if (attribute == "nucleotidesequence") {
     return(nucleotidesequence == "");
+  } else if (attribute == "comment") {
+    return(comment == "");
   } else {
     return(false);
   }

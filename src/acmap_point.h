@@ -32,6 +32,7 @@ class AcPoint {
     std::string strings;
     std::string continent;
     std::string nucleotidesequence;
+    std::string comment;
 
   public:
 
@@ -61,6 +62,7 @@ class AcPoint {
     std::string get_strings() const;
     std::string get_continent() const;
     std::string get_nucleotidesequence() const;
+    std::string get_comment() const;
 
     void set_type( std::string value );
     void set_name( std::string value );
@@ -81,6 +83,7 @@ class AcPoint {
     void set_strings( std::string value );
     void set_continent( std::string value );
     void set_nucleotidesequence( std::string value );
+    void set_comment( std::string value );
 
     // Get IDs for matching
     std::string get_match_id() const;

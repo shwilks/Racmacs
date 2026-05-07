@@ -40,6 +40,8 @@ std::string ac_ag_get_reassortant( const AcAntigen &ag ){ return ag.get_reassort
 std::string ac_ag_get_strings( const AcAntigen &ag ){ return ag.get_strings(); }
 // [[Rcpp::export(rng = false)]]
 std::string ac_ag_get_continent( const AcAntigen &ag ){ return ag.get_continent(); }
+// [[Rcpp::export(rng = false)]]
+std::string ac_ag_get_comment( const AcAntigen &ag ){ return ag.get_comment(); }
 
 // [[Rcpp::export(rng = false)]]
 std::string ac_ag_get_match_id( const AcAntigen &ag ){ return ag.get_match_id(); }
@@ -77,6 +79,8 @@ AcAntigen ac_ag_set_reassortant( AcAntigen ag, std::string value ){ ag.set_reass
 AcAntigen ac_ag_set_strings( AcAntigen ag, std::string value ){ ag.set_strings(value); return ag; }
 // [[Rcpp::export(rng = false)]]
 AcAntigen ac_ag_set_continent( AcAntigen ag, std::string value ){ ag.set_continent(value); return ag; }
+// [[Rcpp::export(rng = false)]]
+AcAntigen ac_ag_set_comment( AcAntigen ag, std::string value ){ ag.set_comment(value); return ag; }
 
 // [[Rcpp::export(rng = false)]]
 AcAntigen ac_ag_set_group( AcAntigen ag, int value ){ ag.set_group(value); return ag; }

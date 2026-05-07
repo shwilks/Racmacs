@@ -113,6 +113,10 @@ ac_ag_get_continent <- function(ag) {
     .Call('_Racmacs_ac_ag_get_continent', PACKAGE = 'Racmacs', ag)
 }
 
+ac_ag_get_comment <- function(ag) {
+    .Call('_Racmacs_ac_ag_get_comment', PACKAGE = 'Racmacs', ag)
+}
+
 ac_ag_get_match_id <- function(ag) {
     .Call('_Racmacs_ac_ag_get_match_id', PACKAGE = 'Racmacs', ag)
 }
@@ -175,6 +179,10 @@ ac_ag_set_strings <- function(ag, value) {
 
 ac_ag_set_continent <- function(ag, value) {
     .Call('_Racmacs_ac_ag_set_continent', PACKAGE = 'Racmacs', ag, value)
+}
+
+ac_ag_set_comment <- function(ag, value) {
+    .Call('_Racmacs_ac_ag_set_comment', PACKAGE = 'Racmacs', ag, value)
 }
 
 ac_ag_set_group <- function(ag, value) {

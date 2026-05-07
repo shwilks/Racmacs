@@ -70,7 +70,8 @@ antigens_setter <- function(fn, type) {
 #'     "agLineage", "agLineage<-",
 #'     "agReassortant", "agReassortant<-",
 #'     "agStrings", "agStrings<-",
-#'     "agContinent", "agContinent<-"
+#'     "agContinent", "agContinent<-",
+#'     "agComments", "agComments<-"
 #'   ),
 #'   args    = c("map")
 #' )
@@ -85,6 +86,7 @@ agLineage <- antigens_getter(ac_ag_get_lineage)
 agReassortant <- antigens_getter(ac_ag_get_reassortant)
 agStrings <- antigens_getter(ac_ag_get_strings)
 agContinent <- antigens_getter(ac_ag_get_continent)
+agComments <- antigens_getter(ac_ag_get_comment)
 agGroupValues <- antigens_getter(ac_ag_get_group) # Not exported
 agMatchIDs <- antigens_getter(ac_ag_get_match_id) # Not exported
 
@@ -98,6 +100,7 @@ agMatchIDs <- antigens_getter(ac_ag_get_match_id) # Not exported
 `agReassortant<-` <- antigens_setter(ac_ag_set_reassortant, "character")
 `agStrings<-` <- antigens_setter(ac_ag_set_strings, "character")
 `agContinent<-` <- antigens_setter(ac_ag_set_continent, "character")
+`agComments<-` <- antigens_setter(ac_ag_set_comment, "character")
 `agGroupValues<-` <- antigens_setter(ac_ag_set_group, "numeric") # Not exported
 
 

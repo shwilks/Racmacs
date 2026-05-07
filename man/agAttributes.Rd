@@ -22,6 +22,8 @@
 \alias{agStrings<-}
 \alias{agContinent}
 \alias{agContinent<-}
+\alias{agComments}
+\alias{agComments<-}
 \title{Getting and setting antigen attributes}
 \usage{
 agIDs(map)
@@ -44,6 +46,8 @@ agStrings(map)
 agStrings(map) <- value
 agContinent(map)
 agContinent(map) <- value
+agComments(map)
+agComments(map) <- value
 }
 \arguments{
 \item{map}{The acmap data object}

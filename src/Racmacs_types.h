@@ -175,6 +175,7 @@ SEXP wrap(const AcAntigen& ag){
       _["strings"] = ag.get_strings(),
       _["continent"] = ag.get_continent(),
       _["nucleotidesequence"] = ag.get_nucleotidesequence(),
+      _["comment"] = ag.get_comment(),
 
       // Plotspec
       _["plotspec"] = as<List>(wrap(ag.plotspec))
@@ -563,6 +564,7 @@ AcAntigen as(SEXP sxp){
   if(list.containsElementNamed("strings")) ag.set_strings(list["strings"]);
   if(list.containsElementNamed("continent")) ag.set_continent(list["continent"]);
   if(list.containsElementNamed("nucleotidesequence")) ag.set_nucleotidesequence(list["nucleotidesequence"]);
+  if(list.containsElementNamed("comment")) ag.set_comment(list["comment"]);
 
   // Plotspec
   if(list.containsElementNamed("plotspec")) ag.plotspec = as<AcPlotspec>(list["plotspec"]);

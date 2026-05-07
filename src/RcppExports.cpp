@@ -336,6 +336,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ac_ag_get_comment
+std::string ac_ag_get_comment(const AcAntigen& ag);
+RcppExport SEXP _Racmacs_ac_ag_get_comment(SEXP agSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< const AcAntigen& >::type ag(agSEXP);
+    rcpp_result_gen = Rcpp::wrap(ac_ag_get_comment(ag));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ac_ag_get_match_id
 std::string ac_ag_get_match_id(const AcAntigen& ag);
 RcppExport SEXP _Racmacs_ac_ag_get_match_id(SEXP agSEXP) {
@@ -506,6 +516,17 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< AcAntigen >::type ag(agSEXP);
     Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
     rcpp_result_gen = Rcpp::wrap(ac_ag_set_continent(ag, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ac_ag_set_comment
+AcAntigen ac_ag_set_comment(AcAntigen ag, std::string value);
+RcppExport SEXP _Racmacs_ac_ag_set_comment(SEXP agSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< AcAntigen >::type ag(agSEXP);
+    Rcpp::traits::input_parameter< std::string >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(ac_ag_set_comment(ag, value));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1913,6 +1934,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Racmacs_ac_ag_get_reassortant", (DL_FUNC) &_Racmacs_ac_ag_get_reassortant, 1},
     {"_Racmacs_ac_ag_get_strings", (DL_FUNC) &_Racmacs_ac_ag_get_strings, 1},
     {"_Racmacs_ac_ag_get_continent", (DL_FUNC) &_Racmacs_ac_ag_get_continent, 1},
+    {"_Racmacs_ac_ag_get_comment", (DL_FUNC) &_Racmacs_ac_ag_get_comment, 1},
     {"_Racmacs_ac_ag_get_match_id", (DL_FUNC) &_Racmacs_ac_ag_get_match_id, 1},
     {"_Racmacs_ac_ag_get_group", (DL_FUNC) &_Racmacs_ac_ag_get_group, 1},
     {"_Racmacs_ac_ag_get_group_levels", (DL_FUNC) &_Racmacs_ac_ag_get_group_levels, 1},
@@ -1929,6 +1951,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_Racmacs_ac_ag_set_reassortant", (DL_FUNC) &_Racmacs_ac_ag_set_reassortant, 2},
     {"_Racmacs_ac_ag_set_strings", (DL_FUNC) &_Racmacs_ac_ag_set_strings, 2},
     {"_Racmacs_ac_ag_set_continent", (DL_FUNC) &_Racmacs_ac_ag_set_continent, 2},
+    {"_Racmacs_ac_ag_set_comment", (DL_FUNC) &_Racmacs_ac_ag_set_comment, 2},
     {"_Racmacs_ac_ag_set_group", (DL_FUNC) &_Racmacs_ac_ag_set_group, 2},
     {"_Racmacs_ac_ag_set_group_levels", (DL_FUNC) &_Racmacs_ac_ag_set_group_levels, 2},
     {"_Racmacs_ac_opt_get_ag_base_coords", (DL_FUNC) &_Racmacs_ac_opt_get_ag_base_coords, 1},

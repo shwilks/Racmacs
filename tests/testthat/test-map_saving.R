@@ -75,16 +75,19 @@ test_that("Map saves and loads additional attributes", {
   sr_ids <- paste0("SRID", seq_len(numSera(map)))
   ag_groups <- paste0("AGGROUP", seq_len(numAntigens(map)))
   sr_groups <- paste0("SRGROUP", seq_len(numSera(map)))
+  ag_comments <- paste0("AGCOMMENT", seq_len(numAntigens(map)))
 
   agIDs(map) <- ag_ids
   srIDs(map) <- sr_ids
   agGroups(map) <- ag_groups
   srGroups(map) <- sr_groups
+  agComments(map) <- ag_comments
 
   expect_equal(agIDs(map), ag_ids)
   expect_equal(srIDs(map), sr_ids)
   expect_equal(agGroups(map), as.factor(ag_groups))
   expect_equal(srGroups(map), as.factor(sr_groups))
+  expect_equal(agComments(map), ag_comments)
 
   temp <- tempfile(fileext = ".ace")
   save.acmap(map, temp)
@@ -94,6 +97,7 @@ test_that("Map saves and loads additional attributes", {
   expect_equal(srIDs(map_loaded), sr_ids)
   expect_equal(agGroups(map_loaded), as.factor(ag_groups))
   expect_equal(srGroups(map_loaded), as.factor(sr_groups))
+  expect_equal(agComments(map_loaded), ag_comments)
 
   ag_subset <- c(2, 4, 5)
   sr_subset <- c(1, 2, 4)
@@ -107,6 +111,7 @@ test_that("Map saves and loads additional attributes", {
   expect_equal(srIDs(subset_map), sr_ids[sr_subset])
   expect_equal(agGroups(subset_map), as.factor(ag_groups)[ag_subset])
   expect_equal(srGroups(subset_map), as.factor(sr_groups)[sr_subset])
+  expect_equal(agComments(subset_map), ag_comments[ag_subset])
 })
 
 test_that("Map saves and loads group factors", {

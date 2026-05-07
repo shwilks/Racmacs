@@ -71,6 +71,7 @@ std::string acmap_to_json(
     if (!ag.isdefault("strings"))             agval.AddMember("S", jsonifya(ag.get_strings(), allocator), allocator);
     if (!ag.isdefault("continent"))           agval.AddMember("C", jsonifya(ag.get_continent(), allocator), allocator);
     if (!ag.isdefault("nucleotidesequence"))  agval.AddMember("B", jsonifya(ag.get_nucleotidesequence(), allocator), allocator);
+    if (!ag.isdefault("comment"))             agval.AddMember("comment", jsonifya(ag.get_comment(), allocator), allocator);
 
     // set_group_values
     // set_reference
