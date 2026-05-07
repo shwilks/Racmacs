@@ -62,7 +62,7 @@ LinkingTo:
     RcppEnsmallen, 
     rapidjsonr
 Encoding: UTF-8
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
 URL: https://acorg.github.io/Racmacs/, https://github.com/acorg/Racmacs/
