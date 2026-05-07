@@ -313,6 +313,11 @@ SEXP wrap(const AcMap& acmap){
   List out = List::create(
     _["name"] = acmap.name,
     _["description"] = acmap.description,
+    _["assay"] = acmap.assay,
+    _["details"] = acmap.details,
+    _["virus"] = acmap.virus,
+    _["laboratory"] = acmap.laboratory,
+    _["rbcs"] = acmap.rbcs,
     _["dilution_stepsize"] = acmap.dilution_stepsize,
     _["antigens"] = antigens,
     _["sera"] = sera,
@@ -745,6 +750,11 @@ AcMap as(SEXP sxp){
   // Attributes
   if(list.containsElementNamed("name")) acmap.name = as<std::string>(list["name"]);
   if(list.containsElementNamed("description")) acmap.description = as<std::string>(list["description"]);
+  if(list.containsElementNamed("assay")) acmap.assay = as<std::string>(list["assay"]);
+  if(list.containsElementNamed("details")) acmap.details = as<std::string>(list["details"]);
+  if(list.containsElementNamed("virus")) acmap.virus = as<std::string>(list["virus"]);
+  if(list.containsElementNamed("laboratory")) acmap.laboratory = as<std::string>(list["laboratory"]);
+  if(list.containsElementNamed("rbcs")) acmap.rbcs = as<std::string>(list["rbcs"]);
   if(list.containsElementNamed("dilution_stepsize")) acmap.dilution_stepsize = as<double>(list["dilution_stepsize"]);
   if(list.containsElementNamed("pt_drawing_order")){
     acmap.set_pt_drawing_order(

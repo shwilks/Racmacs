@@ -392,6 +392,21 @@ bool AcMap::isdefault(
   else if (attribute == "description") {
     return(description == "");
   }
+  else if (attribute == "assay") {
+    return(assay == "");
+  }
+  else if (attribute == "details") {
+    return(details == "");
+  }
+  else if (attribute == "virus") {
+    return(virus == "");
+  }
+  else if (attribute == "laboratory") {
+    return(laboratory == "");
+  }
+  else if (attribute == "rbcs") {
+    return(rbcs == "");
+  }
   else if (attribute == "layer_names") {
     int i = 0;
     for(auto &layer_name : layer_names){

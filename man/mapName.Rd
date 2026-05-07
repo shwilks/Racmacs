@@ -28,7 +28,12 @@ Other map attribute functions:
 \code{\link{adjustedTiterTable}()},
 \code{\link{dilutionStepsize}()},
 \code{\link{logtiterTableLayers}()},
+\code{\link{mapAssay}()},
 \code{\link{mapDescription}()},
+\code{\link{mapDetails}()},
+\code{\link{mapLaboratory}()},
+\code{\link{mapRBCs}()},
+\code{\link{mapVirus}()},
 \code{\link{titerTable}()},
 \code{\link{titerTableFlat}()},
 \code{\link{titerTableLayers}()}

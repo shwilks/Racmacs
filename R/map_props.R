@@ -1,4 +1,3 @@
-
 #' Getting and setting the map name
 #'
 #' @name mapName
@@ -39,6 +38,106 @@ mapDescription <- function(map) {
   map
 }
 
+#' Getting and setting the map assay
+#'
+#' @name mapAssay
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapAssay", "mapAssay<-"),
+#'   args    = c("map")
+#' )
+#'
+mapAssay <- function(map) {
+  check.acmap(map)
+  map$assay
+}
+
+`mapAssay<-` <- function(map, value) {
+  check.acmap(map)
+  map$assay <- value
+  map
+}
+
+#' Getting and setting map details
+#'
+#' @name mapDetails
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapDetails", "mapDetails<-"),
+#'   args    = c("map")
+#' )
+#'
+mapDetails <- function(map) {
+  check.acmap(map)
+  map$details
+}
+
+`mapDetails<-` <- function(map, value) {
+  check.acmap(map)
+  map$details <- value
+  map
+}
+
+#' Getting and setting the map virus type
+#'
+#' @name mapVirus
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapVirus", "mapVirus<-"),
+#'   args    = c("map")
+#' )
+#'
+mapVirus <- function(map) {
+  check.acmap(map)
+  map$virus
+}
+
+`mapVirus<-` <- function(map, value) {
+  check.acmap(map)
+  map$virus <- value
+  map
+}
+
+#' Getting and setting the map laboratory
+#'
+#' @name mapLaboratory
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapLaboratory", "mapLaboratory<-"),
+#'   args    = c("map")
+#' )
+#'
+mapLaboratory <- function(map) {
+  check.acmap(map)
+  map$laboratory
+}
+
+`mapLaboratory<-` <- function(map, value) {
+  check.acmap(map)
+  map$laboratory <- value
+  map
+}
+
+#' Getting and setting the map RBCs
+#'
+#' @name mapRBCs
+#' @family map attribute functions
+#' @eval roxygen_tags(
+#'   methods = c("mapRBCs", "mapRBCs<-"),
+#'   args    = c("map")
+#' )
+#'
+mapRBCs <- function(map) {
+  check.acmap(map)
+  map$rbcs
+}
+
+`mapRBCs<-` <- function(map, value) {
+  check.acmap(map)
+  map$rbcs <- value
+  map
+}
+
 #' Getting and setting map titers
 #'
 #' Functions to get and set the map titer table. Note that when setting the
@@ -59,20 +158,17 @@ mapDescription <- function(map) {
 #' @export
 #' @rdname titerTable
 titerTable <- function(map) {
-
   check.acmap(map)
   titers <- titerTableFlat(map)
   rownames(titers) <- agNames(map)
   colnames(titers) <- srNames(map)
   titers
-
 }
 
 
 #' @export
 #' @rdname titerTable
 `titerTable<-` <- function(map, value) {
-
   check.acmap(map)
 
   # Set the flat titer table
@@ -83,7 +179,6 @@ titerTable <- function(map) {
 
   # Return the map
   map
-
 }
 
 
@@ -120,9 +215,11 @@ titerTableFlat <- function(map) {
 `titerTableFlat<-` <- function(map, value) {
   check.acmap(map)
   check.dimensions(value, map)
-  if (is.data.frame(value)) value <- as.matrix(value)
+  if (is.data.frame(value)) {
+    value <- as.matrix(value)
+  }
   check.validtiters(value)
-  mode(value)          <- "character"
+  mode(value) <- "character"
   map$titer_table_flat <- value
   map
 }
@@ -159,7 +256,6 @@ titerTableLayers <- function(map) {
 
 #' @rdname titerTableLayers
 `titerTableLayers<-` <- function(map, value) {
-
   # Check input
   check.acmap(map)
   if (!is.list(value)) {
@@ -169,7 +265,9 @@ titerTableLayers <- function(map) {
   # Update layers
   value <- lapply(value, function(titers) {
     check.dimensions(titers, map)
-    if (is.data.frame(titers)) titers <- as.matrix(titers)
+    if (is.data.frame(titers)) {
+      titers <- as.matrix(titers)
+    }
     mode(titers) <- "character"
     check.validtiters(titers)
     titers
@@ -185,7 +283,6 @@ titerTableLayers <- function(map) {
 
   # Return the updated map
   map
-
 }
 
 
@@ -195,7 +292,6 @@ titerTableLayers <- function(map) {
 #'
 #' @noRd
 titertypesTableLayers <- function(map) {
-
   lapply(
     titerTableLayers(map),
     function(titertable) {
@@ -206,7 +302,6 @@ titertypesTableLayers <- function(map) {
       )
     }
   )
-
 }
 
 
@@ -219,7 +314,6 @@ titertypesTableLayers <- function(map) {
 #' @family map attribute functions
 #' @export
 logtiterTableLayers <- function(map) {
-
   lapply(
     titerTableLayers(map),
     function(titertable) {
@@ -230,7 +324,6 @@ logtiterTableLayers <- function(map) {
       )
     }
   )
-
 }
 
 
@@ -264,24 +357,20 @@ logtiterTableLayers <- function(map) {
 #' @export
 #'
 dilutionStepsize <- function(map) {
-
   check.acmap(map)
   if (is.null(map$dilution_stepsize)) {
     1
   } else {
     map$dilution_stepsize
   }
-
 }
 
 #' @export
 #' @rdname dilutionStepsize
 `dilutionStepsize<-` <- function(map, value) {
-
   check.acmap(map)
   map$dilution_stepsize <- value
   map
-
 }
 
 
@@ -312,7 +401,9 @@ allMapProperties <- function(map, getter) {
     seq_len(numOptimizations(map)),
     function(i) {
       value <- getter(map, i)
-      if (is.null(value)) value <- NA
+      if (is.null(value)) {
+        value <- NA
+      }
       value
     },
     numeric(1)
@@ -433,7 +524,9 @@ keepBestOptimization <- function(map) {
 layerNames <- function(map) {
   check.acmap(map)
   layer_names <- map$layer_names
-  if (length(layer_names) == 0) layer_names <- NULL
+  if (length(layer_names) == 0) {
+    layer_names <- NULL
+  }
   layer_names
 }
 
@@ -446,7 +539,10 @@ layerNames <- function(map) {
   } else {
     check.charactervector(value)
     if (length(value) != numLayers(map)) {
-      stop("Number of layer names does not match the number of layers", call. = F)
+      stop(
+        "Number of layer names does not match the number of layers",
+        call. = F
+      )
     }
     map$layer_names <- value
   }
@@ -470,7 +566,9 @@ layerNames <- function(map) {
 agReactivityAdjustments <- function(map) {
   check.acmap(map)
   ag_reactivity_adjustments <- map$ag_reactivity_adjustments
-  if (is.null(ag_reactivity_adjustments)) ag_reactivity_adjustments <- rep(0, numAntigens(map))
+  if (is.null(ag_reactivity_adjustments)) {
+    ag_reactivity_adjustments <- rep(0, numAntigens(map))
+  }
   ag_reactivity_adjustments
 }
 
@@ -480,7 +578,10 @@ agReactivityAdjustments <- function(map) {
   check.acmap(map)
   check.numericvector(value)
   if (length(value) != numAntigens(map)) {
-    stop("Number of reactivity adjustments does not match the number of antigens", call. = F)
+    stop(
+      "Number of reactivity adjustments does not match the number of antigens",
+      call. = F
+    )
   }
   map$ag_reactivity_adjustments <- value
   for (n in seq_len(numOptimizations(map))) {
@@ -542,5 +643,3 @@ numLayers <- function(map) {
   check.acmap(map)
   length(titerTableLayers(map))
 }
-
-

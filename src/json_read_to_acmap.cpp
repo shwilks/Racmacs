@@ -77,6 +77,11 @@ AcMap json_to_acmap(
     const Value& i = c["i"]; // map info
 
     if(i.HasMember("N")){ map.name = i["N"].GetString(); }
+    if(i.HasMember("A")){ map.assay = i["A"].GetString(); }
+    if(i.HasMember("D")){ map.details = i["D"].GetString(); }
+    if(i.HasMember("V")){ map.virus = i["V"].GetString(); }
+    if(i.HasMember("l")){ map.laboratory = i["l"].GetString(); }
+    if(i.HasMember("r")){ map.rbcs = i["r"].GetString(); }
 
   }
 

@@ -43,6 +43,11 @@ std::string acmap_to_json(
 
   // == INFO ============================
   i.AddMember("N", jsonifya(map.name, allocator), allocator);
+  if (!map.isdefault("assay"))      i.AddMember("A", jsonifya(map.assay, allocator), allocator);
+  if (!map.isdefault("details"))    i.AddMember("D", jsonifya(map.details, allocator), allocator);
+  if (!map.isdefault("virus"))      i.AddMember("V", jsonifya(map.virus, allocator), allocator);
+  if (!map.isdefault("laboratory")) i.AddMember("l", jsonifya(map.laboratory, allocator), allocator);
+  if (!map.isdefault("rbcs"))        i.AddMember("r", jsonifya(map.rbcs, allocator), allocator);
 
   // == ANTIGENS ========================
   Value a(kArrayType);
