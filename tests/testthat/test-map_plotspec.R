@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Test reading and editing of plotspec data")
@@ -17,48 +16,44 @@ test_that("Test point drawing order", {
 
 ## Test defaults
 test_that("Test acmap defaults", {
-
   map <- acmap(titer_table = matrix(2^(4:9), 3, 2) * 10)
 
-  expect_equal(unname(agFill(map)),             rep("green", 3)       )
-  expect_equal(unname(agOutline(map)),          rep("black", 3)       )
-  expect_equal(unname(agAspect(map)),           rep(1, 3)             )
-  expect_equal(unname(agRotation(map)),         rep(0, 3)             )
-  expect_equal(unname(agOutlineWidth(map)),     rep(1, 3)             )
-  expect_equal(unname(agShape(map)),            rep("CIRCLE", 3)      )
-  expect_equal(unname(agSize(map)),             rep(5, 3)             )
-  expect_equal(unname(agShown(map)),            rep(TRUE, 3)          )
+  expect_equal(unname(agFill(map)), rep("green", 3))
+  expect_equal(unname(agOutline(map)), rep("black", 3))
+  expect_equal(unname(agAspect(map)), rep(1, 3))
+  expect_equal(unname(agRotation(map)), rep(0, 3))
+  expect_equal(unname(agOutlineWidth(map)), rep(1, 3))
+  expect_equal(unname(agShape(map)), rep("CIRCLE", 3))
+  expect_equal(unname(agSize(map)), rep(5, 3))
+  expect_equal(unname(agShown(map)), rep(TRUE, 3))
 
-  expect_equal(unname(srFill(map)),             rep("transparent", 2) )
-  expect_equal(unname(srOutline(map)),          rep("black", 2)       )
-  expect_equal(unname(srAspect(map)),           rep(1, 2)             )
-  expect_equal(unname(srRotation(map)),         rep(0, 2)             )
-  expect_equal(unname(srOutlineWidth(map)),     rep(1, 2)             )
-  expect_equal(unname(srShape(map)),            rep("BOX", 2)         )
-  expect_equal(unname(srSize(map)),             rep(5, 2)             )
-  expect_equal(unname(srShown(map)),            rep(TRUE, 2)          )
-
+  expect_equal(unname(srFill(map)), rep("transparent", 2))
+  expect_equal(unname(srOutline(map)), rep("black", 2))
+  expect_equal(unname(srAspect(map)), rep(1, 2))
+  expect_equal(unname(srRotation(map)), rep(0, 2))
+  expect_equal(unname(srOutlineWidth(map)), rep(1, 2))
+  expect_equal(unname(srShape(map)), rep("BOX", 2))
+  expect_equal(unname(srSize(map)), rep(5, 2))
+  expect_equal(unname(srShown(map)), rep(TRUE, 2))
 })
 
 ## Plotspec
 # property | chart supports setting | test value | mode
 plotspec_features <- list(
-  "Size"         = 4,
-  "Fill"         = "blue",
-  "Outline"      = "green",
+  "Size" = 4,
+  "Fill" = "blue",
+  "Outline" = "green",
   "OutlineWidth" = 2,
-  "Rotation"     = 24,
-  "Aspect"       = 3,
-  "Shape"        = "BOX",
-  "Shown"        = FALSE
+  "Rotation" = 24,
+  "Aspect" = 3,
+  "Shape" = "BOX",
+  "Shown" = FALSE
 )
 
 test_that("Edit plotspec details", {
-
   for (n in seq_along(plotspec_features)) {
-
-    property         <- names(plotspec_features)[n]
-    test_value       <- plotspec_features[[n]]
+    property <- names(plotspec_features)[n]
+    test_value <- plotspec_features[[n]]
 
     agGetterFunction <- get(paste0("ag", property))
     srGetterFunction <- get(paste0("sr", property))
@@ -66,22 +61,26 @@ test_that("Edit plotspec details", {
     agSetterFunction <- get(paste0("ag", property, "<-"))
     srSetterFunction <- get(paste0("sr", property, "<-"))
 
-
     # Test setting
     map <- agSetterFunction(map, value = test_value)
     map <- srSetterFunction(map, value = test_value)
-    expect_equal(unname(agGetterFunction(map)), rep(test_value, numAntigens(map)))
+    expect_equal(
+      unname(agGetterFunction(map)),
+      rep(test_value, numAntigens(map))
+    )
     expect_equal(unname(srGetterFunction(map)), rep(test_value, numSera(map)))
-
   }
-
 })
 
 
 test_that("Applying a plotspec", {
-
   map <- acmap(titer_table = matrix(2^(4:9), 6, 4) * 10)
-  map <- optimizeMap(map, number_of_dimensions = 2, number_of_optimizations = 1, minimum_column_basis = "none")
+  map <- optimizeMap(
+    map,
+    number_of_dimensions = 2,
+    number_of_optimizations = 1,
+    minimum_column_basis = "none"
+  )
 
   map1 <- map
   map2 <- map
@@ -107,5 +106,4 @@ test_that("Applying a plotspec", {
 
   expect_equal(agFill(map3ps), c(agFill(map3)[1:2], rev(agFill(map1))[-(1:2)]))
   expect_equal(srFill(map3ps), c(srFill(map3)[1:2], rev(srFill(map1))[-(1:2)]))
-
 })

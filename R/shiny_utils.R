@@ -1,4 +1,3 @@
-
 # Utility functions for the GUI
 # Convert a list of lists to a matrix
 list2matrix <- function(x) {
@@ -14,7 +13,6 @@ data2json <- function(x) {
 
 # Convert point selections into TRUE, FALSE or base 1 indices
 convertSelectedPoints <- function(selections, map) {
-
   antigens <- unique(unlist(selections$antigens) + 1)
   sera <- unique(unlist(selections$sera) + 1)
 
@@ -27,12 +25,10 @@ convertSelectedPoints <- function(selections, map) {
     antigens = antigens,
     sera = sera
   )
-
 }
 
 # Require that a map is relaxed, otherwise stop execution of reactive function
 reqRelaxed <- function(map, optimization_num, session) {
-
   relaxed <- mapRelaxed(map, optimization_num)
   if (!relaxed) {
     shiny::showNotification(
@@ -44,15 +40,13 @@ reqRelaxed <- function(map, optimization_num, session) {
     )
     shiny::req(relaxed)
   }
-
 }
 
 # Require that a map has optimizations, otherwise stop execution of a reactive function
 reqOptimizations <- function(
   map,
   session
-  ) {
-
+) {
   has_optimizations <- numOptimizations(map) > 0
   if (!has_optimizations) {
     shiny::showNotification(
@@ -64,5 +58,4 @@ reqOptimizations <- function(
     )
     shiny::req(has_optimizations)
   }
-
 }

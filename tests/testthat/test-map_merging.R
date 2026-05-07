@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 set.seed(100)
@@ -8,8 +7,8 @@ context("Merging maps")
 # Setup titer subsets
 logtoraw <- function(x) {
   x[!is.na(x)] <- 2^x[!is.na(x)] * 10
-  x[is.na(x)]  <- "*"
-  x[x == "5"]  <- "<10"
+  x[is.na(x)] <- "*"
+  x[x == "5"] <- "<10"
   x
 }
 
@@ -59,25 +58,32 @@ titerTable(map2) <- titers2
 
 
 test_that("Merging maps with few optimizations", {
-
   set.seed(850909)
-  many_dat <- replicate(3, acmap(
-    ag_names = paste0("A",1:10),
-    sr_names = paste0("S", 1:10),
-    titer_table = matrix(10*2^round(10*runif(100)), ncol=10)
-  ), simplify=F)
+  many_dat <- replicate(
+    3,
+    acmap(
+      ag_names = paste0("A", 1:10),
+      sr_names = paste0("S", 1:10),
+      titer_table = matrix(10 * 2^round(10 * runif(100)), ncol = 10)
+    ),
+    simplify = F
+  )
 
-  mmap <- mergeMaps(many_dat, method="reoptimized-merge", number_of_dimensions = 2, number_of_optimizations = 10, merge_options = list(method = "likelihood"))
+  mmap <- mergeMaps(
+    many_dat,
+    method = "reoptimized-merge",
+    number_of_dimensions = 2,
+    number_of_optimizations = 10,
+    merge_options = list(method = "likelihood")
+  )
   expect_equal(numOptimizations(mmap), 10)
-
 })
 
 test_that("Reoptimized merge with different numbers of antigens and sera", {
-
   set.seed(100)
-  dat <- matrix(10*2^round(10*runif(200)), ncol=10)
+  dat <- matrix(10 * 2^round(10 * runif(200)), ncol = 10)
   map <- expect_warning(make.acmap(dat, number_of_optimizations = 2))
-  dat2 <- matrix(10*2^round(10*runif(200)), ncol=10)
+  dat2 <- matrix(10 * 2^round(10 * runif(200)), ncol = 10)
   map2 <- expect_warning(make.acmap(dat2, number_of_optimizations = 2))
   merged_map <- mergeMaps(
     list(map, map2),
@@ -90,12 +96,10 @@ test_that("Reoptimized merge with different numbers of antigens and sera", {
     numSera(merged_map),
     10
   )
-
 })
 
 
 test_that("Antigens and sera match properly", {
-
   expect_equal(
     match_mapAntigens(map1, map2),
     match(ag_subset1, ag_subset2)
@@ -110,11 +114,9 @@ test_that("Antigens and sera match properly", {
     match_mapSera(map2, map1),
     match(sr_subset2, sr_subset1)
   )
-
 })
 
 test_that("Table merging", {
-
   merged_map <- mergeMaps(
     list(map1, map2),
     method = "table",
@@ -160,10 +162,9 @@ test_that("Table merging", {
       length(merged_sr_subset)
     )
   }
-
 })
 
-map0 <- acmap(titer_table = matrix(logtoraw(-1:4),   3, 2))
+map0 <- acmap(titer_table = matrix(logtoraw(-1:4), 3, 2))
 map1 <- acmap(titer_table = matrix(logtoraw(-1:4 + 1), 3, 2))
 map2 <- acmap(titer_table = matrix(logtoraw(-1:4 + 2), 3, 2))
 map3 <- acmap(titer_table = matrix(logtoraw(-1:4 + 3), 3, 2))
@@ -181,40 +182,52 @@ test_that("Reading in titers from a map", {
   )
   expect_equal(
     unname(titerTable(map0)),
-    matrix(logtoraw(-1:4),   3, 2)
+    matrix(logtoraw(-1:4), 3, 2)
   )
 })
 
 test_that("Titers from flat maps", {
-
   expect_equal(unname(titerTable(map2)), matrix(logtoraw(-1:4 + 2), 3, 2))
   expect_equal(titerTableLayers(map2), list(matrix(logtoraw(-1:4 + 2), 3, 2)))
-
 })
 
 test_that("Merging titers", {
-
-  map13 <- mergeMaps(list(map1, map3), merge_options = list(method = "likelihood"))
-  expect_equal(unname(titerTable(map13)), matrix(logtoraw(-1:4+2), 3, 2))
-  expect_equal(unname(titerTableLayers(map13)), list(
-    matrix(logtoraw(-1:4 + 1), 3, 2),
-    matrix(logtoraw(-1:4 + 3), 3, 2)
-  ))
-
+  map13 <- mergeMaps(
+    list(map1, map3),
+    merge_options = list(method = "likelihood")
+  )
+  expect_equal(unname(titerTable(map13)), matrix(logtoraw(-1:4 + 2), 3, 2))
+  expect_equal(
+    unname(titerTableLayers(map13)),
+    list(
+      matrix(logtoraw(-1:4 + 1), 3, 2),
+      matrix(logtoraw(-1:4 + 3), 3, 2)
+    )
+  )
 })
 
 test_that("Sequential merging", {
-
-  merge1 <- mergeMaps(mergemap1, mergemap2, method = "table", merge_options = list(method = "likelihood"))
-  merge2 <- mergeMaps(merge1, mergemap3, method = "table", merge_options = list(method = "likelihood"))
+  merge1 <- mergeMaps(
+    mergemap1,
+    mergemap2,
+    method = "table",
+    merge_options = list(method = "likelihood")
+  )
+  merge2 <- mergeMaps(
+    merge1,
+    mergemap3,
+    method = "table",
+    merge_options = list(method = "likelihood")
+  )
   expect_equal(numLayers(merge2), 3)
-
 })
 
 # Generating merge reports
 test_that("Merge reports", {
-
-  merged_map <- mergeMaps(list(mergemap1, mergemap2), merge_options = list(method = "likelihood"))
+  merged_map <- mergeMaps(
+    list(mergemap1, mergemap2),
+    merge_options = list(method = "likelihood")
+  )
 
   merge_report <- mergeReport(merged_map)
   html_merge_report <- htmlMergeReport(merged_map)
@@ -228,12 +241,10 @@ test_that("Merge reports", {
     class(html_merge_report),
     c("Rac_html_merge_report", "shiny.tag")
   )
-
 })
 
 # Merge tables
 test_that("Merge error", {
-
   expect_error(
     mergeMaps(
       mergemap1,
@@ -242,22 +253,27 @@ test_that("Merge error", {
       merge_options = list(method = "likelihood")
     )
   )
-
 })
 
 # Different types of merging
 test_that("Different types of merging", {
-
   expect_equal(
-    mergeMaps(mergemap1, mergemap2, method = "table", merge_options = list(method = "likelihood")),
-    mergeMaps(list(mergemap1, mergemap2), method = "table", merge_options = list(method = "likelihood"))
+    mergeMaps(
+      mergemap1,
+      mergemap2,
+      method = "table",
+      merge_options = list(method = "likelihood")
+    ),
+    mergeMaps(
+      list(mergemap1, mergemap2),
+      method = "table",
+      merge_options = list(method = "likelihood")
+    )
   )
-
 })
 
 # Table merge
 test_that("Merge tables", {
-
   mergemap1_nooptimization <- removeOptimizations(mergemap1)
   mergemap2_nooptimization <- removeOptimizations(mergemap2)
 
@@ -277,20 +293,16 @@ test_that("Merge tables", {
     merge12,
     merge12nooptimizations
   )
-
 })
 
 
 # Frozen and relaxed overlay
 test_that("Frozen and relaxed overlay", {
-
-
   frozen_overlay_merge12 <- mergeMaps(
     list(mergemap1, mergemap2),
     method = "frozen-overlay",
     merge_options = list(method = "likelihood")
   )
-
 
   relaxed_overlay_merge12 <- mergeMaps(
     list(mergemap1, mergemap2),
@@ -308,13 +320,11 @@ test_that("Frozen and relaxed overlay", {
     mapStress(frozen_overlay_merge12),
     mapStress(relaxed_overlay_merge12)
   )
-
 })
 
 
 # Frozen merge
 test_that("Frozen merge", {
-
   frozen_merge12 <- mergeMaps(
     list(mergemap1, mergemap2),
     method = "frozen-merge",
@@ -323,35 +333,41 @@ test_that("Frozen merge", {
 
   expect_true(isTRUE(all.equal(
     agBaseCoords(mergemap1),
-    agBaseCoords(frozen_merge12)[match(agNames(mergemap1), agNames(frozen_merge12)), ]
+    agBaseCoords(frozen_merge12)[
+      match(agNames(mergemap1), agNames(frozen_merge12)),
+    ]
   )))
 
   expect_false(isTRUE(all.equal(
     agBaseCoords(mergemap1),
-    agBaseCoords(frozen_merge12)[-match(agNames(mergemap1), agNames(frozen_merge12)), ]
+    agBaseCoords(frozen_merge12)[
+      -match(agNames(mergemap1), agNames(frozen_merge12)),
+    ]
   )))
 
   expect_true(isTRUE(all.equal(
     srBaseCoords(mergemap1),
-    srBaseCoords(frozen_merge12)[match(srNames(mergemap1), srNames(frozen_merge12)), ]
+    srBaseCoords(frozen_merge12)[
+      match(srNames(mergemap1), srNames(frozen_merge12)),
+    ]
   )))
 
   expect_false(isTRUE(all.equal(
     srBaseCoords(mergemap1),
-    srBaseCoords(frozen_merge12)[-match(srNames(mergemap1), srNames(frozen_merge12)), ]
+    srBaseCoords(frozen_merge12)[
+      -match(srNames(mergemap1), srNames(frozen_merge12)),
+    ]
   )))
 
   expect_equal(
     numOptimizations(frozen_merge12),
     1
   )
-
 })
 
 
 # Incremental merge
 test_that("Incremental merge", {
-
   incremental_merge12 <- mergeMaps(
     list(mergemap1, mergemap2),
     method = "incremental-merge",
@@ -369,12 +385,10 @@ test_that("Incremental merge", {
       merge_options = list(method = "likelihood")
     )
   })
-
 })
 
 # Incremental merge
 test_that("Merging with duplicated serum names", {
-
   mergemap1a <- mergemap1
   mergemap2a <- mergemap2
   srNames(mergemap2a)[1:5] <- paste("SERA", 8:12)
@@ -384,12 +398,10 @@ test_that("Merging with duplicated serum names", {
       merge_options = list(method = "likelihood")
     )
   )
-
 })
 
 # Incremental merge
 test_that("Merging maps with different dilution stepsizes", {
-
   mergemap1a <- mergemap1
   mergemap2a <- mergemap2
 
@@ -397,7 +409,10 @@ test_that("Merging maps with different dilution stepsizes", {
   dilutionStepsize(mergemap2a) <- 0
 
   expect_equal(
-    dilutionStepsize(mergeMaps(list(mergemap1a, mergemap2a), merge_options = list(method = "likelihood"))),
+    dilutionStepsize(mergeMaps(
+      list(mergemap1a, mergemap2a),
+      merge_options = list(method = "likelihood")
+    )),
     0
   )
 
@@ -405,7 +420,10 @@ test_that("Merging maps with different dilution stepsizes", {
   dilutionStepsize(mergemap2a) <- 1
 
   expect_equal(
-    dilutionStepsize(mergeMaps(list(mergemap1a, mergemap2a), merge_options = list(method = "likelihood"))),
+    dilutionStepsize(mergeMaps(
+      list(mergemap1a, mergemap2a),
+      merge_options = list(method = "likelihood")
+    )),
     1
   )
 
@@ -413,19 +431,20 @@ test_that("Merging maps with different dilution stepsizes", {
   dilutionStepsize(mergemap2a) <- 0
 
   expect_warning({
-    merged_map <- mergeMaps(list(mergemap1a, mergemap2a), merge_options = list(method = "likelihood"))
+    merged_map <- mergeMaps(
+      list(mergemap1a, mergemap2a),
+      merge_options = list(method = "likelihood")
+    )
   })
 
   expect_equal(
     dilutionStepsize(merged_map),
     1
   )
-
 })
 
 # Incremental merge
 test_that("Merging serum and antigen groups", {
-
   mergemap1a <- mergemap1
   mergemap2a <- mergemap2
   srNames(mergemap2a)[1:5] <- paste("SERA", 11:15)
@@ -437,13 +456,28 @@ test_that("Merging serum and antigen groups", {
   ag_groups <- paste("GROUP", sample(1:2, length(ag_names), replace = T))
   sr_groups <- paste("GROUP", sample(1:2, length(sr_names), replace = T))
 
-  agGroups(mergemap1a) <- factor(ag_groups[match(agNames(mergemap1a), ag_names)])
-  agGroups(mergemap2a) <- factor(ag_groups[match(agNames(mergemap2a), ag_names)])
+  agGroups(mergemap1a) <- factor(ag_groups[match(
+    agNames(mergemap1a),
+    ag_names
+  )])
+  agGroups(mergemap2a) <- factor(ag_groups[match(
+    agNames(mergemap2a),
+    ag_names
+  )])
 
-  srGroups(mergemap1a) <- factor(sr_groups[match(srNames(mergemap1a), sr_names)])
-  srGroups(mergemap2a) <- factor(sr_groups[match(srNames(mergemap2a), sr_names)])
+  srGroups(mergemap1a) <- factor(sr_groups[match(
+    srNames(mergemap1a),
+    sr_names
+  )])
+  srGroups(mergemap2a) <- factor(sr_groups[match(
+    srNames(mergemap2a),
+    sr_names
+  )])
 
-  merged_map <- mergeMaps(list(mergemap1a, mergemap2a), merge_options = list(method = "likelihood"))
+  merged_map <- mergeMaps(
+    list(mergemap1a, mergemap2a),
+    merge_options = list(method = "likelihood")
+  )
 
   expect_equal(
     as.character(agGroups(merged_map)),
@@ -454,20 +488,24 @@ test_that("Merging serum and antigen groups", {
     as.character(srGroups(merged_map)),
     sr_groups[match(srNames(merged_map), sr_names)]
   )
-
 })
 
 # Merging maps with names
 test_that("Merging maps with names", {
-
   mergemap1a <- mergemap1
   mergemap2a <- mergemap2
 
   mapName(mergemap1a) <- "Merge map 1"
   mapName(mergemap2a) <- "Merge map 2"
 
-  merged_map_unnamed <- mergeMaps(list(mergemap1, mergemap2), merge_options = list(method = "likelihood"))
-  merged_map_named <- mergeMaps(list(mergemap1a, mergemap2a), merge_options = list(method = "likelihood"))
+  merged_map_unnamed <- mergeMaps(
+    list(mergemap1, mergemap2),
+    merge_options = list(method = "likelihood")
+  )
+  merged_map_named <- mergeMaps(
+    list(mergemap1a, mergemap2a),
+    merge_options = list(method = "likelihood")
+  )
 
   # Check null defaults
   expect_null(layerNames(mergemap1))
@@ -552,13 +590,11 @@ test_that("Merging maps with names", {
     layerNames(merged_map_listnamed),
     c("map1merge", "map2merge")
   )
-
 })
 
 
 # Homologous antigens after merging
 test_that("Sera homologous antigens after merging", {
-
   srNames(mergemap2)[3] <- "SERA 29"
   srNames(mergemap2)[5] <- "SERA 13"
 
@@ -574,10 +610,14 @@ test_that("Sera homologous antigens after merging", {
   mergemap2_matches[is.na(unlist(mergemap2_matches))] <- list(integer())
   srHomologousAgs(mergemap2) <- mergemap2_matches
 
-  merged_map <- mergeMaps(mergemap1, mergemap2, method = "table", merge_options = list(method = "likelihood"))
+  merged_map <- mergeMaps(
+    mergemap1,
+    mergemap2,
+    method = "table",
+    merge_options = list(method = "likelihood")
+  )
   expect_equal(
     agNames(merged_map)[unlist(srHomologousAgs(merged_map))],
     gsub("SERA", "ANTIGEN", srNames(merged_map))
   )
-
 })

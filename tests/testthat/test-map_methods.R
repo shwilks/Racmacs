@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Test reading and editing of chart details")
@@ -7,7 +6,6 @@ context("Test reading and editing of chart details")
 map <- read.acmap(filename = test_path("../testdata/testmap.ace"))
 
 test_that("Edit map details", {
-
   # Initial default checks
   expect_equal(mapName(map), "")
   expect_equal(mapDescription(map), "")
@@ -29,11 +27,9 @@ test_that("Edit map details", {
   # Checking the loaded map
   expect_equal(mapName(loaded_map), "NEW NAME")
   expect_equal(mapDescription(loaded_map), "A map description")
-
 })
 
 test_that("Edit map strain details", {
-
   # HI table -------
   expect_equal(dim(titerTable(map)), c(10, 5))
   expect_equal(sum(titerTable(map) == "<10"), 3)
@@ -42,14 +38,11 @@ test_that("Edit map strain details", {
   new_table <- matrix("40", numAntigens(map), numSera(map))
   titerTable(map) <- new_table
   expect_equal(unname(titerTable(map)), new_table)
-
-
 })
 
 test_that("Edit map titer table", {
-
   map_edited <- map
-  bad_table  <- matrix("10", 8, 4)
+  bad_table <- matrix("10", 8, 4)
   good_table <- matrix("10", 10, 5)
 
   expect_error({
@@ -61,11 +54,9 @@ test_that("Edit map titer table", {
     unname(titerTable(map_edited)),
     good_table
   )
-
 })
 
 test_that("Antigen reactivity adjustments", {
-
   map_edited <- map
   bad_adjustments <- 1:9
   good_adjustments <- 1:10
@@ -94,6 +85,4 @@ test_that("Antigen reactivity adjustments", {
     agReactivityAdjustments(map_loaded),
     good_adjustments + 1
   )
-
 })
-

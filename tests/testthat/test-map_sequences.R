@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 
@@ -9,7 +8,6 @@ context("Adding sequences")
 map <- read.acmap(test_path("../testdata/testmap.ace"))
 
 test_that("Setting and getting sequences", {
-
   aasequence <- matrix("a", nrow = numAntigens(map), ncol = 10)
   rownames(aasequence) <- agNames(map)
   colnames(aasequence) <- seq_len(ncol(aasequence))
@@ -27,13 +25,11 @@ test_that("Setting and getting sequences", {
   tmp <- tempfile(fileext = ".ace")
   save.acmap(map, tmp)
   map_loaded <- read.acmap(tmp)
-  expect_equal(aasequence,    agSequences(map_loaded))
+  expect_equal(aasequence, agSequences(map_loaded))
   expect_equal(aasequence_sr, srSequences(map_loaded))
-
 })
 
 test_that("Setting and getting nucleotide sequences", {
-
   nucsequence <- matrix("a", nrow = numAntigens(map), ncol = 10)
   agNucleotideSequences(map) <- nucsequence
   expect_equal(nucsequence, agNucleotideSequences(map))
@@ -45,19 +41,17 @@ test_that("Setting and getting nucleotide sequences", {
   tmp <- tempfile(fileext = ".ace")
   save.acmap(map, tmp)
   map_loaded <- read.acmap(tmp)
-  expect_equal(nucsequence,    agNucleotideSequences(map_loaded))
+  expect_equal(nucsequence, agNucleotideSequences(map_loaded))
   expect_equal(nucsequence_sr, srNucleotideSequences(map_loaded))
-
 })
 
 test_that("H3 map with sequences", {
-
   map <- read.acmap(test_path("../testdata/testmap_h3subset.ace"))
 
   agSequences(map) <- read.csv(
-    file        = test_path("../testdata/testmap_h3subset_sequences.csv"),
-    row.names   = 1,
-    colClasses  = "character",
+    file = test_path("../testdata/testmap_h3subset_sequences.csv"),
+    row.names = 1,
+    colClasses = "character",
     check.names = FALSE
   )
 
@@ -67,9 +61,9 @@ test_that("H3 map with sequences", {
   )
 
   srSequences(map) <- read.csv(
-    file        = test_path("../testdata/testmap_h3subset_srsequences.csv"),
-    row.names   = 1,
-    colClasses  = "character",
+    file = test_path("../testdata/testmap_h3subset_srsequences.csv"),
+    row.names = 1,
+    colClasses = "character",
     check.names = FALSE
   )
 
@@ -83,18 +77,22 @@ test_that("H3 map with sequences", {
     view(map),
     "map_with_agsrsequences.html"
   )
-
 })
 
 
 test_that("Setting and getting sequences with insertions", {
-
   map <- acmap(
     titer_table = matrix("*", 3, 2)
   )
 
-  expect_equal(unname(agSequences(map)), unname(matrix(character(1), 3, 0, dimnames = list(NULL, NULL))))
-  expect_equal(unname(srSequences(map)), unname(matrix(character(1), 2, 0, dimnames = list(NULL, NULL))))
+  expect_equal(
+    unname(agSequences(map)),
+    unname(matrix(character(1), 3, 0, dimnames = list(NULL, NULL)))
+  )
+  expect_equal(
+    unname(srSequences(map)),
+    unname(matrix(character(1), 2, 0, dimnames = list(NULL, NULL)))
+  )
 
   test_ag_sequences <- matrix(LETTERS[1:12], 3, 4)
   test_sr_sequences <- matrix(LETTERS[1:10], 2, 5)
@@ -130,6 +128,4 @@ test_that("Setting and getting sequences with insertions", {
 
   expect_equal(unname(agSequences(map)), new_ag_sequences)
   expect_equal(unname(srSequences(map)), new_sr_sequences)
-
 })
-

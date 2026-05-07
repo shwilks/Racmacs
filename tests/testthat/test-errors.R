@@ -1,4 +1,3 @@
-
 library(testthat)
 context("Test errors")
 
@@ -7,10 +6,8 @@ map <- acmap(
 )
 
 test_that("errors when no optimizations are available", {
-
   expect_error(
     colBases(map),
     "Map has no optimization runs"
   )
-
 })

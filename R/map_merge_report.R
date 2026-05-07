@@ -1,4 +1,3 @@
-
 #' Return a merge report
 #'
 #' Prints a raw text merge report from merging two map tables.
@@ -10,7 +9,6 @@
 #' @family map merging functions
 #' @export
 mergeReport <- function(map) {
-
   # Set variables
   merged_table <- titerTable(map)
   table_layers <- titerTableLayers(map)
@@ -21,14 +19,13 @@ mergeReport <- function(map) {
   colnames(merge_report) <- srNames(map)
 
   # Setup for merge classes
-  merge_type      <- merge_report
+  merge_type <- merge_report
   separate_titers <- merge_report
-  merged_titers   <- merge_report
+  merged_titers <- merge_report
 
   # Fill in merge report table
   for (ag in seq_len(numAntigens(map))) {
     for (sr in seq_len(numSera(map))) {
-
       # Fetch titers and merged value
       titers <- vapply(table_layers, function(x) x[ag, sr], character(1))
       merged_value <- merged_table[ag, sr]
@@ -61,7 +58,6 @@ mergeReport <- function(map) {
       } else {
         merge_type[ag, sr] <- "average"
       }
-
     }
   }
 
@@ -70,7 +66,6 @@ mergeReport <- function(map) {
   attr(merge_report, "merged-titers") <- merged_titers
   attr(merge_report, "merge-type") <- merge_type
   merge_report
-
 }
 
 
@@ -88,7 +83,6 @@ mergeReport <- function(map) {
 #' @family map merging functions
 #' @export
 htmlMergeReport <- function(map) {
-
   report <- mergeReport(map)
   htmlreport <- report
 
@@ -98,7 +92,7 @@ htmlMergeReport <- function(map) {
     excluded = "#ed0909",
     lessthan = "#0066ff",
     morethan = "#0066ff",
-    average  = "#000000"
+    average = "#000000"
   )
 
   # Set background colors
@@ -109,7 +103,6 @@ htmlMergeReport <- function(map) {
       ""
     }
   }
-
 
   td_style <- function(x = "", padding = "4px", border_col = "#dfe2e5") {
     sprintf("padding: %s; border: solid 1px %s; %s", padding, border_col, x)
@@ -126,7 +119,6 @@ htmlMergeReport <- function(map) {
   )
 
   for (sr in seq_len(numSera(map))) {
-
     header_names <- c(
       header_names,
       list(
@@ -146,12 +138,14 @@ htmlMergeReport <- function(map) {
         htmltools::tag(
           "td",
           list(
-            style = td_style(sprintf('background-color: %s;', srOutline(map)[sr]))
+            style = td_style(sprintf(
+              'background-color: %s;',
+              srOutline(map)[sr]
+            ))
           )
         )
       )
     )
-
   }
 
   rows <- list(
@@ -161,7 +155,6 @@ htmlMergeReport <- function(map) {
 
   # Add main table
   for (ag in seq_len(numAntigens(map))) {
-
     # Add ag names and colors
     cells <- list(
       htmltools::tag(
@@ -180,7 +173,6 @@ htmlMergeReport <- function(map) {
     )
 
     for (sr in seq_len(numSera(map))) {
-
       cell <- htmltools::tag(
         "td",
         list(
@@ -205,12 +197,10 @@ htmlMergeReport <- function(map) {
         cells,
         list(cell)
       )
-
     }
 
     # Append to rows
     rows <- c(rows, list(htmltools::tag("tr", cells)))
-
   }
 
   # Return the table
@@ -223,7 +213,6 @@ htmlMergeReport <- function(map) {
   )
   class(html_table) <- c("Rac_html_merge_report", class(html_table))
   html_table
-
 }
 
 
@@ -241,13 +230,11 @@ htmlMergeReport <- function(map) {
 #' @seealso htmlAdjustedTiterTable
 #' @export
 htmlTiterTable <- function(map) {
-
   html_titer_table(
     map = map,
     titer_table = titerTable(map),
     logtiter_table = logtiterTable(map)
   )
-
 }
 
 #' Return an html formatted titer table with antigen reactivity adjustments applied
@@ -265,21 +252,18 @@ htmlTiterTable <- function(map) {
 #'
 #' @export
 htmlAdjustedTiterTable <- function(map, optimization_number = 1) {
-
   html_titer_table(
     map = map,
     titer_table = adjustedTiterTable(map, optimization_number),
     logtiter_table = adjustedLogTiterTable(map, optimization_number)
   )
-
 }
 
 html_titer_table <- function(
   map,
   titer_table,
   logtiter_table
-  ) {
-
+) {
   # Work out max in cols
   max_in_col <- apply(logtiter_table, 2, max, na.rm = T)
 
@@ -322,7 +306,6 @@ html_titer_table <- function(
   )
 
   for (sr in seq_len(numSera(map))) {
-
     header_names <- c(
       header_names,
       list(
@@ -342,12 +325,14 @@ html_titer_table <- function(
         htmltools::tag(
           "td",
           list(
-            style = td_style(sprintf('background-color: %s;', srOutline(map)[sr]))
+            style = td_style(sprintf(
+              'background-color: %s;',
+              srOutline(map)[sr]
+            ))
           )
         )
       )
     )
-
   }
 
   rows <- list(
@@ -357,7 +342,6 @@ html_titer_table <- function(
 
   # Add main table
   for (ag in seq_len(numAntigens(map))) {
-
     # Add ag names and colors
     cells <- list(
       htmltools::tag(
@@ -376,7 +360,6 @@ html_titer_table <- function(
     )
 
     for (sr in seq_len(numSera(map))) {
-
       # Work out if it is a homologous titer
       homologous_titer <- agNames(map)[ag] == srNames(map)[sr]
 
@@ -398,12 +381,10 @@ html_titer_table <- function(
         cells,
         list(cell)
       )
-
     }
 
     # Append to rows
     rows <- c(rows, list(htmltools::tag("tr", cells)))
-
   }
 
   # Return the table
@@ -416,7 +397,6 @@ html_titer_table <- function(
   )
   class(html_table) <- c("Rac_html_merge_report", class(html_table))
   html_table
-
 }
 
 
@@ -433,4 +413,3 @@ html_titer_table <- function(
 print.Rac_html_merge_report <- function(x, ...) {
   htmltools::html_print(x)
 }
-

@@ -1,4 +1,3 @@
-
 #' Apply the current map transformation
 #'
 #' Applies the map transformation associated with a selected optimization run to
@@ -18,7 +17,6 @@ applyMapTransform <- function(
   map,
   optimization_number = 1
 ) {
-
   # Check input
   check.numericmatrix(coords)
   check.acmap(map)
@@ -29,7 +27,6 @@ applyMapTransform <- function(
     map$optimizations[[optimization_number]],
     coords
   )
-
 }
 
 
@@ -51,8 +48,7 @@ translateMap <- function(
   map,
   translation,
   optimization_number = NULL
-  ) {
-
+) {
   # Check input
   if (is.vector(translation)) translation <- matrix(translation, ncol = 1)
 
@@ -69,7 +65,6 @@ translateMap <- function(
   )
 
   map
-
 }
 
 
@@ -91,8 +86,7 @@ reflectMap <- function(
   map,
   axis = "x",
   optimization_number = NULL
-  ) {
-
+) {
   # Set the axis num
   if (is.null(axis)) {
     axis_num <- 3
@@ -115,7 +109,6 @@ reflectMap <- function(
   )
 
   map
-
 }
 
 
@@ -139,8 +132,7 @@ rotateMap <- function(
   degrees,
   axis = NULL,
   optimization_number = NULL
-  ) {
-
+) {
   # Set the axis num
   if (is.null(axis)) {
     axis_num <- 3
@@ -164,5 +156,4 @@ rotateMap <- function(
   )
 
   map
-
 }

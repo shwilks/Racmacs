@@ -1,4 +1,3 @@
-
 #' Read in acmap data from a file
 #'
 #' Reads an antigenic map file and converts it into an acmap data object.
@@ -19,10 +18,9 @@
 read.acmap <- function(
   filename,
   optimization_number = NULL,
-  sort_optimizations  = FALSE,
+  sort_optimizations = FALSE,
   align_optimizations = FALSE
-  ) {
-
+) {
   # Expand the file path and check that the file exists
   if (!file.exists(filename)) {
     stop("File '", filename, "' not found", call. = FALSE)
@@ -55,7 +53,6 @@ read.acmap <- function(
 
   # Return the map
   map
-
 }
 
 # Function to read brotli compressed maps
@@ -92,8 +89,7 @@ save.acmap <- function(
   compress = FALSE,
   pretty = !compress,
   round_titers = FALSE
-  ) {
-
+) {
   # Check file extension
   nfilechar <- nchar(filename)
   if (substr(filename, nfilechar - 3, nfilechar) != ".ace") {
@@ -101,12 +97,14 @@ save.acmap <- function(
   }
 
   # Save to a file
-  if (compress) conn <- xzfile(filename, "w")
-  else          conn <- filename
+  if (compress) conn <- xzfile(filename, "w") else conn <- filename
 
-  writeChar(as.json(map, pretty = pretty, round_titers = round_titers), conn, eos = NULL)
+  writeChar(
+    as.json(map, pretty = pretty, round_titers = round_titers),
+    conn,
+    eos = NULL
+  )
   if (compress) close(conn)
-
 }
 
 
@@ -121,7 +119,6 @@ save.acmap <- function(
 #' @export
 #'
 as.json <- function(map, pretty = FALSE, round_titers = FALSE) {
-
   check.acmap(map)
   acmap_to_json(
     map = map,
@@ -129,7 +126,6 @@ as.json <- function(map, pretty = FALSE, round_titers = FALSE) {
     pretty = pretty,
     round_titers = round_titers
   )
-
 }
 
 
@@ -159,21 +155,20 @@ save.coords <- function(
   optimization_number = 1,
   antigens = TRUE,
   sera = TRUE
-  ) {
-
+) {
   check.acmap(map)
   check.optnum(map, optimization_number)
 
   antigens <- get_ag_indices(antigens, map)
-  sera     <- get_sr_indices(sera, map)
+  sera <- get_sr_indices(sera, map)
 
   nfilechar <- nchar(filename)
   if (substr(filename, nfilechar - 3, nfilechar) != ".csv") {
     stop("File format must be .csv")
   }
 
-  type   <- c(rep("antigen", length(antigens)), rep("sera", length(sera)))
-  name   <- c(agNames(map)[antigens], srNames(map)[sera])
+  type <- c(rep("antigen", length(antigens)), rep("sera", length(sera)))
+  name <- c(agNames(map)[antigens], srNames(map)[sera])
   coords <- rbind(
     agCoords(map, optimization_number)[antigens, ],
     srCoords(map, optimization_number)[sera, ]
@@ -183,7 +178,6 @@ save.coords <- function(
     file = filename,
     row.names = FALSE
   )
-
 }
 
 #' Save titer data to a file
@@ -209,10 +203,9 @@ save.titerTable <- function(
   filename,
   antigens = TRUE,
   sera = TRUE
-  ) {
-
+) {
   antigens <- get_ag_indices(antigens, map)
-  sera     <- get_sr_indices(sera, map)
+  sera <- get_sr_indices(sera, map)
 
   nfilechar <- nchar(filename)
   if (substr(filename, nfilechar - 3, nfilechar) != ".csv") {
@@ -223,5 +216,4 @@ save.titerTable <- function(
     x = titerTable(map)[antigens, sera],
     file = filename
   )
-
 }

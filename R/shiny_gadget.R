@@ -1,4 +1,3 @@
-
 #' Open a shiny gadget to view the map
 #'
 #' This function is equivalent to running `runGUI()` and loading a map file, but this
@@ -12,10 +11,8 @@
 #' @export
 #'
 mapGadget <- function(map) {
-
   check.acmap(map)
   ui <- mapGUI_ui()
   server <- mapGUI_server(map)
   shiny::runGadget(ui, server)
-
 }

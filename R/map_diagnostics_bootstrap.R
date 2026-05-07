@@ -1,4 +1,3 @@
-
 #' Perform a bootstrap on a map
 #'
 #' This function takes the map and original titer table, and performs a version
@@ -70,16 +69,15 @@
 bootstrapMap <- function(
   map,
   method,
-  bootstrap_repeats        = 1000,
-  bootstrap_ags            = TRUE,
-  bootstrap_sr             = TRUE,
-  reoptimize               = TRUE,
+  bootstrap_repeats = 1000,
+  bootstrap_ags = TRUE,
+  bootstrap_sr = TRUE,
+  reoptimize = TRUE,
   optimizations_per_repeat = 100,
-  ag_noise_sd              = 0.7,
-  titer_noise_sd           = 0.7,
-  options                  = list()
+  ag_noise_sd = 0.7,
+  titer_noise_sd = 0.7,
+  options = list()
 ) {
-
   # Check there are already some map optimizations
   if (numOptimizations(map) == 0) {
     stop(
@@ -102,56 +100,52 @@ bootstrapMap <- function(
   pb <- ac_progress_bar(bootstrap_repeats)
 
   # Run the bootstrap
-  map$optimizations[[1]]$bootstrap <- lapply(seq_len(bootstrap_repeats), function(x) {
+  map$optimizations[[1]]$bootstrap <- lapply(
+    seq_len(bootstrap_repeats),
+    function(x) {
+      # Do a bootstrap run
+      bs_result <- ac_bootstrap_map(
+        map = keepSingleOptimization(map),
+        method = method,
+        bootstrap_ags = bootstrap_ags,
+        bootstrap_sr = bootstrap_sr,
+        reoptimize = reoptimize,
+        ag_noise_sd = ag_noise_sd,
+        titer_noise_sd = titer_noise_sd,
+        minimum_column_basis = minColBasis(map),
+        fixed_column_bases = fixedColBases(map),
+        ag_reactivity_adjustments = agReactivityAdjustments(map),
+        num_optimizations = optimizations_per_repeat,
+        num_dimensions = mapDimensions(map),
+        options = options
+      )
 
-    # Do a bootstrap run
-    bs_result <- ac_bootstrap_map(
-      map = keepSingleOptimization(map),
-      method = method,
-      bootstrap_ags = bootstrap_ags,
-      bootstrap_sr = bootstrap_sr,
-      reoptimize = reoptimize,
-      ag_noise_sd = ag_noise_sd,
-      titer_noise_sd = titer_noise_sd,
-      minimum_column_basis = minColBasis(map),
-      fixed_column_bases = fixedColBases(map),
-      ag_reactivity_adjustments = agReactivityAdjustments(map),
-      num_optimizations = optimizations_per_repeat,
-      num_dimensions = mapDimensions(map),
-      options = options
-    )
+      # Align to the main map coordinates
+      bs_result$coords <- ac_align_coords(
+        bs_result$coords,
+        ptBaseCoords(map)
+      )
 
-    # Align to the main map coordinates
-    bs_result$coords <- ac_align_coords(
-      bs_result$coords,
-      ptBaseCoords(map)
-    )
+      # Update progress
+      ac_update_progress(pb, x)
 
-    # Update progress
-    ac_update_progress(pb, x)
-
-    # Return the result
-    bs_result
-
-  })
+      # Return the result
+      bs_result
+    }
+  )
 
   # Return the map
   map
-
 }
 
 # Utility function to get bootstrap data
 bootstrapData <- function(map, optimization_number) {
-
   map$optimizations[[optimization_number]]$bootstrap
-
 }
 
 # Utility function to check if map has bootstrap data
 hasBootstrapData <- function(map, optimization_number) {
-
   length(bootstrapData(map, optimization_number)) > 0
-
 }
 
 
@@ -171,42 +165,36 @@ hasBootstrapData <- function(map, optimization_number) {
 
 # Underlying function to get base bootstrap coordinates
 mapBootstrap_ptBaseCoords <- function(map) {
-
   # Get bootstrap data
   bootstrap <- map$optimizations[[1]]$bootstrap
-  if (is.null(bootstrap)) stop(strwrap(
-    "There are no bootstrap repeats associated with this map,
+  if (is.null(bootstrap))
+    stop(strwrap(
+      "There are no bootstrap repeats associated with this map,
     create some first using 'bootstrapMap()'"
-  ))
+    ))
   lapply(bootstrap, function(x) x$coords)
-
 }
 
 # Underlying function to get ag bootstrap coordinates
 mapBootstrap_agBaseCoords <- function(map) {
-
   num_antigens <- numAntigens(map)
   lapply(mapBootstrap_ptBaseCoords(map), function(x) {
     x[seq_len(num_antigens), , drop = F]
   })
-
 }
 
 # Underlying function to get sr bootstrap coordinates
 mapBootstrap_srBaseCoords <- function(map) {
-
   # Return the data
   num_antigens <- numAntigens(map)
   lapply(mapBootstrap_ptBaseCoords(map), function(x) {
     x[-seq_len(num_antigens), , drop = F]
   })
-
 }
 
 
 # Underlying function to get bootstrap coordinates
 mapBootstrap_ptCoords <- function(map) {
-
   # Get coordinates
   bootstrap <- mapBootstrap_ptBaseCoords(map)
 
@@ -217,33 +205,28 @@ mapBootstrap_ptCoords <- function(map) {
       map = map
     )
   })
-
 }
 
 
 #' @rdname mapBootstrapCoords
 #' @export
 mapBootstrap_agCoords <- function(map) {
-
   # Return the data
   num_antigens <- numAntigens(map)
   lapply(mapBootstrap_ptCoords(map), function(x) {
     x[seq_len(num_antigens), , drop = F]
   })
-
 }
 
 
 #' @rdname mapBootstrapCoords
 #' @export
 mapBootstrap_srCoords <- function(map) {
-
   # Return the data
   num_antigens <- numAntigens(map)
   lapply(mapBootstrap_ptCoords(map), function(x) {
     x[-seq_len(num_antigens), , drop = F]
   })
-
 }
 
 
@@ -268,7 +251,7 @@ ptBootstrapCoords <- function(map, point) {
   points <- do.call(
     rbind,
     lapply(map$optimizations[[1]]$bootstrap, function(bs) {
-      bs$coords[point,]
+      bs$coords[point, ]
     })
   )
   applyMapTransform(points, map)

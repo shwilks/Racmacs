@@ -1,9 +1,7 @@
-
 # Function for title case
 simpleCap <- function(x) {
   s <- strsplit(x, " ")[[1]]
-  paste(toupper(substring(s, 1, 1)), substring(s, 2),
-        sep = "", collapse = " ")
+  paste(toupper(substring(s, 1, 1)), substring(s, 2), sep = "", collapse = " ")
 }
 
 # Function for standardising names locally
@@ -12,14 +10,13 @@ standardizeStrainName <- function(
   default_species = NA,
   default_virus_type = "A",
   default_virus_subtype = "HXNX"
-  ) {
-
+) {
   # Check stringr package installed
   package_required("stringr")
 
   # Save original name
   original_name <- name
-  parse_error   <- paste0("Unclear how to parse name : ", original_name)
+  parse_error <- paste0("Unclear how to parse name : ", original_name)
 
   # Convert to lower
   name <- tolower(name)
@@ -36,22 +33,20 @@ standardizeStrainName <- function(
   # Strip any suffix
   suffix <- stringr::str_extract(name, "[^\\/]+$")
   suffix <- stringr::str_extract(suffix, "[_\\s].*$")
-  name   <- gsub(paste0(suffix, "$"), "", name)
+  name <- gsub(paste0(suffix, "$"), "", name)
   suffix <- gsub("^(_|\\s)", "", suffix)
 
   # Strip any prefix
   prefix <- stringr::str_extract(name, "^[^\\/]+")
   prefix <- stringr::str_extract(prefix, "^.*[_\\s]")
-  name   <- gsub(paste0("^", prefix), "", name)
+  name <- gsub(paste0("^", prefix), "", name)
   prefix <- gsub("(_|\\s)$", "", prefix)
 
   # Strip year and convert to 4 digit format
-  year   <- stringr::str_match(name, "(.*/)(.*?$)")[3]
-  year   <- gsub("^(9.$|8.$|7.$|6.$|5.$|4.$)",
-                 "19\\1", year)
-  year   <- gsub("^(0.$|1.$)",
-                 "20\\1", year)
-  name   <- gsub("(.*)/.*?$", "\\1", name)
+  year <- stringr::str_match(name, "(.*/)(.*?$)")[3]
+  year <- gsub("^(9.$|8.$|7.$|6.$|5.$|4.$)", "19\\1", year)
+  year <- gsub("^(0.$|1.$)", "20\\1", year)
+  name <- gsub("(.*)/.*?$", "\\1", name)
 
   if (grepl("[^0-9]+", year)) {
     stop(parse_error)
@@ -63,12 +58,11 @@ standardizeStrainName <- function(
   identifier <- gsub("([[:digit:]])dash([[:digit:]])", "\\1\\2", identifier)
   identifier <- toupper(identifier)
   identifier <- gsub("^0+", "", identifier) # Strip leading 0s
-  name       <- gsub("(.*[a-z])/.*?$", "\\1", name)
+  name <- gsub("(.*[a-z])/.*?$", "\\1", name)
 
   # Strip place name and standardise
   place <- stringr::str_match(name, "(.*/|^)(.*?$)")[3]
   if (place %in% tolower(acmacs_placeAbvs$abv)) {
-
     if (place %in% ambig_places$abv) {
       assumed_place <- ambig_places$placename[
         match(place, tolower(ambig_places$abv))
@@ -79,8 +73,7 @@ standardizeStrainName <- function(
         assumed_place
       ))
       place <- assumed_place
-    }
-    else {
+    } else {
       place <- acmacs_placeAbvs$placename[
         match(place, tolower(acmacs_placeAbvs$abv))
       ]
@@ -93,7 +86,7 @@ standardizeStrainName <- function(
   if (grepl("[0-9]+", place)) {
     stop(parse_error)
   }
-  name  <- gsub("(.*/|^)(.*?$)", "\\1", name)
+  name <- gsub("(.*/|^)(.*?$)", "\\1", name)
 
   # Deal with place name spaces
   place <- gsub("hongkong", "hong kong", place)
@@ -121,8 +114,7 @@ standardizeStrainName <- function(
     # Convert to upper and remove from name
     virus_subtype <- toupper(virus_subtype)
     name <- gsub(subtype_regex, "", name)
-  }
-  else {
+  } else {
     virus_subtype <- default_virus_subtype
   }
 
@@ -130,30 +122,28 @@ standardizeStrainName <- function(
   name <- gsub("/", "", name)
   if (name == "") {
     species <- default_species
-  }
-  else {
+  } else {
     species <- name
     species <- gsub("^sw$", "swine", species)
     species <- simpleCap(species)
   }
 
   # Deal with extras
-  if (is.na(suffix) & !is.na(prefix))  extras <- prefix
-  if (!is.na(suffix) & is.na(prefix))  extras <- suffix
+  if (is.na(suffix) & !is.na(prefix)) extras <- prefix
+  if (!is.na(suffix) & is.na(prefix)) extras <- suffix
   if (!is.na(suffix) & !is.na(prefix)) {
     extras <- paste(prefix, suffix, sep = "_")
   }
 
   if (is.na(suffix) & is.na(prefix)) {
-    extras     <- NA
+    extras <- NA
     extra_text <- ""
-  }
-  else {
+  } else {
     all_extras <- stringr::str_split(extras, "(_|\\s)")[[1]]
     all_extras <- gsub("r([a-z][0-9]{3}[a-z])", "\\1", all_extras)
 
     # Find any suffixes that look like HA substitutions
-    HA_subs    <- grepl("[a-z][0-9]{3}[a-z]", all_extras)
+    HA_subs <- grepl("[a-z][0-9]{3}[a-z]", all_extras)
     all_extras <- c(all_extras[HA_subs], all_extras[!HA_subs])
 
     extra_text <- toupper(paste0(" ", paste(all_extras, collapse = " ")))
@@ -161,42 +151,49 @@ standardizeStrainName <- function(
 
   # Now return name in standard format
   basic_name <- paste0(
-    virus_type, "(", virus_subtype, ")/",
-    gsub(" ", "_", place), "/",
-    identifier, "/",
+    virus_type,
+    "(",
+    virus_subtype,
+    ")/",
+    gsub(" ", "_", place),
+    "/",
+    identifier,
+    "/",
     year
   )
 
   if (is.na(species)) {
     species_text <- ""
-  }
-  else {
+  } else {
     species_text <- paste0(species, "/")
   }
 
-  full_name  <- paste0(
-    virus_type, "(", virus_subtype, ")/",
+  full_name <- paste0(
+    virus_type,
+    "(",
+    virus_subtype,
+    ")/",
     species_text,
-    gsub(" ", "_", place), "/",
-    identifier, "/",
+    gsub(" ", "_", place),
+    "/",
+    identifier,
+    "/",
     year,
     extra_text
   )
 
   # Set attributes
   output <- c()
-  output$name       <- full_name
+  output$name <- full_name
   output$basic_name <- basic_name
-  output$type       <- virus_type
-  output$subtype    <- virus_subtype
-  output$species    <- species
-  output$id         <- identifier
-  output$place      <- place
-  output$year       <- year
-  output$extras     <- extras
+  output$type <- virus_type
+  output$subtype <- virus_subtype
+  output$species <- species
+  output$id <- identifier
+  output$place <- place
+  output$year <- year
+  output$extras <- extras
   output
-
-
 }
 
 #' Standardize strain names
@@ -221,16 +218,17 @@ standardizeStrainNames <- function(
   default_virus_type = "A",
   default_virus_subtype = "HXNX"
 ) {
-
   # Check tibble package is installed
   package_required("tibble")
 
   # Get name attributes
   name_list <- lapply(names, function(x) {
-    standardizeStrainName(x,
-                           default_species       = default_species,
-                           default_virus_type    = default_virus_type,
-                           default_virus_subtype = default_virus_subtype)
+    standardizeStrainName(
+      x,
+      default_species = default_species,
+      default_virus_type = default_virus_type,
+      default_virus_subtype = default_virus_subtype
+    )
   })
 
   # Return output
@@ -248,5 +246,4 @@ standardizeStrainNames <- function(
 
   # Return output as a tibble
   tibble::as_tibble(output)
-
 }

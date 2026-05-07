@@ -1,4 +1,3 @@
-
 #' Calculate triangulation blobs data for an antigenic map
 #'
 #' This function is to help give an idea of how well coordinated each point is
@@ -40,14 +39,13 @@
 triangulationBlobs <- function(
   map,
   optimization_number = 1,
-  stress_lim          = 1,
-  grid_spacing        = 0.25,
-  antigens            = TRUE,
-  sera                = TRUE,
-  .check_relaxation   = TRUE,
-  .options            = list()
+  stress_lim = 1,
+  grid_spacing = 0.25,
+  antigens = TRUE,
+  sera = TRUE,
+  .check_relaxation = TRUE,
+  .options = list()
 ) {
-
   # Check dimensions
   if (!mapDimensions(map) %in% c(2, 3)) {
     stop("Stress blobs can only be calculated for maps with 2 or 3 dimensions")
@@ -61,10 +59,9 @@ triangulationBlobs <- function(
   # Calculate blob data for antigens
   if (antigens) {
     for (agnum in seq_along(map$antigens)) {
-
       blobgrid <- ac_stress_blob_grid(
         testcoords = agBaseCoords(map, optimization_number)[agnum, ],
-        coords     = srBaseCoords(map, optimization_number),
+        coords = srBaseCoords(map, optimization_number),
         tabledists = numeric_min_tabledists(
           tabledists = tableDistances(map, optimization_number),
           dilution_stepsize = dilutionStepsize(map)
@@ -81,19 +78,17 @@ triangulationBlobs <- function(
       )[[agnum]]$stress_blob <- contour_blob(
         grid_values = blobgrid$grid,
         grid_points = blobgrid$coords,
-        value_lim   = blobgrid$stress_lim
+        value_lim = blobgrid$stress_lim
       )
-
     }
   }
 
   # Calculate blob data for sera
   if (sera) {
     for (srnum in seq_along(map$sera)) {
-
       blobgrid <- ac_stress_blob_grid(
         testcoords = srBaseCoords(map, optimization_number)[srnum, ],
-        coords     = agBaseCoords(map, optimization_number),
+        coords = agBaseCoords(map, optimization_number),
         tabledists = numeric_min_tabledists(
           tabledists = tableDistances(map, optimization_number),
           dilution_stepsize = dilutionStepsize(map)
@@ -110,15 +105,11 @@ triangulationBlobs <- function(
       )[[srnum]]$stress_blob <- contour_blob(
         grid_values = blobgrid$grid,
         grid_points = blobgrid$coords,
-        value_lim   = blobgrid$stress_lim
+        value_lim = blobgrid$stress_lim
       )
-
     }
   }
 
   # Return the map with blob data
   map
-
 }
-
-

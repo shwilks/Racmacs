@@ -1,4 +1,3 @@
-
 # Some utility functions to check inputs are of the right type, for many of the
 # underlying C++ functions, they will stop with an error and the bomb in an
 # Rstudio session if the wrong types are supplied so these checks are especially
@@ -13,7 +12,7 @@ check.acmap <- function(x) {
   }
 }
 
-check.string  <- function(x) {
+check.string <- function(x) {
   if (length(x) > 1 || !is.character(x)) {
     stop("Input must be a single string", call. = FALSE)
   }
@@ -96,7 +95,10 @@ check.dimensions <- function(x, map) {
     stop(
       sprintf(
         "Dimensions of input [%s,%s] does not match dimensions of the map in terms of number of antigens and sera [%s,%s]",
-        nrow(x), ncol(x), numAntigens(map), numSera(map)
+        nrow(x),
+        ncol(x),
+        numAntigens(map),
+        numSera(map)
       ),
       call. = FALSE
     )
@@ -104,15 +106,15 @@ check.dimensions <- function(x, map) {
 }
 
 check.validtiters <- function(titers) {
-
   x <- titers
   unmeasured <- x == "*" | x == "."
-  lessthans  <- substr(x, 1, 1) == "<"
-  morethans  <- substr(x, 1, 1) == ">"
+  lessthans <- substr(x, 1, 1) == "<"
+  morethans <- substr(x, 1, 1) == ">"
   x[unmeasured] <- "10"
   x[lessthans | morethans] <- substr(
     x[lessthans | morethans],
-    2, nchar(x[lessthans | morethans])
+    2,
+    nchar(x[lessthans | morethans])
   )
   x <- suppressWarnings(as.numeric(x))
   invalid_titers <- is.na(x)
@@ -126,7 +128,6 @@ check.validtiters <- function(titers) {
       call. = FALSE
     )
   }
-
 }
 
 # Check the optimization number is valid
@@ -138,7 +139,8 @@ check.optnum <- function(map, optimization_number) {
     stop(
       sprintf(
         "Map only has %s optimization runs, but number %s requested",
-        numOptimizations(map), optimization_number
+        numOptimizations(map),
+        optimization_number
       ),
       call. = FALSE
     )
@@ -152,28 +154,29 @@ format_titers <- function(titers) {
 }
 
 # Helper function to deprecate the 'table' argument
-table_arg_deprecated <- function(titer_table, table, ...){
-
+table_arg_deprecated <- function(titer_table, table, ...) {
   if (!missing(table)) {
     if (is.null(titer_table)) {
-      warning("Argument 'table' is deprecated, please use 'titer_table' instead")
+      warning(
+        "Argument 'table' is deprecated, please use 'titer_table' instead"
+      )
       titer_table <- table
     } else {
       stop("Only one of the arguments 'table' and 'titer_table' should be used")
     }
   }
   titer_table
-
 }
 
 # Helper function for specifying that a "suggested" package is required to run a function
 package_required <- function(pkg) {
-
   if (!requireNamespace(pkg, quietly = TRUE)) {
     stop(
-      sprintf("Please install package '%s' in order to use this function.", pkg),
+      sprintf(
+        "Please install package '%s' in order to use this function.",
+        pkg
+      ),
       call. = FALSE
     )
   }
-
 }

@@ -1,9 +1,8 @@
-
 #' All known two-letter place name abbreviations
 #'
 #' @noRd
 #' @return Returns a matrix of known two-letter place name abbreviations
-#'
+# fmt: skip
 acmacs_placeAbvs <- tibble::tribble(
   ~abv, ~placename,
   "-A", "SAUDI-ARABIA",
@@ -638,6 +637,7 @@ acmacs_placeAbvs <- tibble::tribble(
 )
 
 # Table of ambiguous names
+# fmt: skip
 ambig_places <- tibble::tribble(
   ~abv, ~placename,
   "vn", "vietnam",

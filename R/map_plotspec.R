@@ -1,4 +1,3 @@
-
 #' Apply a plotspec from another acmap
 #'
 #' Copy point style from matching antigens and sera in another acmap
@@ -14,8 +13,7 @@
 applyPlotspec <- function(
   map,
   source_map
-  ) {
-
+) {
   ag_match <- match_mapAntigens(map, source_map)
   sr_match <- match_mapSera(map, source_map)
 
@@ -27,5 +25,4 @@ applyPlotspec <- function(
   }
 
   map
-
 }

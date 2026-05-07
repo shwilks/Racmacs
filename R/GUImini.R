@@ -1,12 +1,11 @@
-
 mapGUI <- function(
   map,
   jsinit = NULL,
   serverfn = NULL,
   height = NULL,
   width = NULL,
-  ...) {
-
+  ...
+) {
   # Check RStudio is running
   if (!rstudioapi::isAvailable()) {
     stop("This code must be run from within RStudio.")
@@ -27,7 +26,6 @@ mapGUI <- function(
 
   # Make server
   server <- function(input, output, session, ...) {
-
     # Render the map in the viewer
     output$racViewer <- renderRacViewer({
       RacViewer(map)
@@ -37,7 +35,6 @@ mapGUI <- function(
     if (!is.null(serverfn)) {
       serverfn(input, output, ...)
     }
-
   }
 
   # Decide where to open the viewer
@@ -57,5 +54,4 @@ mapGUI <- function(
       viewer = viewer
     )
   })
-
 }

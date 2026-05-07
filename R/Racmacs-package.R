@@ -1,4 +1,3 @@
-
 #' @description
 #' \subsection{The acmap data object}{
 #' The fundamental unit of the Racmacs package is the [acmap]

@@ -1,4 +1,3 @@
-
 agBaseBlob <- function(map, agnum, optimization_number, blobname) {
   blob <- agDiagnostics(map, optimization_number)[[agnum]][[blobname]]
   if (is.null(blob)) return(blob)
@@ -20,11 +19,19 @@ srBaseBlob <- function(map, srnum, optimization_number, blobname) {
 }
 
 agBlob <- function(map, agnum, optimization_number, blobname) {
-  transformMapBlob(agBaseBlob(map, agnum, optimization_number, blobname), map, optimization_number)
+  transformMapBlob(
+    agBaseBlob(map, agnum, optimization_number, blobname),
+    map,
+    optimization_number
+  )
 }
 
 srBlob <- function(map, srnum, optimization_number, blobname) {
-  transformMapBlob(srBaseBlob(map, srnum, optimization_number, blobname), map, optimization_number)
+  transformMapBlob(
+    srBaseBlob(map, srnum, optimization_number, blobname),
+    map,
+    optimization_number
+  )
 }
 
 
@@ -65,23 +72,41 @@ srBootstrapBlob <- function(map, serum, optimization_number = 1) {
 #' @rdname ptBootstrapBlob
 #' @export
 agBootstrapBlobs <- function(map, optimization_number = 1) {
-  lapply(seq_len(numAntigens(map)), agBootstrapBlob, map = map, optimization_number = optimization_number)
+  lapply(
+    seq_len(numAntigens(map)),
+    agBootstrapBlob,
+    map = map,
+    optimization_number = optimization_number
+  )
 }
 
 #' @rdname ptBootstrapBlob
 #' @export
 srBootstrapBlobs <- function(map, optimization_number = 1) {
-  lapply(seq_len(numSera(map)), srBootstrapBlob, map = map, optimization_number = optimization_number)
+  lapply(
+    seq_len(numSera(map)),
+    srBootstrapBlob,
+    map = map,
+    optimization_number = optimization_number
+  )
 }
 
 #' @rdname ptBootstrapBlob
 #' @export
 ptBootstrapBlobs <- function(map, optimization_number = 1) {
-  c(agBootstrapBlobs(map, optimization_number), srBootstrapBlobs(map, optimization_number))
+  c(
+    agBootstrapBlobs(map, optimization_number),
+    srBootstrapBlobs(map, optimization_number)
+  )
 }
 
 hasBootstrapBlobs <- function(map, optimization_number = 1) {
-  sum(vapply(ptDiagnostics(map, optimization_number), function(x) length(x$bootstrap_blob) > 0, logical(1))) > 0
+  sum(vapply(
+    ptDiagnostics(map, optimization_number),
+    function(x) length(x$bootstrap_blob) > 0,
+    logical(1)
+  )) >
+    0
 }
 
 ptBaseBootstrapBlobs <- function(map, optimization_number = 1) {
@@ -116,7 +141,8 @@ srBaseBootstrapBlobs <- function(map, optimization_number = 1) {
 #' @export
 agTriangulationBlob <- function(map, antigen, optimization_number = 1) {
   check.acmap(map)
-  if (!hasTriangulationBlobs(map)) stop("Map has no bootstrap blobs calculated yet")
+  if (!hasTriangulationBlobs(map))
+    stop("Map has no bootstrap blobs calculated yet")
   ag <- get_ag_indices(antigen, map)
   agBlob(map, ag, optimization_number, "stress_blob")
 }
@@ -125,7 +151,8 @@ agTriangulationBlob <- function(map, antigen, optimization_number = 1) {
 #' @export
 srTriangulationBlob <- function(map, serum, optimization_number = 1) {
   check.acmap(map)
-  if (!hasTriangulationBlobs(map)) stop("Map has no bootstrap blobs calculated yet")
+  if (!hasTriangulationBlobs(map))
+    stop("Map has no bootstrap blobs calculated yet")
   sr <- get_sr_indices(serum, map)
   srBlob(map, sr, optimization_number, "stress_blob")
 }
@@ -134,23 +161,41 @@ srTriangulationBlob <- function(map, serum, optimization_number = 1) {
 #' @rdname ptTriangulationBlob
 #' @export
 agTriangulationBlobs <- function(map, optimization_number = 1) {
-  lapply(seq_len(numAntigens(map)), agTriangulationBlob, map = map, optimization_number = optimization_number)
+  lapply(
+    seq_len(numAntigens(map)),
+    agTriangulationBlob,
+    map = map,
+    optimization_number = optimization_number
+  )
 }
 
 #' @rdname ptTriangulationBlob
 #' @export
 srTriangulationBlobs <- function(map, optimization_number = 1) {
-  lapply(seq_len(numSera(map)), srTriangulationBlob, map = map, optimization_number = optimization_number)
+  lapply(
+    seq_len(numSera(map)),
+    srTriangulationBlob,
+    map = map,
+    optimization_number = optimization_number
+  )
 }
 
 #' @rdname ptTriangulationBlob
 #' @export
 ptTriangulationBlobs <- function(map, optimization_number = 1) {
-  c(agTriangulationBlobs(map, optimization_number), srTriangulationBlobs(map, optimization_number))
+  c(
+    agTriangulationBlobs(map, optimization_number),
+    srTriangulationBlobs(map, optimization_number)
+  )
 }
 
 hasTriangulationBlobs <- function(map, optimization_number = 1) {
-  sum(vapply(ptDiagnostics(map, optimization_number), function(x) length(x$stress_blob) > 0, logical(1))) > 0
+  sum(vapply(
+    ptDiagnostics(map, optimization_number),
+    function(x) length(x$stress_blob) > 0,
+    logical(1)
+  )) >
+    0
 }
 
 ptBaseTriangulationBlobs <- function(map, optimization_number = 1) {
@@ -164,4 +209,3 @@ agBaseTriangulationBlobs <- function(map, optimization_number = 1) {
 srBaseTriangulationBlobs <- function(map, optimization_number = 1) {
   lapply(srDiagnostics(map, optimization_number), function(x) x$stress_blob)
 }
-

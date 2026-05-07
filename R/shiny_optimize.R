@@ -1,7 +1,5 @@
-
 # Running optimizations
 server_runOptimizations <- function(env) {
-
   shiny::showNotification(
     ui = "Optimizing map...",
     duration = NULL,
@@ -14,11 +12,11 @@ server_runOptimizations <- function(env) {
   # Optimise the map
   env$storage$map <- optimizeMap(
     map = env$storage$map,
-    number_of_dimensions           = as.numeric(env$input$runOptimizations$numdims),
-    number_of_optimizations        = as.numeric(env$input$runOptimizations$numruns),
-    minimum_column_basis           = env$input$runOptimizations$mincolbasis,
+    number_of_dimensions = as.numeric(env$input$runOptimizations$numdims),
+    number_of_optimizations = as.numeric(env$input$runOptimizations$numruns),
+    minimum_column_basis = env$input$runOptimizations$mincolbasis,
     # discard_previous_optimizations = FALSE,
-    sort_optimizations             = TRUE
+    sort_optimizations = TRUE
   )
 
   shiny::showNotification(
@@ -32,5 +30,4 @@ server_runOptimizations <- function(env) {
 
   # Reload the map
   env$session$sendCustomMessage("loadMapData", as.json(env$storage$map))
-
 }

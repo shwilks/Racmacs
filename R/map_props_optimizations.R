@@ -1,36 +1,41 @@
-
 # Function factory for antigen getter functions
 optimization_getter <- function(fn) {
   eval(
-    substitute(env = list(
-      fn = fn
-    ), expr = {
-      function(map, optimization_number = 1) {
-        check.acmap(map)
-        check.optnum(map, optimization_number)
-        optimization <- map$optimizations[[optimization_number]]
-        fn(optimization)
+    substitute(
+      env = list(
+        fn = fn
+      ),
+      expr = {
+        function(map, optimization_number = 1) {
+          check.acmap(map)
+          check.optnum(map, optimization_number)
+          optimization <- map$optimizations[[optimization_number]]
+          fn(optimization)
+        }
       }
-    })
+    )
   )
 }
 
 # Function factory for antigen setter functions
 optimization_setter <- function(fn, checker_fn = NULL) {
   eval(
-    substitute(env = list(
-      fn = fn
-    ), expr = {
-      function(map, optimization_number = 1, value) {
-        check.acmap(map)
-        check.optnum(map, optimization_number)
-        if (is.null(value)) stop("Cannot set null value")
-        if (!is.null(checker_fn)) checker_fn(value)
-        optimization <- map$optimizations[[optimization_number]]
-        map$optimizations[[optimization_number]] <- fn(optimization, value)
-        map
+    substitute(
+      env = list(
+        fn = fn
+      ),
+      expr = {
+        function(map, optimization_number = 1, value) {
+          check.acmap(map)
+          check.optnum(map, optimization_number)
+          if (is.null(value)) stop("Cannot set null value")
+          if (!is.null(checker_fn)) checker_fn(value)
+          optimization <- map$optimizations[[optimization_number]]
+          map$optimizations[[optimization_number]] <- fn(optimization, value)
+          map
+        }
       }
-    })
+    )
   )
 }
 
@@ -88,13 +93,13 @@ ptBaseCoords <- function(map, optimization_number = 1) {
 #'   args = c("map", "optimization_number = 1")
 #' )
 #'
-mapTransformation     <- optimization_getter(ac_opt_get_transformation)
-mapTranslation        <- optimization_getter(ac_opt_get_translation)
+mapTransformation <- optimization_getter(ac_opt_get_transformation)
+mapTranslation <- optimization_getter(ac_opt_get_translation)
 `mapTransformation<-` <- optimization_setter(
   ac_opt_set_transformation,
   check.numericmatrix
 )
-`mapTranslation<-`    <- optimization_setter(
+`mapTranslation<-` <- optimization_setter(
   ac_opt_set_translation,
   check.numericmatrix
 )
@@ -133,10 +138,12 @@ mapTranslation        <- optimization_getter(ac_opt_get_translation)
 #'   args       = c("map", "optimization_number = 1")
 #' )
 #'
-minColBasis             <- optimization_getter(ac_opt_get_mincolbasis)
-fixedColBases           <- optimization_getter(ac_opt_get_fixedcolbases)
-agOptReactivityAdjustments <- optimization_getter(ac_opt_get_agreactivityadjustments)
-`minColBasis<-`   <- optimization_setter(
+minColBasis <- optimization_getter(ac_opt_get_mincolbasis)
+fixedColBases <- optimization_getter(ac_opt_get_fixedcolbases)
+agOptReactivityAdjustments <- optimization_getter(
+  ac_opt_get_agreactivityadjustments
+)
+`minColBasis<-` <- optimization_setter(
   ac_opt_set_mincolbasis,
   check.string
 )
@@ -151,14 +158,12 @@ agOptReactivityAdjustments <- optimization_getter(ac_opt_get_agreactivityadjustm
 
 #' @export
 colBases <- function(map, optimization_number = 1) {
-
   ac_table_colbases(
     titerTable(map),
     minColBasis(map, optimization_number),
     fixedColBases(map, optimization_number),
     agReactivityAdjustments(map)
   )
-
 }
 
 
@@ -175,8 +180,7 @@ colBases <- function(map, optimization_number = 1) {
 mapStress <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   ac_coords_stress(
     titers = titerTable(map),
     min_colbasis = minColBasis(map, optimization_number),
@@ -186,12 +190,11 @@ mapStress <- function(
     sr_coords = srBaseCoords(map, optimization_number),
     dilution_stepsize = dilutionStepsize(map)
   )
-
 }
 
 
 # Functions to get and set the optimization stress value directly, not exported
-optStress     <- optimization_getter(ac_opt_get_stress)
+optStress <- optimization_getter(ac_opt_get_stress)
 `optStress<-` <- optimization_setter(ac_opt_set_stress, check.numeric)
 
 
@@ -216,5 +219,5 @@ mapDimensions <- optimization_getter(ac_opt_get_dimensions)
 #'   args       = c("map", "optimization_number = 1"),
 #'   returns    = "Gets or sets map comments for the optimization run."
 #' )
-mapComment     <- optimization_getter(ac_opt_get_comment)
+mapComment <- optimization_getter(ac_opt_get_comment)
 `mapComment<-` <- optimization_setter(ac_opt_set_comment, check.string)

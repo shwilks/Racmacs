@@ -1,4 +1,3 @@
-
 colBaseMatrix <- function(map, optimization_number = 1) {
   matrix(
     colBases(map, optimization_number),

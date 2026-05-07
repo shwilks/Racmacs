@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 
@@ -28,11 +27,9 @@ map <- read.acmap(test_path("../testdata/testmap_small.ace"))
 #
 # })
 
-
 # Fetch test map
 map <- read.acmap(test_path("../testdata/testmap_h3subset3d.ace"))
 test_that("Setting a rotating grid", {
-
   export.viewer.test(
     view(
       map,
@@ -43,11 +40,9 @@ test_that("Setting a rotating grid", {
     ),
     "map_rotating_grid.html"
   )
-
 })
 
 test_that("Setting grid color", {
-
   map <- read.acmap(test_path("../testdata/testmap_h3subset.ace"))
   export.viewer.test(
     view(
@@ -69,12 +64,10 @@ test_that("Setting grid color", {
     ),
     "map_blue_grid3d.html"
   )
-
 })
 
 
 test_that("Toggle names", {
-
   map <- read.acmap(test_path("../testdata/testmap_h3subset.ace"))
   export.viewer.test(
     view(
@@ -85,12 +78,10 @@ test_that("Toggle names", {
     ),
     "map_names_on.html"
   )
-
 })
 
 
 test_that("Group legend", {
-
   map <- read.acmap(test_path("../testdata/testmap_h3subset.ace"))
   agGroups(map) <- factor(agFill(map))
   srGroups(map) <- factor(srOutline(map))
@@ -101,6 +92,4 @@ test_that("Group legend", {
     ),
     "map_group_legend.html"
   )
-
 })
-

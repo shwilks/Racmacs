@@ -1,4 +1,3 @@
-
 #' Return calculated table distances for an acmap
 #'
 #' Takes the acmap object and, assuming the column bases associated with the
@@ -19,8 +18,7 @@
 tableDistances <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   if (numOptimizations(map) == 0) {
     stop("This map has no optimizations for which to calculate table distances")
   }
@@ -30,25 +28,29 @@ tableDistances <- function(
     fixed_col_bases = fixedColBases(map, optimization_number),
     ag_reactivity_adjustments = agReactivityAdjustments(map)
   )
-  numeric_dists[titertypesTable(map) == -1]  <- "."
-  numeric_dists[titertypesTable(map) == 0]  <- "*"
-  numeric_dists[titertypesTable(map) == 2]  <- paste0(">", numeric_dists[titertypesTable(map) == 2])
-  numeric_dists[titertypesTable(map) == 3]  <- "NA"
+  numeric_dists[titertypesTable(map) == -1] <- "."
+  numeric_dists[titertypesTable(map) == 0] <- "*"
+  numeric_dists[titertypesTable(map) == 2] <- paste0(
+    ">",
+    numeric_dists[titertypesTable(map) == 2]
+  )
+  numeric_dists[titertypesTable(map) == 3] <- "NA"
   numeric_dists
-
 }
 
 # Backend function to get numeric form of table distances
 numeric_min_tabledists <- function(tabledists, dilution_stepsize) {
-
   thresholded <- substr(tabledists, 1, 1) == ">"
-  tabledists[thresholded] <- substr(tabledists[thresholded], 2, nchar(tabledists[thresholded]))
+  tabledists[thresholded] <- substr(
+    tabledists[thresholded],
+    2,
+    nchar(tabledists[thresholded])
+  )
   tabledists[tabledists == "*"] <- NA
   tabledists[tabledists == "."] <- NA
   mode(tabledists) <- "numeric"
   tabledists[thresholded] <- tabledists[thresholded] + dilution_stepsize
   tabledists
-
 }
 
 
@@ -74,8 +76,7 @@ tableColbases <- function(
   minimum_column_basis = "none",
   fixed_column_bases = rep(NA, ncol(titer_table)),
   ag_reactivity_adjustments = rep(0, nrow(titer_table))
-  ) {
-
+) {
   check.charactermatrix(titer_table)
   check.string(minimum_column_basis)
   fixed_column_bases <- check.numericvector(fixed_column_bases)
@@ -87,7 +88,6 @@ tableColbases <- function(
     fixed_col_bases = fixed_column_bases,
     ag_reactivity_adjustments = ag_reactivity_adjustments
   )
-
 }
 
 
@@ -109,8 +109,7 @@ tableColbases <- function(
 mapDistances <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   if (numOptimizations(map) == 0) {
     stop("This map has no optimizations for which to calculate map distances")
   }
@@ -119,7 +118,6 @@ mapDistances <- function(
     agCoords(map, optimization_number),
     srCoords(map, optimization_number)
   )
-
 }
 
 
@@ -138,7 +136,6 @@ mapDistances <- function(
 #' @family functions relating to map stress calculation
 #'
 logtiterTable <- function(map) {
-
   logtiters <- matrix(
     log_titers(titerTable(map), dilutionStepsize(map)),
     numAntigens(map),
@@ -147,7 +144,6 @@ logtiterTable <- function(map) {
   rownames(logtiters) <- agNames(map)
   colnames(logtiters) <- srNames(map)
   logtiters
-
 }
 
 
@@ -168,8 +164,7 @@ logtiterTable <- function(map) {
 stressTable <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   if (numOptimizations(map) == 0) {
     stop(strwrap(
       "This map has no optimizations for which
@@ -185,7 +180,6 @@ stressTable <- function(
     map_dists = mapDistances(map, optimization_number),
     dilution_stepsize = dilutionStepsize(map)
   )
-
 }
 
 
@@ -207,10 +201,9 @@ stressTable <- function(
 #'
 mapResiduals <- function(
   map,
-  exclude_nd          = FALSE,
+  exclude_nd = FALSE,
   optimization_number = 1
 ) {
-
   if (numOptimizations(map) == 0) {
     stop(strwrap(
       "This map has no optimizations for which
@@ -226,7 +219,6 @@ mapResiduals <- function(
   }
 
   residual_matrix
-
 }
 
 
@@ -247,8 +239,7 @@ mapResiduals <- function(
 recalculateStress <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   check.acmap(map)
   check.optnum(map, optimization_number)
 
@@ -261,7 +252,6 @@ recalculateStress <- function(
     sr_coords = srBaseCoords(map, optimization_number),
     dilutionStepsize(map)
   )
-
 }
 
 
@@ -288,54 +278,49 @@ recalculateStress <- function(
 #' @export
 agStress <- function(
   map,
-  antigens            = TRUE,
+  antigens = TRUE,
   optimization_number = 1
 ) {
-
   # Convert to indices
   antigens <- get_ag_indices(antigens, map, warnings = TRUE)
 
   # Calculate the stress
   stress_table <- stressTable(map, optimization_number)
   stresses <- rowSums(stress_table[antigens, , drop = F], na.rm = T)
-  stresses[is.na(agCoords(map))[,1]] <- NA
+  stresses[is.na(agCoords(map))[, 1]] <- NA
   stresses
-
 }
 
 #' @rdname pointStress
 #' @export
 srStress <- function(
   map,
-  sera                = TRUE,
+  sera = TRUE,
   optimization_number = 1
 ) {
-
   # Convert to indices
   sera <- get_sr_indices(sera, map, warnings = TRUE)
 
   # Calculate the stress
   stress_table <- stressTable(map, optimization_number)
   stresses <- colSums(stress_table[, sera, drop = F], na.rm = T)
-  stresses[is.na(srCoords(map))[,1]] <- NA
+  stresses[is.na(srCoords(map))[, 1]] <- NA
   stresses
-
 }
 
 #' @rdname pointStress
 #' @export
 srStressPerTiter <- function(
   map,
-  sera                = TRUE,
+  sera = TRUE,
   optimization_number = 1
 ) {
-
   # Convert to indices
   sera <- get_sr_indices(sera, map, warnings = TRUE)
 
   # Get map residuals omitting anything that's not a measurable value
   stress_table <- stressTable(
-    map                 = map,
+    map = map,
     optimization_number = optimization_number
   )
 
@@ -345,17 +330,16 @@ srStressPerTiter <- function(
 
   # Calculate the antigen stress per titer
   stresses <- colMeans(stress_table, na.rm = T)
-  stresses[is.na(srCoords(map))[,1]] <- NA
+  stresses[is.na(srCoords(map))[, 1]] <- NA
 
   stresses_nd_excluded <- colMeans(stress_table_nd_excluded, na.rm = T)
-  stresses_nd_excluded[is.na(srCoords(map))[,1]] <- NA
+  stresses_nd_excluded[is.na(srCoords(map))[, 1]] <- NA
 
   # Return a matrix
   result <- cbind(stresses, stresses_nd_excluded)
   colnames(result) <- c("nd_included", "nd_excluded")
   rownames(result) <- srNames(map)
   result[sera, , drop = F]
-
 }
 
 
@@ -363,16 +347,15 @@ srStressPerTiter <- function(
 #' @export
 agStressPerTiter <- function(
   map,
-  antigens            = TRUE,
+  antigens = TRUE,
   optimization_number = 1
 ) {
-
   # Convert to indices
   antigens <- get_ag_indices(antigens, map, warnings = TRUE)
 
   # Get map residuals omitting anything that's not a measurable value
   stress_table <- stressTable(
-    map                 = map,
+    map = map,
     optimization_number = optimization_number
   )
 
@@ -382,40 +365,35 @@ agStressPerTiter <- function(
 
   # Calculate the antigen stress per titer
   stresses <- rowMeans(stress_table, na.rm = T)
-  stresses[is.na(agCoords(map))[,1]] <- NA
+  stresses[is.na(agCoords(map))[, 1]] <- NA
 
   stresses_nd_excluded <- rowMeans(stress_table_nd_excluded, na.rm = T)
-  stresses_nd_excluded[is.na(agCoords(map))[,1]] <- NA
+  stresses_nd_excluded[is.na(agCoords(map))[, 1]] <- NA
 
   # Return a matrix
   result <- cbind(stresses, stresses_nd_excluded)
   colnames(result) <- c("nd_included", "nd_excluded")
   rownames(result) <- agNames(map)
   result[antigens, , drop = F]
-
 }
 
 
 # Get a matrix of numeric titer types, where < or > is removed
 # 40 => 40, <10 => 10, >1280 => 1280
 numerictiterTable <- function(map) {
-
   matrix(
     numeric_titers(titerTable(map)),
     numAntigens(map),
     numSera(map)
   )
-
 }
 
 # Get a matrix of integer types representing the titer types
 # 0: unmeasured, 1: measurable, 2: lessthan, 3: morethan
 titertypesTable <- function(map) {
-
   matrix(
     titer_types_int(titerTable(map)),
     numAntigens(map),
     numSera(map)
   )
-
 }

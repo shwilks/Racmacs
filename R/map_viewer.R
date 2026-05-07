@@ -1,5 +1,3 @@
-
-
 #' Set viewer options
 #'
 #' This function facilitates setting racviewer options by returning a list of
@@ -43,8 +41,7 @@ RacViewer.options <- function(
   translation = c(0, 0, 0),
   rotation = c(0, 0, 0),
   zoom = NULL
-  ) {
-
+) {
   # Check input
   check.string(viewer.controls)
   check.string(grid.display)
@@ -68,7 +65,6 @@ RacViewer.options <- function(
     rotation = rotation,
     zoom = zoom
   )
-
 }
 
 
@@ -90,10 +86,7 @@ RacViewer.options <- function(
 #'
 #' @export
 #'
-export_viewer <- function(map,
-                          file,
-                          selfcontained = TRUE,
-                          ...) {
+export_viewer <- function(map, file, selfcontained = TRUE, ...) {
   # Check file has .html extension
   if (!grepl("\\.html$", file)) {
     stop("File extension must be '.html'")

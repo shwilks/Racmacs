@@ -1,15 +1,15 @@
-
 library(testthat)
 library(Racmacs)
 context("Test underconstrained positions")
 
 # Read titer_table with missing data
 
-titertable <- read.titerTable(test_path("../testdata/titer_tables/titer_table5_underconstrained.csv"))
+titertable <- read.titerTable(test_path(
+  "../testdata/titer_tables/titer_table5_underconstrained.csv"
+))
 map <- acmap(titer_table = titertable)
 
 test_that("Warn of undercontrained positions", {
-
   # Check for warning
   map <- expect_warning(
     optimizeMap(
@@ -28,12 +28,10 @@ test_that("Warn of undercontrained positions", {
   expect_false(anyNA(agBaseCoords(map)))
   expect_false(anyNA(agBaseCoords(map, 2)))
   expect_false(anyNA(agBaseCoords(map, 3)))
-
 })
 
 
 test_that("Error for underconstrained points with infinite positions", {
-
   titerTable(map)[4, 2] <- "*"
   map <- expect_warning(
     optimizeMap(
@@ -48,8 +46,7 @@ test_that("Error for underconstrained points with infinite positions", {
     )
   )
 
-  expect_equal(agCoords(map)[4,], c(NaN, NaN))
-  expect_equal(agCoords(map, 2)[4,], c(NaN, NaN))
-  expect_equal(agCoords(map, 3)[4,], c(NaN, NaN))
-
+  expect_equal(agCoords(map)[4, ], c(NaN, NaN))
+  expect_equal(agCoords(map, 2)[4, ], c(NaN, NaN))
+  expect_equal(agCoords(map, 3)[4, ], c(NaN, NaN))
 })

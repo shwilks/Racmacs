@@ -1,4 +1,3 @@
-
 # library(testthat)
 # context("Adding 3js features to the viewer")
 #

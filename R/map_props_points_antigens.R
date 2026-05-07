@@ -1,45 +1,52 @@
-
 # Function factory for antigen getter functions
 antigens_getter <- function(fn) {
   eval(
-    substitute(env = list(
-      fn = fn
-    ), expr = {
-      function(map) {
-        check.acmap(map)
-        sapply(map$antigens, fn)
+    substitute(
+      env = list(
+        fn = fn
+      ),
+      expr = {
+        function(map) {
+          check.acmap(map)
+          sapply(map$antigens, fn)
+        }
       }
-    })
+    )
   )
 }
 
 # Function factory for antigen setter functions
 antigens_setter <- function(fn, type) {
   eval(
-    substitute(env = list(
-      fn = fn,
-      type = type
-    ), expr = {
-      function(map, value) {
-        if (is.null(value)) stop("Cannot set null value")
-        check.acmap(map)
-        value <- switch(
-          type,
-          character = check.charactervector(value),
-          numeric = check.numericvector(value)
-        )
-        if (length(value) != numAntigens(map)) {
-          stop("Length of the value must equal the number of antigens in the map")
-        }
-        map$antigens <- lapply(
-          seq_along(map$antigens),
-          function(x) {
-            fn(map$antigens[[x]], unlist(value[x]))
+    substitute(
+      env = list(
+        fn = fn,
+        type = type
+      ),
+      expr = {
+        function(map, value) {
+          if (is.null(value)) stop("Cannot set null value")
+          check.acmap(map)
+          value <- switch(
+            type,
+            character = check.charactervector(value),
+            numeric = check.numericvector(value)
+          )
+          if (length(value) != numAntigens(map)) {
+            stop(
+              "Length of the value must equal the number of antigens in the map"
+            )
           }
-        )
-        map
+          map$antigens <- lapply(
+            seq_along(map$antigens),
+            function(x) {
+              fn(map$antigens[[x]], unlist(value[x]))
+            }
+          )
+          map
+        }
       }
-    })
+    )
   )
 }
 
@@ -68,30 +75,30 @@ antigens_setter <- function(fn, type) {
 #'   args    = c("map")
 #' )
 #'
-agIDs               <- antigens_getter(ac_ag_get_id)
-agDates             <- antigens_getter(ac_ag_get_date)
-agReference         <- antigens_getter(ac_ag_get_reference)
-agNames             <- antigens_getter(ac_ag_get_name)
-agExtra             <- antigens_getter(ac_ag_get_extra)
-agPassage           <- antigens_getter(ac_ag_get_passage)
-agLineage           <- antigens_getter(ac_ag_get_lineage)
-agReassortant       <- antigens_getter(ac_ag_get_reassortant)
-agStrings           <- antigens_getter(ac_ag_get_strings)
-agContinent         <- antigens_getter(ac_ag_get_continent)
-agGroupValues       <- antigens_getter(ac_ag_get_group) # Not exported
-agMatchIDs          <- antigens_getter(ac_ag_get_match_id) # Not exported
+agIDs <- antigens_getter(ac_ag_get_id)
+agDates <- antigens_getter(ac_ag_get_date)
+agReference <- antigens_getter(ac_ag_get_reference)
+agNames <- antigens_getter(ac_ag_get_name)
+agExtra <- antigens_getter(ac_ag_get_extra)
+agPassage <- antigens_getter(ac_ag_get_passage)
+agLineage <- antigens_getter(ac_ag_get_lineage)
+agReassortant <- antigens_getter(ac_ag_get_reassortant)
+agStrings <- antigens_getter(ac_ag_get_strings)
+agContinent <- antigens_getter(ac_ag_get_continent)
+agGroupValues <- antigens_getter(ac_ag_get_group) # Not exported
+agMatchIDs <- antigens_getter(ac_ag_get_match_id) # Not exported
 
-`agIDs<-`               <- antigens_setter(ac_ag_set_id, "character")
-`agDates<-`             <- antigens_setter(ac_ag_set_date, "character")
-`agReference<-`         <- antigens_setter(ac_ag_set_reference, "character")
-`agNames<-`             <- antigens_setter(ac_ag_set_name, "character")
-`agExtra<-`             <- antigens_setter(ac_ag_set_extra, "character")
-`agPassage<-`           <- antigens_setter(ac_ag_set_passage, "character")
-`agLineage<-`           <- antigens_setter(ac_ag_set_lineage, "character")
-`agReassortant<-`       <- antigens_setter(ac_ag_set_reassortant, "character")
-`agStrings<-`           <- antigens_setter(ac_ag_set_strings, "character")
-`agContinent<-`         <- antigens_setter(ac_ag_set_continent, "character")
-`agGroupValues<-`       <- antigens_setter(ac_ag_set_group, "numeric") # Not exported
+`agIDs<-` <- antigens_setter(ac_ag_set_id, "character")
+`agDates<-` <- antigens_setter(ac_ag_set_date, "character")
+`agReference<-` <- antigens_setter(ac_ag_set_reference, "character")
+`agNames<-` <- antigens_setter(ac_ag_set_name, "character")
+`agExtra<-` <- antigens_setter(ac_ag_set_extra, "character")
+`agPassage<-` <- antigens_setter(ac_ag_set_passage, "character")
+`agLineage<-` <- antigens_setter(ac_ag_set_lineage, "character")
+`agReassortant<-` <- antigens_setter(ac_ag_set_reassortant, "character")
+`agStrings<-` <- antigens_setter(ac_ag_set_strings, "character")
+`agContinent<-` <- antigens_setter(ac_ag_set_continent, "character")
+`agGroupValues<-` <- antigens_setter(ac_ag_set_group, "numeric") # Not exported
 
 
 #' Getting and setting antigen groups
@@ -110,7 +117,6 @@ agMatchIDs          <- antigens_getter(ac_ag_get_match_id) # Not exported
 #' @rdname agGroups
 #' @export
 agGroups <- function(map) {
-
   check.acmap(map)
   aglevels <- map$ag_group_levels
   if (length(aglevels) == 0) return(NULL)
@@ -118,13 +124,11 @@ agGroups <- function(map) {
     x = aglevels[agGroupValues(map) + 1],
     levels = aglevels
   )
-
 }
 
 #' @rdname agGroups
 #' @export
 `agGroups<-` <- function(map, value) {
-
   check.acmap(map)
   if (is.null(value)) {
     agGroupValues(map) <- rep(0, numAntigens(map))
@@ -135,7 +139,6 @@ agGroups <- function(map) {
     map$ag_group_levels <- levels(value)
   }
   map
-
 }
 
 
@@ -156,13 +159,11 @@ agGroups <- function(map) {
 #' @rdname agSequences
 #' @export
 agSequences <- function(map, missing_value = ".") {
-
   check.acmap(map)
   seqs <- get_pts_sequence_matrix(map$antigens, missing_value)
   rownames(seqs) <- agNames(map)
   colnames(seqs) <- seq_len(ncol(seqs))
   seqs
-
 }
 
 #' @rdname agSequences
@@ -200,10 +201,6 @@ agNucleotideSequences <- function(map, missing_value = ".") {
   }
   map
 }
-
-
-
-
 
 
 #' Getting and setting point clade information

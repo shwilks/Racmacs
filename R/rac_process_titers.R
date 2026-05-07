@@ -1,5 +1,3 @@
-
-
 #' Read in a table of titer data
 #'
 #' Reads in a table of titer data, converting it to a matrix of titers with
@@ -14,20 +12,16 @@
 #' @export
 #'
 read.titerTable <- function(filepath) {
-
   if (grepl("\\.csv$", filepath)) {
-
     # Read from csv
     titer_table <- utils::read.csv(
-      file             = filepath,
-      row.names        = 1,
-      check.names      = FALSE,
+      file = filepath,
+      row.names = 1,
+      check.names = FALSE,
       stringsAsFactors = FALSE,
-      colClasses       = "character"
+      colClasses = "character"
     )
-
   } else if (grepl("\\.xls$", filepath) | grepl("\\.xlsx$", filepath)) {
-
     # Check gdata package installed
     package_required("readxl")
 
@@ -39,11 +33,9 @@ read.titerTable <- function(filepath) {
     )
 
     # Convert to a character matrix
-    titer_table <- as.matrix(titer_table_tibble[,-1])
+    titer_table <- as.matrix(titer_table_tibble[, -1])
     rownames(titer_table) <- titer_table_tibble[[1]]
-
   } else if (grepl("\\.txt$", filepath)) {
-
     # Read from tab delimted txt
     fileLines <- readLines(filepath, warn = FALSE)
 
@@ -62,7 +54,7 @@ read.titerTable <- function(filepath) {
     rows <- rows[sapply(rows, length) > 0]
 
     # Identify any header rows
-    rowlengths  <- sapply(rows, length)
+    rowlengths <- sapply(rows, length)
     header_rows <- which(rowlengths < max(rowlengths))
 
     # Bind the data into a table
@@ -74,12 +66,9 @@ read.titerTable <- function(filepath) {
 
     # Apply column names
     colnames(titer_table) <- rows[[header_rows[1]]]
-
   } else {
-
     # Unsupported filetype
     stop("File type '", tools::file_ext(filepath), "' not supported.")
-
   }
 
   # Convert to matrix
@@ -102,5 +91,4 @@ read.titerTable <- function(filepath) {
 
   # Return HI table
   titer_table
-
 }

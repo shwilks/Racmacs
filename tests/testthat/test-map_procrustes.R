@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Test procrustes methods")
@@ -25,22 +24,22 @@ trans_mat <- matrix(c(2.4, 3.8), nrow = 1)
 
 # Create new maps
 num_ags <- c(10, 14)
-num_sr  <- c(8,  6)
+num_sr <- c(8, 6)
 
 ag_names1 <- paste("Map1 antigen", seq_len(num_ags[1]))
-sr_names1 <- paste("Map1 sera",    seq_len(num_sr[1]))
+sr_names1 <- paste("Map1 sera", seq_len(num_sr[1]))
 
 ag_names2 <- paste("Map2 antigen", seq_len(num_ags[2]))
-sr_names2 <- paste("Map2 sera",    seq_len(num_sr[2]))
+sr_names2 <- paste("Map2 sera", seq_len(num_sr[2]))
 
 
 # Define matching antigens
 matching_ags <- rbind(
   c(10, 2),
-  c(1,  14),
-  c(3,  4),
-  c(6,  7),
-  c(4,  11)
+  c(1, 14),
+  c(3, 4),
+  c(6, 7),
+  c(4, 11)
 )
 
 matching_sr <- rbind(
@@ -76,27 +75,31 @@ rownames(sr_coords2) <- sr_names2
 # Create the test maps
 map1 <- acmap(
   titer_table = matrix(
-    as.character(2^round(runif(nrow(ag_coords1)*nrow(sr_coords1), -1, 10))*10),
+    as.character(
+      2^round(runif(nrow(ag_coords1) * nrow(sr_coords1), -1, 10)) * 10
+    ),
     nrow(ag_coords1),
     nrow(sr_coords1)
   ),
   ag_coords = ag_coords1,
   sr_coords = sr_coords1,
-  ag_names  = ag_names1,
-  sr_names  = sr_names1,
+  ag_names = ag_names1,
+  sr_names = sr_names1,
   minimum_column_basis = "none"
 )
 
 map2 <- acmap(
   titer_table = matrix(
-    as.character(2^round(runif(nrow(ag_coords2)*nrow(sr_coords2), -1, 10))*10),
+    as.character(
+      2^round(runif(nrow(ag_coords2) * nrow(sr_coords2), -1, 10)) * 10
+    ),
     nrow(ag_coords2),
     nrow(sr_coords2)
   ),
   ag_coords = ag_coords2,
   sr_coords = sr_coords2,
-  ag_names  = ag_names2,
-  sr_names  = sr_names2,
+  ag_names = ag_names2,
+  sr_names = sr_names2,
   minimum_column_basis = "none"
 )
 
@@ -111,50 +114,52 @@ ag_mismatches1rot <- c(1, 6)
 sr_mismatches1rot <- c(2, 3)
 ag_names1rot <- ag_names1[ag_order1rot]
 sr_names1rot <- sr_names1[sr_order1rot]
-ag_names1rot[ag_mismatches1rot] <- paste("Mismatched antigen", ag_mismatches1rot)
-sr_names1rot[sr_mismatches1rot] <- paste("Mismatched sera",    sr_mismatches1rot)
+ag_names1rot[ag_mismatches1rot] <- paste(
+  "Mismatched antigen",
+  ag_mismatches1rot
+)
+sr_names1rot[sr_mismatches1rot] <- paste("Mismatched sera", sr_mismatches1rot)
 
 ## Rotate and translate the coordinates
-ag_coords1rot <- ag_coords1 %*% rot_mat + matrix(trans_mat, num_ags[1], 2, byrow = TRUE)
-sr_coords1rot <- sr_coords1 %*% rot_mat + matrix(trans_mat, num_sr[1],  2, byrow = TRUE)
+ag_coords1rot <- ag_coords1 %*%
+  rot_mat +
+  matrix(trans_mat, num_ags[1], 2, byrow = TRUE)
+sr_coords1rot <- sr_coords1 %*%
+  rot_mat +
+  matrix(trans_mat, num_sr[1], 2, byrow = TRUE)
 ag_coords1rot <- ag_coords1rot[ag_order1rot, ]
 sr_coords1rot <- sr_coords1rot[sr_order1rot, ]
 
 map1rot <- acmap(
   ag_coords = ag_coords1rot,
   sr_coords = sr_coords1rot,
-  ag_names  = ag_names1rot,
-  sr_names  = sr_names1rot,
+  ag_names = ag_names1rot,
+  sr_names = sr_names1rot,
   minimum_column_basis = "none"
 )
 
 
 # Test procrustes of map to itself
 test_that("Realign a map to itself", {
-
   omap1 <- map1
   omap1 <- realignMap(omap1, map1)
   expect_equal(agCoords(omap1), agCoords(map1))
   expect_equal(srCoords(omap1), srCoords(map1))
-
 })
 
 # Realign a map with NA coordinates
 test_that("Realign a map with NA coordinates", {
-
   omap1 <- map1
   omap2 <- map1
-  agCoords(omap1)[1,] <- NA
-  agCoords(omap2)[5,] <- NA
-  srCoords(omap1)[2,] <- NA
-  srCoords(omap2)[4,] <- NA
+  agCoords(omap1)[1, ] <- NA
+  agCoords(omap2)[5, ] <- NA
+  srCoords(omap1)[2, ] <- NA
+  srCoords(omap2)[4, ] <- NA
   omap1 <- realignMap(omap1, omap2)
   expect_equal(numAntigens(omap1), numAntigens(omap2))
-
 })
 
 test_that("Procrustes a map to itself", {
-
   pc1 <- procrustesData(map1, map1)
   expected_ag_dists <- rep(0, num_ags[1])
   expected_sr_dists <- rep(0, num_sr[1])
@@ -166,12 +171,10 @@ test_that("Procrustes a map to itself", {
   expect_equal(pc1$total_rmsd, 0)
   # expect_equal(pc1$pc_coords$ag, unname(ag_coords1))
   # expect_equal(pc1$pc_coords$sr, unname(sr_coords1))
-
 })
 
 
 test_that("Procrustes a map to with duplicate antigen or sera names", {
-
   map1a <- map1
   agNames(map1a)[2] <- agNames(map1a)[1]
   expect_error(procrustesMap(map1, map1a))
@@ -179,12 +182,10 @@ test_that("Procrustes a map to with duplicate antigen or sera names", {
   map1a <- map1
   srNames(map1a)[2] <- srNames(map1a)[1]
   expect_error(procrustesMap(map1, map1a))
-
 })
 
 
 test_that("Procrustes a map to one with no matching viruses", {
-
   map1a <- map1
   agNames(map1a) <- paste(agNames(map1a), "alt")
   srNames(map1a) <- paste(srNames(map1a), "alt")
@@ -192,21 +193,23 @@ test_that("Procrustes a map to one with no matching viruses", {
     procrustesData(map1, map1a),
     "Not enough matching points \\(0\\)"
   )
-
 })
 
 
 test_that("Realign to a transformed version", {
-
   omap1 <- realignMap(map1, map1rot)
-  expect_equal(unname(srCoords(omap1)[sr_order1rot, ]), unname(srCoords(map1rot)))
-  expect_equal(unname(agCoords(omap1)[ag_order1rot, ]), unname(agCoords(map1rot)))
-
+  expect_equal(
+    unname(srCoords(omap1)[sr_order1rot, ]),
+    unname(srCoords(map1rot))
+  )
+  expect_equal(
+    unname(agCoords(omap1)[ag_order1rot, ]),
+    unname(agCoords(map1rot))
+  )
 })
 
 
 test_that("Procrustes to a transformed version", {
-
   pc1 <- procrustesData(map1rot, map1)
 
   expected_ag_dists <- rep(0, num_ags[1])
@@ -225,13 +228,11 @@ test_that("Procrustes to a transformed version", {
   expect_equal(round(pc1$sr_rmsd, 5), 0)
   # expect_equal(unname(pc1$procrustes$pc_coords$ag), unname(expected_pc_coords_ag))
   # expect_equal(unname(pc1$procrustes$pc_coords$sr), unname(expected_pc_coords_sr))
-
 })
 
 
 # Realign a map that's been rotated into 3D
 test_that("Realigning 2D to 3D and back", {
-
   coords2d <- matrix(c(2, 3, 1, 8, 3, 3, 2, 9, 1, 0), 5, 2)
   coords3d <- coords2d %*% rotation_matrix_3D(1.2, "y")[1:2, ]
 
@@ -263,14 +264,11 @@ test_that("Realigning 2D to 3D and back", {
   expect_equal(round(pc3d2d$sr_rmsd, 5), 0)
   expect_equal(round(pc2d3d$total_rmsd, 5), 0)
   expect_equal(round(pc3d2d$total_rmsd, 5), 0)
-
 })
-
 
 
 # Realign a map that's been rotated into 3D
 test_that("Realigning 2D to 3D and back in a rotated map", {
-
   coords2d <- matrix(c(2, 3, 1, 8, 3, 3, 2, 9, 1, 0), 5, 2)
 
   map2d <- acmap(
@@ -286,7 +284,7 @@ test_that("Realigning 2D to 3D and back in a rotated map", {
   )
 
   mapTransformation(map3d) <- rotation_matrix_3D(1, "x")
-  mapTranslation(map3d)    <- matrix(c(1, 2))
+  mapTranslation(map3d) <- matrix(c(1, 2))
 
   pc2d3d <- procrustesData(
     map2d,
@@ -310,12 +308,13 @@ test_that("Realigning 2D to 3D and back in a rotated map", {
 
   expect_equal(pc2d3d$total_rmsd, 0)
   expect_equal(pc3d2d$total_rmsd, 0)
-  warning("Need to decide how to deal with rotating a map in 3D back to a 2D plane")
+  warning(
+    "Need to decide how to deal with rotating a map in 3D back to a 2D plane"
+  )
   # For example, do we want to treat it like a 2D map again (as is now the case)
   expect_equal(mapTransformation(map3d), diag(nrow = 2))
   expect_equal(mapTranslation(map3d), matrix(0, nrow = 2, ncol = 1))
   expect_equal(ncol(agBaseCoords(map3d)), 2)
-
 })
 
 
@@ -323,24 +322,39 @@ test_that("Realigning 2D to 3D and back in a rotated map", {
 mapA <- read.acmap(test_path("../testdata/testmap.ace"))
 
 test_that("Realigning map optimizations 3D to 2D", {
-
   mapB <- realignOptimizations(mapA)
 
   expect_lt(
-    sum((agCoords(mapB, 1) - MCMCpack::procrustes(agCoords(mapB, 2), agCoords(mapB, 1))$X.new)^2),
-    sum((agCoords(mapA, 1) - MCMCpack::procrustes(agCoords(mapA, 2), agCoords(mapA, 1))$X.new)^2)
+    sum(
+      (agCoords(mapB, 1) -
+        MCMCpack::procrustes(agCoords(mapB, 2), agCoords(mapB, 1))$X.new)^2
+    ),
+    sum(
+      (agCoords(mapA, 1) -
+        MCMCpack::procrustes(agCoords(mapA, 2), agCoords(mapA, 1))$X.new)^2
+    )
   )
 
   expect_lt(
-    sum((cbind(agCoords(mapB, 1), 0) - MCMCpack::procrustes(agCoords(mapB, 3), cbind(agCoords(mapB, 1), 0))$X.new)^2),
-    sum((cbind(agCoords(mapA, 1), 0) - MCMCpack::procrustes(agCoords(mapA, 3), cbind(agCoords(mapA, 1), 0))$X.new)^2)
+    sum(
+      (cbind(agCoords(mapB, 1), 0) -
+        MCMCpack::procrustes(
+          agCoords(mapB, 3),
+          cbind(agCoords(mapB, 1), 0)
+        )$X.new)^2
+    ),
+    sum(
+      (cbind(agCoords(mapA, 1), 0) -
+        MCMCpack::procrustes(
+          agCoords(mapA, 3),
+          cbind(agCoords(mapA, 1), 0)
+        )$X.new)^2
+    )
   )
-
 })
 
 
 test_that("Realigning map optimizations 2D to 3D", {
-
   mapB <- realignOptimizations(mapA)
 
   pcA <- procrustesData(
@@ -382,12 +396,10 @@ test_that("Realigning map optimizations 2D to 3D", {
     sum(ac_coord_dists(agCoords(mapB, 1), agCoords(mapB, 2))^2),
     sum(ac_coord_dists(agCoords(mapA, 1), agCoords(mapA, 2))^2)
   )
-
 })
 
 
 test_that("Procrustes maps with na coords", {
-
   map1na <- map1
   agCoords(map1na)[1:2, ] <- NA
   srCoords(map1na)[1, ] <- NA
@@ -411,11 +423,9 @@ test_that("Procrustes maps with na coords", {
     ),
     "na_map_procrustes.html"
   )
-
 })
 
 test_that("Procrustes against only antigens or sera", {
-
   ag_coords <- matrix(11:30, 10, 2)
   sr_coords <- matrix(1:10, 5, 2)
 
@@ -457,16 +467,12 @@ test_that("Procrustes against only antigens or sera", {
       agBaseCoords(map2s)
     )
   )
-
 })
 
 
 test_that("Procrustes data with no matching sera", {
-
   mapA <- map1
   mapB <- map2
   srNames(mapB) <- paste("mismatch", srNames(mapB))
   expect_true("total_rmsd" %in% names(procrustesData(mapA, mapB)))
-
 })
-

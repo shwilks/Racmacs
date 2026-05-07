@@ -1,4 +1,3 @@
-
 #' Get indices of matching antigens in a map
 #'
 #' @param antigens The antigens to get indices
@@ -13,15 +12,13 @@ get_ag_indices <- function(
   antigens = TRUE,
   map,
   warnings = TRUE
-  ) {
-
+) {
   # Default to all points if null passed
   if (isTRUE(antigens)) return(seq_len(numAntigens(map)))
 
   # Default to no points if null passed
-  if (is.null(antigens)
-      || isFALSE(antigens)
-      || length(antigens) == 0) return(c())
+  if (is.null(antigens) || isFALSE(antigens) || length(antigens) == 0)
+    return(c())
 
   # Deal with logical specification
   if (is.logical(antigens)) {
@@ -39,7 +36,7 @@ get_ag_indices <- function(
     return(antigens)
   }
 
-  ag_names   <- agNames(map)
+  ag_names <- agNames(map)
   ag_matches <- match(antigens, ag_names)
   if (warnings && sum(is.na(ag_matches)) != 0) {
     strain_list_warning(
@@ -63,7 +60,6 @@ get_ag_indices <- function(
   }
 
   ag_matches
-
 }
 
 
@@ -81,8 +77,7 @@ get_sr_indices <- function(
   sera = TRUE,
   map,
   warnings = TRUE
-  ) {
-
+) {
   # Default to all sera if null passed
   if (isTRUE(sera)) return(seq_len(numSera(map)))
 
@@ -105,7 +100,7 @@ get_sr_indices <- function(
     return(sera)
   }
 
-  sr_names   <- srNames(map)
+  sr_names <- srNames(map)
   sr_matches <- match(sera, sr_names)
   if (warnings && sum(is.na(sr_matches)) > 0) {
     strain_list_warning(
@@ -129,7 +124,6 @@ get_sr_indices <- function(
   }
 
   sr_matches
-
 }
 
 
@@ -148,16 +142,17 @@ get_sr_indices <- function(
 subsetMap <- function(
   map,
   antigens = TRUE,
-  sera     = TRUE
-  ) {
-
+  sera = TRUE
+) {
   # Match by antigen and sera name if character vectors are specified
   antigens <- stats::na.omit(get_ag_indices(antigens, map))
-  sera     <- stats::na.omit(get_sr_indices(sera, map))
+  sera <- stats::na.omit(get_sr_indices(sera, map))
 
   # Check you are still left with some antigens or sera
-  if (length(antigens) == 0) stop("You cannot remove all antigens from a map", call. = FALSE)
-  if (length(sera) == 0)     stop("You cannot remove all sera from a map", call. = FALSE)
+  if (length(antigens) == 0)
+    stop("You cannot remove all antigens from a map", call. = FALSE)
+  if (length(sera) == 0)
+    stop("You cannot remove all sera from a map", call. = FALSE)
 
   # Subset the map
   map <- ac_subset_map(
@@ -168,15 +163,13 @@ subsetMap <- function(
 
   # Return the subsetted map
   map
-
 }
 
 
 subsetAntigens <- function(
   map,
   antigens = TRUE
-  ) {
-
+) {
   # Match by antigen and sera name if character vectors are specified
   antigens <- stats::na.omit(get_ag_indices(antigens, map))
 
@@ -189,7 +182,6 @@ subsetAntigens <- function(
 
   # Return the subsetted map
   map
-
 }
 
 
@@ -197,7 +189,6 @@ subsetSera <- function(
   map,
   sera = TRUE
 ) {
-
   # Match by antigen and sera name if character vectors are specified
   sera <- stats::na.omit(get_sr_indices(sera, map))
 
@@ -210,7 +201,6 @@ subsetSera <- function(
 
   # Return the subsetted map
   map
-
 }
 
 
@@ -269,8 +259,6 @@ removeSera <- function(map, sera) {
 }
 
 
-
-
 #' Remove antigens and sera
 #'
 #' Functions to subset a list of maps to include only antigens, antigen groups, sera
@@ -285,10 +273,12 @@ removeSera <- function(map, sera) {
 # Function to subset a list of maps to common antigens
 #' @rdname subsetCommonPoints
 subsetCommonAgs <- function(maps) {
-
   map_ags <- lapply(maps, agNames)
   ag_names <- unique(unlist(map_ags))
-  ag_names_in_maps <- do.call(cbind, lapply(map_ags, function(ags) ag_names %in% ags))
+  ag_names_in_maps <- do.call(
+    cbind,
+    lapply(map_ags, function(ags) ag_names %in% ags)
+  )
   common_ags <- ag_names[rowSums(!ag_names_in_maps) == 0]
 
   lapply(
@@ -296,16 +286,17 @@ subsetCommonAgs <- function(maps) {
     subsetMap,
     antigens = common_ags
   )
-
 }
 
 
 #' @rdname subsetCommonPoints
 subsetCommonSrGroups <- function(maps) {
-
   map_sr_groups <- lapply(maps, function(map) levels(srGroups(map)))
   sr_groups <- unique(unlist(map_sr_groups))
-  sr_groups_in_maps <- do.call(cbind, lapply(map_sr_groups, function(srgs) sr_groups %in% srgs))
+  sr_groups_in_maps <- do.call(
+    cbind,
+    lapply(map_sr_groups, function(srgs) sr_groups %in% srgs)
+  )
   common_sr_groups <- sr_groups[rowSums(!sr_groups_in_maps) == 0]
 
   lapply(
@@ -315,11 +306,11 @@ subsetCommonSrGroups <- function(maps) {
         map,
         sera = as.character(srGroups(map)) %in% common_sr_groups
       )
-      srGroups(map) <- factor(as.character(srGroups(map)), levels = common_sr_groups)
+      srGroups(map) <- factor(
+        as.character(srGroups(map)),
+        levels = common_sr_groups
+      )
       map
     }
   )
-
 }
-
-

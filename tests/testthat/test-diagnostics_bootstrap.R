@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Bootstrapping maps")
@@ -11,25 +10,22 @@ num_bs_repeats <- 200
 map <- read.acmap(test_path("../testdata/testmap_h3subset.ace"))
 
 test_that("Test error on bootstrap blobs for map that was not bootstrapped", {
-
   expect_error(
     bootstrapBlobs(map),
     "First run bootstrap repeats on this map object using the bootstrapMap\\(\\) function"
   )
-
 })
 
 test_that("Test map noisy bootstrapping", {
-
   # Noisy bootstrap
   bsmap <- bootstrapMap(
     map = map,
     method = "noisy",
-    bootstrap_repeats        = num_bs_repeats,
+    bootstrap_repeats = num_bs_repeats,
     optimizations_per_repeat = 10,
-    ag_noise_sd              = 0.7,
-    titer_noise_sd           = 0.7,
-    reoptimize               = TRUE
+    ag_noise_sd = 0.7,
+    titer_noise_sd = 0.7,
+    reoptimize = TRUE
   )
 
   bsmap <- rotateMap(bsmap, 30)
@@ -67,16 +63,18 @@ test_that("Test map noisy bootstrapping", {
   )
 
   # Viewing 3d bootstrap blobs
-  bsmap3d <- read.acmap(test_path("../testdata/testmap_h3subset3d_1000bootstraps.ace"))
+  bsmap3d <- read.acmap(test_path(
+    "../testdata/testmap_h3subset3d_1000bootstraps.ace"
+  ))
   bsmap3d_blobs <- bootstrapBlobs(
-    bsmap3d, 0.68
+    bsmap3d,
+    0.68
   )
 
   export.viewer.test(
     view(bsmap3d_blobs),
     "map3d_with_bootstrap_blobs.html"
   )
-
 
   # Calculating bootstrap blobs
   bsmap_blobs_partial <- bootstrapBlobs(
@@ -110,54 +108,45 @@ test_that("Test map noisy bootstrapping", {
     view(bsmap3d_blobs_partial),
     "map3d_with_bootstrap_blobs_partial.html"
   )
-
-
 })
 
 test_that("Bootstrap without reoptimization", {
-
   # Bayesian bootstrap
   bsmap <- bootstrapMap(
     map = map,
     method = "bayesian",
-    reoptimize               = FALSE,
-    bootstrap_repeats        = num_bs_repeats,
+    reoptimize = FALSE,
+    bootstrap_repeats = num_bs_repeats,
     optimizations_per_repeat = 10
   )
-
 
   sample1 <- bsmap$optimizations[[1]]$bootstrap[[1]]$sampling
   expect_equal(length(mapBootstrap_agCoords(bsmap)), num_bs_repeats)
   expect_equal(length(mapBootstrap_srCoords(bsmap)), num_bs_repeats)
   expect_equal(sum(sample1), 2)
-
 })
 
 test_that("Bayesian bootstrap", {
-
   # Bayesian bootstrap
   bsmap <- bootstrapMap(
     map = map,
     method = "bayesian",
-    bootstrap_repeats        = num_bs_repeats,
+    bootstrap_repeats = num_bs_repeats,
     optimizations_per_repeat = 10
   )
-
 
   sample1 <- bsmap$optimizations[[1]]$bootstrap[[1]]$sampling
   expect_equal(length(mapBootstrap_agCoords(bsmap)), num_bs_repeats)
   expect_equal(length(mapBootstrap_srCoords(bsmap)), num_bs_repeats)
   expect_equal(sum(sample1), 2)
-
 })
 
 test_that("Resample bootstrap", {
-
   # Resample bootstrap
   bsmap <- bootstrapMap(
     map = map,
     method = "resample",
-    bootstrap_repeats        = num_bs_repeats,
+    bootstrap_repeats = num_bs_repeats,
     optimizations_per_repeat = 10
   )
 
@@ -174,6 +163,4 @@ test_that("Resample bootstrap", {
   coords1 <- bsmap$optimizations[[1]]$bootstrap[[1]]$coords
   expect_equal(sum(sample1), numPoints(bsmap))
   expect_equal(sum(!is.na(coords1[sample1 == 0, ])), 0)
-
-
 })

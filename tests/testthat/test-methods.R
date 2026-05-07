@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Test map methods")

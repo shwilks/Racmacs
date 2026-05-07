@@ -1,4 +1,3 @@
-
 #' Getting and setting point coordinates
 #'
 #' Getting and setting of antigen and serum coordinates in a map optimization
@@ -75,9 +74,21 @@ ptCoords <- function(map, optimization_number = 1) {
 #' @export
 `ptCoords<-` <- function(map, optimization_number = 1, value) {
   check.numericmatrix(value)
-  if (nrow(value) != numPoints(map)) stop("Replacement coordinates do not match the number of points in the map", call. = FALSE)
-  agCoords(map, optimization_number) <- value[seq_len(numAntigens(map)), , drop = FALSE]
-  srCoords(map, optimization_number) <- value[-seq_len(numAntigens(map)), , drop = FALSE]
+  if (nrow(value) != numPoints(map))
+    stop(
+      "Replacement coordinates do not match the number of points in the map",
+      call. = FALSE
+    )
+  agCoords(map, optimization_number) <- value[
+    seq_len(numAntigens(map)),
+    ,
+    drop = FALSE
+  ]
+  srCoords(map, optimization_number) <- value[
+    -seq_len(numAntigens(map)),
+    ,
+    drop = FALSE
+  ]
   map
 }
 

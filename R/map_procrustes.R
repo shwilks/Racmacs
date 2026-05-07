@@ -1,4 +1,3 @@
-
 #' Realign map to match another
 #'
 #' Realigns the coordinates of a map to match a target map as closely as
@@ -21,9 +20,8 @@ realignMap <- function(
   map,
   target_map,
   translation = TRUE,
-  scaling     = FALSE
-  ) {
-
+  scaling = FALSE
+) {
   # Check input
   check.acmap(map)
   check.acmap(target_map)
@@ -34,7 +32,6 @@ realignMap <- function(
     translation = translation,
     scaling = scaling
   )
-
 }
 
 
@@ -70,13 +67,12 @@ procrustesMap <- function(
   comparison_map,
   optimization_number = 1,
   comparison_optimization_number = 1,
-  antigens    = TRUE,
-  sera        = TRUE,
+  antigens = TRUE,
+  sera = TRUE,
   translation = TRUE,
-  scaling     = FALSE,
+  scaling = FALSE,
   keep_optimizations = FALSE
-  ) {
-
+) {
   # Check input
   check.acmap(map)
   check.acmap(comparison_map)
@@ -92,8 +88,16 @@ procrustesMap <- function(
   }
 
   # Check for duplicate names
-  if (sum(duplicated(agMatchIDs(map))) > 0 || sum(duplicated(agMatchIDs(comparison_map))) > 0) stop("Duplicate antigen names/IDs found.", call. = F)
-  if (sum(duplicated(srMatchIDs(map))) > 0 || sum(duplicated(srMatchIDs(comparison_map))) > 0) stop("Duplicate sera names/IDs found.", call. = F)
+  if (
+    sum(duplicated(agMatchIDs(map))) > 0 ||
+      sum(duplicated(agMatchIDs(comparison_map))) > 0
+  )
+    stop("Duplicate antigen names/IDs found.", call. = F)
+  if (
+    sum(duplicated(srMatchIDs(map))) > 0 ||
+      sum(duplicated(srMatchIDs(comparison_map))) > 0
+  )
+    stop("Duplicate sera names/IDs found.", call. = F)
 
   # Get selected antigen and sera indices
   antigens_included <- rep(FALSE, numAntigens(map))
@@ -102,12 +106,19 @@ procrustesMap <- function(
   sera_included[get_sr_indices(sera, map)] <- TRUE
 
   # Throw error if no points match
-  num_antigens_matching <- sum(agMatchIDs(map)[antigens_included] %in% agMatchIDs(comparison_map))
-  num_sera_matching <- sum(srMatchIDs(map)[sera_included] %in% srMatchIDs(comparison_map))
+  num_antigens_matching <- sum(
+    agMatchIDs(map)[antigens_included] %in% agMatchIDs(comparison_map)
+  )
+  num_sera_matching <- sum(
+    srMatchIDs(map)[sera_included] %in% srMatchIDs(comparison_map)
+  )
   num_points_matching <- num_antigens_matching + num_sera_matching
 
   if (num_points_matching < mapDimensions(map) + 1) {
-    stop(sprintf("Not enough matching points (%s)", num_points_matching), call. = FALSE)
+    stop(
+      sprintf("Not enough matching points (%s)", num_points_matching),
+      call. = FALSE
+    )
   }
 
   # Set unselected point coords to NaN
@@ -127,13 +138,19 @@ procrustesMap <- function(
 
   # Add the data to the map
   map$optimizations[[optimization_number]]$procrustes <- pc_coords
-  map$optimizations[[optimization_number]]$procrustes$ag_coords[!antigens_included, ] <- NaN
-  map$optimizations[[optimization_number]]$procrustes$sr_coords[!sera_included, ] <- NaN
-  map$optimizations[[optimization_number]]$procrustes$dim <- mapDimensions(comparison_map, comparison_optimization_number)
+  map$optimizations[[optimization_number]]$procrustes$ag_coords[
+    !antigens_included,
+  ] <- NaN
+  map$optimizations[[optimization_number]]$procrustes$sr_coords[
+    !sera_included,
+  ] <- NaN
+  map$optimizations[[optimization_number]]$procrustes$dim <- mapDimensions(
+    comparison_map,
+    comparison_optimization_number
+  )
 
   # Return the map
   map
-
 }
 
 
@@ -170,20 +187,19 @@ procrustesData <- function(
   comparison_map,
   optimization_number = 1,
   comparison_optimization_number = 1,
-  antigens    = TRUE,
-  sera        = TRUE,
+  antigens = TRUE,
+  sera = TRUE,
   translation = TRUE,
-  scaling     = FALSE
-  ) {
-
+  scaling = FALSE
+) {
   # Perform the procrustes
   map <- procrustesMap(
     map = map,
     comparison_map = comparison_map,
     optimization_number = optimization_number,
     comparison_optimization_number = comparison_optimization_number,
-    antigens    = antigens,
-    sera        = sera,
+    antigens = antigens,
+    sera = sera,
     translation = translation,
     scaling = scaling
   )
@@ -193,7 +209,6 @@ procrustesData <- function(
     map$optimizations[[1]],
     map$optimizations[[1]]$procrustes
   )
-
 }
 
 # Functions for fetching procrustes information
@@ -221,8 +236,7 @@ hasProcrustes <- function(map, optimization_number = 1) {
 #'
 realignOptimizations <- function(
   map
-  ) {
-
+) {
   check.acmap(map)
 
   # Align optimizations
@@ -230,6 +244,4 @@ realignOptimizations <- function(
 
   # Return the map
   map
-
 }
-

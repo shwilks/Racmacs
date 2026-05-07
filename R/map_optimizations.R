@@ -1,4 +1,3 @@
-
 #' Add a new optimization to an acmap object
 #'
 #' Function to add a new optimization to an acmap object, with specified values.
@@ -33,11 +32,11 @@ addOptimization <- function(
   fixed_column_bases = NULL,
   ag_reactivity_adjustments = NULL
 ) {
-
   # Check input
   check.string(minimum_column_basis)
-  if (is.null(number_of_dimensions)
-      && (is.null(ag_coords) || is.null(sr_coords))) {
+  if (
+    is.null(number_of_dimensions) && (is.null(ag_coords) || is.null(sr_coords))
+  ) {
     stop(strwrap(
       "You must specify either a number of dimensions
       or both antigen and sera coordinates"
@@ -79,7 +78,6 @@ addOptimization <- function(
 
   # Return the map
   map
-
 }
 
 
@@ -98,10 +96,8 @@ addOptimization <- function(
 #' @export
 #'
 listOptimizations <- function(map) {
-
   check.acmap(map)
   map$optimizations
-
 }
 
 
@@ -121,9 +117,7 @@ listOptimizations <- function(map) {
 #' @export
 #'
 getOptimization <- function(map, optimization_number = 1) {
-
   check.acmap(map)
   check.optnum(map, optimization_number)
   map$optimizations[[optimization_number]]
-
 }

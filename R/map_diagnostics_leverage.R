@@ -1,4 +1,3 @@
-
 #' Calculate point leverage
 #'
 #' These functions attempt to estimate leverage of each antigen, sera or titer
@@ -26,12 +25,10 @@ calc_agLeverage <- function(
   ag,
   antigens,
   sera
-  ) {
-
+) {
   mapi <- removeAntigens(map, ag)
   mapi <- relaxMap(mapi)
   procrustesData(map, mapi)$total_rmsd
-
 }
 
 #' @export
@@ -40,8 +37,7 @@ agLeverage <- function(
   map,
   antigens = TRUE,
   sera = TRUE
-  ) {
-
+) {
   # Calculate the leverage
   vapply(
     X = seq_len(numAntigens(map)),
@@ -51,7 +47,6 @@ agLeverage <- function(
     antigens = antigens,
     sera = sera
   )
-
 }
 
 # For calculating sera leverage
@@ -60,12 +55,10 @@ calc_srLeverage <- function(
   sr,
   antigens,
   sera
-  ) {
-
+) {
   mapi <- removeSera(map, sr)
   mapi <- relaxMap(mapi)
   procrustesData(map, mapi)$total_rmsd
-
 }
 
 #' @export
@@ -74,8 +67,7 @@ srLeverage <- function(
   map,
   antigens = TRUE,
   sera = TRUE
-  ) {
-
+) {
   vapply(
     X = seq_len(numSera(map)),
     FUN = calc_srLeverage,
@@ -84,23 +76,21 @@ srLeverage <- function(
     antigens = antigens,
     sera = sera
   )
-
 }
 
 
 # For calculating titer leverage
 calc_titerLeverage <- function(
   map,
-  ag, sr,
+  ag,
+  sr,
   antigens,
   sera
 ) {
-
   mapi <- map
   titerTable(mapi)[ag, sr] <- "*"
   mapi <- relaxMap(mapi)
   procrustesData(map, mapi)$total_rmsd
-
 }
 
 #' @export
@@ -110,7 +100,6 @@ titerLeverage <- function(
   antigens = TRUE,
   sera = TRUE
 ) {
-
   # Calculate the titer leverage
   vapply(
     seq_len(numSera(map)),
@@ -131,5 +120,4 @@ titerLeverage <- function(
     },
     numeric(numAntigens(map))
   )
-
 }

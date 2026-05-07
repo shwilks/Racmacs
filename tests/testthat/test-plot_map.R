@@ -1,12 +1,10 @@
-
 library(testthat)
 context("Plotting a map")
 
 test_that("Plotting a bare bones", {
-
   map <- acmap(
     ag_coords = matrix(1:10, 5),
-    sr_coords = matrix(1:8,  4),
+    sr_coords = matrix(1:8, 4),
     minimum_column_basis = "none"
   )
 
@@ -16,9 +14,9 @@ test_that("Plotting a bare bones", {
   export.plot.test(
     plot(map),
     "simplemap.pdf",
-    8, 8
+    8,
+    8
   )
-
 })
 
 # test_that("Plotting a 1D map", {
@@ -33,14 +31,13 @@ test_that("Plotting a bare bones", {
 # })
 
 test_that("Plotting a map with error lines", {
-
   map <- read.acmap(test_path("../testdata/testmap.ace"))
 
   x <- plot(map, show_error_lines = TRUE)
   export.plot.test(
     plot(map),
     "simplemap.pdf",
-    8, 8
+    8,
+    8
   )
-
 })

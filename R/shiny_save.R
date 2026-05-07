@@ -1,7 +1,5 @@
-
 # Save map
 server_saveMapData <- function(env) {
-
   savepath <- shinyFiles::parseSavePath(
     env$save_volumes,
     env$input$mapDataSaved
@@ -18,7 +16,11 @@ server_saveMapData <- function(env) {
 
   # Clone and subset map
   if (!isTRUE(selections$antigens) || !isTRUE(selections$sera)) {
-    map <- subsetMap(env$storage$map, antigens = selections$antigens, sera = selections$sera)
+    map <- subsetMap(
+      env$storage$map,
+      antigens = selections$antigens,
+      sera = selections$sera
+    )
   } else {
     map <- env$storage$map
   }
@@ -26,14 +28,15 @@ server_saveMapData <- function(env) {
   # Save table
   save.acmap(map, savepath)
   message("done.")
-
 }
 
 
 # Save table
 server_saveTableData <- function(env) {
-
-  savepath <- shinyFiles::parseSavePath(env$save_volumes, env$input$tableDataSaved)$datapath
+  savepath <- shinyFiles::parseSavePath(
+    env$save_volumes,
+    env$input$tableDataSaved
+  )$datapath
   shiny::req(savepath)
 
   message("Saving table...", appendLF = F)
@@ -45,15 +48,18 @@ server_saveTableData <- function(env) {
   )
 
   # Save table
-  save.titerTable(env$storage$map, savepath, antigens = selections$antigens, sera = selections$sera)
+  save.titerTable(
+    env$storage$map,
+    savepath,
+    antigens = selections$antigens,
+    sera = selections$sera
+  )
   message("done.")
-
 }
 
 
 # Save coords
 server_saveCoordsData <- function(env) {
-
   savepath <- shinyFiles::parseSavePath(
     env$save_volumes,
     env$input$coordsDataSaved
@@ -77,5 +83,4 @@ server_saveCoordsData <- function(env) {
     sera = selections$sera
   )
   message("done.")
-
 }

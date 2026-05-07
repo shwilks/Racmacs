@@ -1,4 +1,3 @@
-
 #' Optimize antigen reactivity adjustments
 #'
 #' @description
@@ -39,15 +38,17 @@ optimizeAgReactivity <- function(
   reoptimize = FALSE,
   number_of_optimizations = 100,
   options = list()
-  ) {
-
+) {
   # Check inputs and set defaults
   check.acmap(map)
   check.optnum(map, optimization_number)
   fixed_ag_reactivities <- check.numericvector(fixed_ag_reactivities)
 
   if (length(fixed_ag_reactivities) != numAntigens(map)) {
-    stop("fixed_ag_reactivities does not match the number of antigens", call. = FALSE)
+    stop(
+      "fixed_ag_reactivities does not match the number of antigens",
+      call. = FALSE
+    )
   }
   if (length(start_pars) != numAntigens(map)) {
     stop("start_pars does not match the number of antigens", call. = FALSE)
@@ -81,5 +82,4 @@ optimizeAgReactivity <- function(
 
   # Relax and return the map
   relaxMap(map, optimization_number)
-
 }

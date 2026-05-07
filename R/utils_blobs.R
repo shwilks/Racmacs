@@ -1,4 +1,3 @@
-
 #' Fit a contour blob
 #' @noRd
 contour_blob <- function(
@@ -6,14 +5,12 @@ contour_blob <- function(
   grid_points,
   value_lim
 ) {
-
   # Collapse 3d arrays into 2d if 3rd dimension is length 1
   if (length(dim(grid_values)) == 3 && dim(grid_values)[3] == 1) {
-    grid_values <- grid_values[, , 1]
+    grid_values <- grid_values[,, 1]
   }
 
   if (length(dim(grid_values)) == 2) {
-
     ## 2D
     ndims <- 2
     if (length(grid_points[[1]]) == 0 || length(grid_points[[2]]) == 0) {
@@ -26,27 +23,24 @@ contour_blob <- function(
         levels = value_lim
       )
     }
-
   } else {
-
     ## 3D
     ndims <- 3
     contour_fit <- rmarchingcubes::contour3d(
       griddata = grid_values,
-      level  = value_lim,
-      x      = grid_points[[1]],
-      y      = grid_points[[2]],
-      z      = grid_points[[3]]
+      level = value_lim,
+      x = grid_points[[1]],
+      y = grid_points[[2]],
+      z = grid_points[[3]]
     )
 
     blob <- separate_meshes(
       list(
         vertices = contour_fit$vertices,
-        faces    = contour_fit$triangles - 1,
-        normals  = contour_fit$normals
+        faces = contour_fit$triangles - 1,
+        normals = contour_fit$normals
       )
     )
-
   }
 
   ## Blob attributes
@@ -54,7 +48,6 @@ contour_blob <- function(
 
   # Return the blob
   blob
-
 }
 
 
@@ -85,7 +78,6 @@ coordDensityBlob <- function(
   gridspacing = NULL,
   method = "ks"
 ) {
-
   # Check dimensions
   ndims <- ncol(coords)
   if (ndims != 2 && ndims != 3) {
@@ -94,8 +86,7 @@ coordDensityBlob <- function(
 
   # Set default grid spacing
   if (is.null(gridspacing)) {
-    if (ndims == 2) gridspacing <- 0.05
-    else            gridspacing <- 0.25
+    if (ndims == 2) gridspacing <- 0.05 else gridspacing <- 0.25
   }
 
   # Check confidence level
@@ -105,36 +96,42 @@ coordDensityBlob <- function(
 
   # Use a quicker algorithm for 2 dimensions, 3d must use the slower ks::kde method
   if (ndims == 2 && method == "MASS") {
-
     # Perform a kernel density fit
     kd_fit <- MASS::kde2d(
-      x = coords[,1],
-      y = coords[,2],
+      x = coords[, 1],
+      y = coords[, 2],
       n = c(
-        ceiling(diff(range(coords[,1])) / gridspacing),
-        ceiling(diff(range(coords[,2])) / gridspacing)
+        ceiling(diff(range(coords[, 1])) / gridspacing),
+        ceiling(diff(range(coords[, 2])) / gridspacing)
       ),
-      h = apply(coords, 2, MASS::bandwidth.nrd)*smoothing,
+      h = apply(coords, 2, MASS::bandwidth.nrd) * smoothing,
       lims = c(
-        grDevices::extendrange(coords[,1], f = 1),
-        grDevices::extendrange(coords[,2], f = 1)
+        grDevices::extendrange(coords[, 1], f = 1),
+        grDevices::extendrange(coords[, 2], f = 1)
       )
     )
 
     # Calculate the contour level for the appropriate confidence level
-    fhat <- interp2d(x = coords, gpoints1 = kd_fit$x, gpoints2 = kd_fit$y, f = kd_fit$z)
+    fhat <- interp2d(
+      x = coords,
+      gpoints1 = kd_fit$x,
+      gpoints2 = kd_fit$y,
+      f = kd_fit$z
+    )
     contour_level <- stats::quantile(fhat, 1 - conf.level)
 
     grid_values = -kd_fit$z
     grid_points = list(kd_fit$x, kd_fit$y)
-    value_lim   = -contour_level
-
+    value_lim = -contour_level
   } else {
-
     # Perform a kernel density fit
     kd_fit <- ks::kde(
       coords,
-      gridsize = apply(coords, 2, function(x) ceiling(diff(range(x)) / gridspacing)),
+      gridsize = apply(
+        coords,
+        2,
+        function(x) ceiling(diff(range(x)) / gridspacing)
+      ),
       H = ks::Hpi(x = coords, nstage = 2, deriv.order = 0) * smoothing
     )
 
@@ -145,33 +142,29 @@ coordDensityBlob <- function(
     # We have to negate things here so that 3d contours are calculated appropriately
     grid_values <- -kd_fit$estimate
     grid_points <- kd_fit$eval.points
-    value_lim   <- -contour_level
-
+    value_lim <- -contour_level
   }
 
   # Calculate the blob
   contour_blob(
     grid_values = grid_values,
     grid_points = grid_points,
-    value_lim   = value_lim
+    value_lim = value_lim
   )
-
 }
 
 
 transformMapBlob <- function(blob, map, optimization_number) {
-
   if (is.null(blob)) return(NULL)
   transformed_blob <- lapply(blob, function(b) {
-
     if (attr(blob, "dim") == 2) {
       coords <- applyMapTransform(
         coords = cbind(b$x, b$y),
         map = map,
         optimization_number = optimization_number
       )
-      b$x <- coords[,1]
-      b$y <- coords[,2]
+      b$x <- coords[, 1]
+      b$y <- coords[, 2]
       b
     } else {
       b$vertices <- applyMapTransform(
@@ -186,12 +179,10 @@ transformMapBlob <- function(blob, map, optimization_number) {
       )
       b
     }
-
   })
 
   attributes(transformed_blob) <- attributes(blob)
   transformed_blob
-
 }
 
 #' Calculate size of a blob object
@@ -206,13 +197,11 @@ transformMapBlob <- function(blob, map, optimization_number) {
 #' @export
 #'
 blobsize <- function(blob) {
-
   if (attr(blob, "dims") == 3) {
     blob_volume(blob)
   } else {
     blob_area(blob)
   }
-
 }
 
 blob_area <- function(blob) {

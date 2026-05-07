@@ -1,4 +1,3 @@
-
 #' Merging maps
 #'
 #' Functions to merge together two tables or maps.
@@ -65,24 +64,36 @@ mergeMaps <- function(
   optimizer_options = list(),
   merge_options = list(),
   verbose = TRUE
-  ) {
-
+) {
   # Process input
   maps <- list(...)
   if (!inherits(maps[[1]], "acmap")) maps <- unlist(maps, recursive = F)
 
   # Check input
-  if (!is.list(maps)) stop("Input must be a list of acmap objects", call. = FALSE)
+  if (!is.list(maps))
+    stop("Input must be a list of acmap objects", call. = FALSE)
   lapply(maps, check.acmap)
 
   # Check for duplicate ids before merging
-  duplicated_ags <- unique(unlist(lapply(maps, function(map) agMatchIDs(map)[duplicated(agMatchIDs(map))])))
-  duplicated_srs <- unique(unlist(lapply(maps, function(map) srMatchIDs(map)[duplicated(srMatchIDs(map))])))
+  duplicated_ags <- unique(unlist(lapply(
+    maps,
+    function(map) agMatchIDs(map)[duplicated(agMatchIDs(map))]
+  )))
+  duplicated_srs <- unique(unlist(lapply(
+    maps,
+    function(map) srMatchIDs(map)[duplicated(srMatchIDs(map))]
+  )))
   if (length(duplicated_ags) > 0) {
-    stop(strain_list_error("Cannot merge, at least one of the maps has the following duplicated antigen ids:", duplicated_ags))
+    stop(strain_list_error(
+      "Cannot merge, at least one of the maps has the following duplicated antigen ids:",
+      duplicated_ags
+    ))
   }
   if (length(duplicated_srs) > 0) {
-    stop(strain_list_error("Cannot merge, at least one of the maps has the following duplicated serum ids:", duplicated_srs))
+    stop(strain_list_error(
+      "Cannot merge, at least one of the maps has the following duplicated serum ids:",
+      duplicated_srs
+    ))
   }
 
   # If list has names apply them as map names
@@ -98,7 +109,11 @@ mergeMaps <- function(
   if (!verbose) optimizer_options$report_progress <- FALSE
 
   # Set the dilution stepsize for merging
-  merge_options$dilution_stepsize <- mean(vapply(maps, dilutionStepsize, numeric(1)))
+  merge_options$dilution_stepsize <- mean(vapply(
+    maps,
+    dilutionStepsize,
+    numeric(1)
+  ))
 
   # Apply the relevant merge method
   merged_map <- switch(
@@ -160,26 +175,32 @@ mergeMaps <- function(
   )
 
   # Merge the groups
-  ag_ids    <- unlist(lapply(maps, agMatchIDs))
+  ag_ids <- unlist(lapply(maps, agMatchIDs))
   ag_groups <- unlist(lapply(maps, function(map) {
-    if (is.null(agGroups(map))) rep("", numAntigens(map))
-    else                        as.character(agGroups(map))
+    if (is.null(agGroups(map))) rep("", numAntigens(map)) else
+      as.character(agGroups(map))
   }))
 
-  sr_ids    <- unlist(lapply(maps, srMatchIDs))
+  sr_ids <- unlist(lapply(maps, srMatchIDs))
   sr_groups <- unlist(lapply(maps, function(map) {
-    if (is.null(srGroups(map))) rep("", numSera(map))
-    else                        as.character(srGroups(map))
+    if (is.null(srGroups(map))) rep("", numSera(map)) else
+      as.character(srGroups(map))
   }))
 
   merged_map_ag_groups <- ag_groups[match(agMatchIDs(merged_map), ag_ids)]
   merged_map_sr_groups <- sr_groups[match(srMatchIDs(merged_map), sr_ids)]
 
   if (sum(merged_map_ag_groups != "") > 0) {
-    agGroups(merged_map) <- factor(merged_map_ag_groups, unique(merged_map_ag_groups))
+    agGroups(merged_map) <- factor(
+      merged_map_ag_groups,
+      unique(merged_map_ag_groups)
+    )
   }
   if (sum(merged_map_sr_groups != "") > 0) {
-    srGroups(merged_map) <- factor(merged_map_sr_groups, unique(merged_map_sr_groups))
+    srGroups(merged_map) <- factor(
+      merged_map_sr_groups,
+      unique(merged_map_sr_groups)
+    )
   }
 
   # Deal with dilution stepsizes
@@ -188,12 +209,13 @@ mergeMaps <- function(
     dilutionStepsize(merged_map) <- unique(dilution_stepsizes)
   } else {
     dilutionStepsize(merged_map) <- 1
-    warning("Merged maps have different 'dilutionStepSize()' settings, a default of 1 has been assigned.")
+    warning(
+      "Merged maps have different 'dilutionStepSize()' settings, a default of 1 has been assigned."
+    )
   }
 
   # Return the map
   merged_map
-
 }
 
 
@@ -237,7 +259,6 @@ RacMerge.options <- function(
   dilution_stepsize = 1,
   method = NULL
 ) {
-
   # Check input
   check.numeric(dilution_stepsize)
   if (!is.null(sd_limit)) {
@@ -256,26 +277,28 @@ RacMerge.options <- function(
   }
 
   # Deal with method defaults
-  if (is.character(method) && method %in% c("conservative", "likelihood", "lispmds")) {
-
-    merge_function <- function(){}
-
+  if (
+    is.character(method) &&
+      method %in% c("conservative", "likelihood", "lispmds")
+  ) {
+    merge_function <- function() {
+    }
   } else if (is.function(method)) {
-
     merge_function <- method
     method <- "function"
-
   } else {
-
-    stop("'merge_method' must be one of 'conservative', 'likelihood', 'lispmds', or a user defined function.", call. = FALSE)
-
+    stop(
+      "'merge_method' must be one of 'conservative', 'likelihood', 'lispmds', or a user defined function.",
+      call. = FALSE
+    )
   }
 
   # Set default sd limit
   if (is.null(sd_limit)) {
     sd_limit <- ifelse(
       method == "lispmds",
-      1, NA_real_
+      1,
+      NA_real_
     )
   }
 
@@ -286,9 +309,7 @@ RacMerge.options <- function(
     merge_function = merge_function,
     method = method
   )
-
 }
-
 
 
 #' Split a map made up from titer layers into a list of separate maps each with a titer table
@@ -303,10 +324,10 @@ RacMerge.options <- function(
 #'
 splitTiterLayers <- function(
   map
-  ) {
-
+) {
   maps <- lapply(
-    titerTableLayers(map), function(titertable) {
+    titerTableLayers(map),
+    function(titertable) {
       splitmap <- map
       titerTable(splitmap) <- titertable
       splitmap
@@ -315,6 +336,4 @@ splitTiterLayers <- function(
 
   names(maps) <- layerNames(map)
   maps
-
 }
-

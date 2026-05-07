@@ -1,4 +1,3 @@
-
 #' Calculate bootstrap blob data for an antigenic map
 #'
 #' This function takes a map for which the function `bootstrapMap()` has already
@@ -40,10 +39,12 @@ bootstrapBlobs <- function(
   sera = TRUE,
   method = "ks"
 ) {
-
   # Check the map has bootstrap data
   if (!hasBootstrapData(map, 1)) {
-    stop("First run bootstrap repeats on this map object using the bootstrapMap() function", call. = FALSE)
+    stop(
+      "First run bootstrap repeats on this map object using the bootstrapMap() function",
+      call. = FALSE
+    )
   }
 
   # Set antigens and sera
@@ -60,10 +61,9 @@ bootstrapBlobs <- function(
 
   # Calculate for antigens
   for (agnum in antigens) {
-
     # Fetch coords, removing nas found in the resample method
     coords <- t(sapply(bootstrap_ag_coords, function(x) x[agnum, ]))
-    coords <- coords[!is.na(coords[,1]), , drop=F]
+    coords <- coords[!is.na(coords[, 1]), , drop = F]
 
     agDiagnostics(map, 1)[[agnum]]$bootstrap_blob <- coordDensityBlob(
       coords = coords,
@@ -73,15 +73,13 @@ bootstrapBlobs <- function(
       method = method
     )
     ac_update_progress(pb, agnum)
-
   }
 
   # Calculate for sera
   for (srnum in sera) {
-
     # Fetch coords, removing nas found in the resample method
     coords <- t(sapply(bootstrap_sr_coords, function(x) x[srnum, ]))
-    coords <- coords[!is.na(coords[,1]), , drop=F]
+    coords <- coords[!is.na(coords[, 1]), , drop = F]
 
     srDiagnostics(map, 1)[[srnum]]$bootstrap_blob <- coordDensityBlob(
       coords = coords,
@@ -90,15 +88,8 @@ bootstrapBlobs <- function(
       gridspacing = gridspacing
     )
     ac_update_progress(pb, srnum + numAntigens(map))
-
   }
 
   # Return the updated map
   map
-
 }
-
-
-
-
-

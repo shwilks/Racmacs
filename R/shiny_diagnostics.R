@@ -1,7 +1,5 @@
-
 # Adding stress blob information
 server_triangulationBlobs <- function(env) {
-
   shiny::showNotification(
     ui = "Calculating triangulation blobs...",
     duration = NULL,
@@ -57,13 +55,11 @@ server_triangulationBlobs <- function(env) {
       optimization_number = env$storage$opt_selected
     ))
   )
-
 }
 
 
 # Check and add hemisphering information
 server_checkHemisphering <- function(env) {
-
   # Check the map is relaxed
   reqRelaxed(env$storage$map, env$storage$opt_selected, env$session)
 
@@ -78,7 +74,10 @@ server_checkHemisphering <- function(env) {
   )
 
   # Check for hemisphering
-  env$storage$map <- checkHemisphering(env$storage$map, env$storage$opt_selected)
+  env$storage$map <- checkHemisphering(
+    env$storage$map,
+    env$storage$opt_selected
+  )
 
   # Send hemisphering information to display
   env$session$sendCustomMessage(
@@ -98,12 +97,10 @@ server_checkHemisphering <- function(env) {
     type = "message",
     session = env$session
   )
-
 }
 
 # Moving trapped points
 server_moveTrappedPoints <- function(env) {
-
   shiny::showNotification(
     ui = "Moving trapped points...",
     duration = NULL,
@@ -118,11 +115,14 @@ server_moveTrappedPoints <- function(env) {
     env$storage$map,
     env$storage$opt_selected
   )
-  env$session$sendCustomMessage("animateCoords", list(
-    antigens = agCoords(env$storage$map, env$storage$opt_selected),
-    sera     = srCoords(env$storage$map, env$storage$opt_selected),
-    stress   = mapStress(env$storage$map, env$storage$opt_selected)
-  ))
+  env$session$sendCustomMessage(
+    "animateCoords",
+    list(
+      antigens = agCoords(env$storage$map, env$storage$opt_selected),
+      sera = srCoords(env$storage$map, env$storage$opt_selected),
+      stress = mapStress(env$storage$map, env$storage$opt_selected)
+    )
+  )
   env$session$sendCustomMessage("updateMapData", as.json(env$storage$map))
   message("done.")
 
@@ -134,12 +134,10 @@ server_moveTrappedPoints <- function(env) {
     type = "message",
     session = env$session
   )
-
 }
 
 # Procrustes points
 server_procrustesMap <- function(env) {
-
   shiny::showNotification(
     ui = "Calculating procrustes... ",
     duration = NULL,
@@ -157,13 +155,13 @@ server_procrustesMap <- function(env) {
 
   # Read in the procrustes map
   pcmap <- read.acmap(
-    filename            = env$input$procrustesDataLoaded$datapath,
+    filename = env$input$procrustesDataLoaded$datapath,
     optimization_number = as.numeric(env$input$procrustes$optimization)
   )
 
   # Calculate the procrustes data
   env$storage$map <- procrustesMap(
-    map            = env$storage$map,
+    map = env$storage$map,
     comparison_map = pcmap,
     optimization_number = env$storage$opt_selected,
     comparison_optimization_number = 1,
@@ -171,7 +169,10 @@ server_procrustesMap <- function(env) {
   )
 
   # Reload the map data
-  env$session$sendCustomMessage("addProcrustesData", I(ptProcrustes(env$storage$map, env$storage$opt_selected)))
+  env$session$sendCustomMessage(
+    "addProcrustesData",
+    I(ptProcrustes(env$storage$map, env$storage$opt_selected))
+  )
 
   shiny::showNotification(
     ui = "Calculating procrustes... complete.",
@@ -180,5 +181,4 @@ server_procrustesMap <- function(env) {
     id = "procrustes",
     type = "message"
   )
-
 }

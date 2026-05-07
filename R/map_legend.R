@@ -1,4 +1,3 @@
-
 #' Set acmap legend
 #'
 #' This sets the acmap legend used when viewing a map for example.
@@ -22,33 +21,30 @@ setLegend <- function(
   fill,
   style.bottom = "8px",
   style.right = "8px"
-  ) {
-
+) {
   # Check input
   check.acmap(map)
 
   # Return the map with legend added
   map$legend <- list(
-    legend       = unname(legend),
-    fill         = unname(fill),
+    legend = unname(legend),
+    fill = unname(fill),
     style.bottom = style.bottom,
-    style.right  = style.right
+    style.right = style.right
   )
 
   map
-
 }
 
 
 # Helper function to create the html used for a legend
 make_html_legend <- function(
   args
-  ) {
-
+) {
   # Set variables
-  args$box.width      <- "14px"
-  args$box.height     <- "14px"
-  args$font.size      <- "14px"
+  args$box.width <- "14px"
+  args$box.height <- "14px"
+  args$font.size <- "14px"
   args$legend.spacing <- "4px"
 
   # Create the legend holder
@@ -62,12 +58,12 @@ make_html_legend <- function(
 
   # Add the legend entries
   for (x in seq_along(args$legend)) {
-
     # Create the entry
     div.entry <- htmltools::div(
       style = sprintf(
         "line-height:%s; margin:%s;",
-        args$font.size, args$legend.spacing
+        args$font.size,
+        args$legend.spacing
       ),
       htmltools::div(
         style = sprintf(
@@ -99,10 +95,8 @@ make_html_legend <- function(
       div.legend,
       div.entry
     )
-
   }
 
   # Return the div legend
   div.legend
-
 }

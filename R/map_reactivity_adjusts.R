@@ -1,7 +1,5 @@
-
 # Apply a reactivity adjustment to a titer
 reactivity_adjust_titers <- function(titers, adjustment) {
-
   # Check and adjust adjustment length
   if (length(adjustment) != 1 && length(adjustment) != length(titers)) {
     stop("Adjustment must be length 1 or same as titers")
@@ -13,7 +11,6 @@ reactivity_adjust_titers <- function(titers, adjustment) {
   numtiters <- numeric_titers(titers)
   numtiters <- 2^(log2(numtiters) + adjustment)
   make_titers(numtiters, titertypes)
-
 }
 
 
@@ -33,8 +30,7 @@ reactivity_adjust_titers <- function(titers, adjustment) {
 adjustedTiterTable <- function(
   map,
   optimization_number = 1
-  ) {
-
+) {
   adjusted_titer_table <- titerTable(map)
   ag_reactivity_adjusts <- agReactivityAdjustments(map)
 
@@ -46,7 +42,6 @@ adjustedTiterTable <- function(
   }
 
   adjusted_titer_table
-
 }
 
 
@@ -66,17 +61,13 @@ adjustedLogTiterTable <- function(
   map,
   optimization_number = 1
 ) {
-
   adjusted_titer_table <- logtiterTable(map)
   ag_reactivity_adjusts <- agReactivityAdjustments(map)
-  adjusted_titer_table + matrix(
-    ag_reactivity_adjusts,
-    nrow = numAntigens(map),
-    ncol = numSera(map),
-    byrow = FALSE
-  )
-
+  adjusted_titer_table +
+    matrix(
+      ag_reactivity_adjusts,
+      nrow = numAntigens(map),
+      ncol = numSera(map),
+      byrow = FALSE
+    )
 }
-
-
-

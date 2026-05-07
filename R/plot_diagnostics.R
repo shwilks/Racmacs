@@ -1,4 +1,3 @@
-
 #' Plot map vs table distances
 #'
 #' @param map The acmap data object
@@ -17,10 +16,10 @@
 plot_map_table_distance <- function(
   map,
   optimization_number = 1,
-  xlim, ylim,
+  xlim,
+  ylim,
   line_of_equality = TRUE
 ) {
-
   # Calculate distances and types
   map_distances <- mapDistances(map, optimization_number)
   table_distances <- numeric_min_tabledists(
@@ -30,37 +29,39 @@ plot_map_table_distance <- function(
   titer_types <- titertypesTable(map)
 
   # Format data
-  map_dists   <- as.vector(map_distances)
+  map_dists <- as.vector(map_distances)
   table_dists <- as.vector(table_distances)
-  lessthans   <- as.vector(titer_types == 2)
-  dist_pairs  <- expand.grid(
+  lessthans <- as.vector(titer_types == 2)
+  dist_pairs <- expand.grid(
     agNames(map),
     srNames(map)
   )
-  dist_names  <- paste0(
-    "SR: ", dist_pairs[, 2],
-    ", AG: ", dist_pairs[, 1]
+  dist_names <- paste0(
+    "SR: ",
+    dist_pairs[, 2],
+    ", AG: ",
+    dist_pairs[, 1]
   )
 
   # Remove NAs
-  na_vals     <- is.na(map_dists) | is.na(table_dists)
-  map_dists   <- map_dists[!na_vals]
+  na_vals <- is.na(map_dists) | is.na(table_dists)
+  map_dists <- map_dists[!na_vals]
   table_dists <- table_dists[!na_vals]
-  lessthans   <- lessthans[!na_vals]
-  dist_names  <- dist_names[!na_vals]
+  lessthans <- lessthans[!na_vals]
+  dist_names <- dist_names[!na_vals]
 
   # Convert lessthans to titer types
   titertype <- lessthans
-  titertype[lessthans]  <- "non-detectable"
+  titertype[lessthans] <- "non-detectable"
   titertype[!lessthans] <- "detectable"
 
   # Do the main ggplot
   gp <- ggplot2::ggplot(
     data = data.frame(
-      map_dists   = map_dists,
+      map_dists = map_dists,
       table_dists = table_dists,
-      titertype   = titertype,
-      dist_names  = dist_names
+      titertype = titertype,
+      dist_names = dist_names
     ),
     ggplot2::aes(
       text = dist_names
@@ -68,18 +69,20 @@ plot_map_table_distance <- function(
   ) +
     ggplot2::geom_point(
       mapping = ggplot2::aes(
-        x     = table_dists,
-        y     = map_dists,
+        x = table_dists,
+        y = map_dists,
         color = titertype
       ),
       alpha = 0.4
-    ) + ggplot2::guides(
+    ) +
+    ggplot2::guides(
       color = ggplot2::guide_legend(
         title = NULL
       )
-    ) + ggplot2::scale_color_manual(
+    ) +
+    ggplot2::scale_color_manual(
       values = c(
-        `detectable`     = "#0099ff",
+        `detectable` = "#0099ff",
         `non-detectable` = "grey80"
       )
     ) +
@@ -91,16 +94,15 @@ plot_map_table_distance <- function(
   if (line_of_equality) {
     gp <- gp +
       ggplot2::geom_abline(
-        slope     = 1,
+        slope = 1,
         intercept = 0,
-        linetype  = "dashed",
-        color     = "black"
+        linetype = "dashed",
+        color = "black"
       )
   }
 
   # Return the ggplot object
   gp
-
 }
 
 
@@ -109,10 +111,10 @@ plot_map_table_distance <- function(
 plotly_map_table_distance <- function(
   map,
   optimization_number = 1,
-  xlim, ylim,
+  xlim,
+  ylim,
   line_of_equality = TRUE
-  ) {
-
+) {
   gp <- plot_map_table_distance(
     map = map,
     optimization_number = optimization_number,
@@ -120,7 +122,6 @@ plotly_map_table_distance <- function(
     ylim = ylim
   )
   plotly::ggplotly(gp, tooltip = "text")
-
 }
 
 
@@ -131,25 +132,24 @@ plot_sr_titers <- function(
   ylim = NULL,
   optimization_number = 1,
   .plot = TRUE
-  ) {
-
+) {
   serum <- get_sr_indices(map = map, sera = serum)
   if (length(serum) > 1) stop("Please select a single serum to plot")
 
   # Get data
   sr_colbase <- colBases(map)[serum]
-  sr_name    <- srNames(map)[serum]
+  sr_name <- srNames(map)[serum]
 
   ag_distances <- mapDistances(
     map,
     optimization_number = optimization_number
   )[, serum]
   ag_logtiters <- logtiterTable(map)[, serum]
-  ag_names     <- agNames(map)
+  ag_names <- agNames(map)
 
   # Set limits
   if (is.null(xlim)) {
-    xlim <- c(0,  max(ag_distances, na.rm = T) + 1)
+    xlim <- c(0, max(ag_distances, na.rm = T) + 1)
   }
   if (is.null(ylim)) {
     ylim <- c(-1, max(c(ag_logtiters, sr_colbase), na.rm = T) + 1)
@@ -158,10 +158,10 @@ plot_sr_titers <- function(
   # Plot the result
   gp <- ggplot2::ggplot(
     data = stats::na.omit(
-        data.frame(
+      data.frame(
         ag_distances = ag_distances,
         ag_logtiters = ag_logtiters,
-        ag_names     = ag_names
+        ag_names = ag_names
       )
     ),
     ggplot2::aes(
@@ -176,10 +176,10 @@ plot_sr_titers <- function(
       color = "#0099ff"
     ) +
     ggplot2::geom_abline(
-      slope     = -1,
+      slope = -1,
       intercept = sr_colbase,
-      linetype  = "dashed",
-      color     = "grey80"
+      linetype = "dashed",
+      color = "grey80"
     ) +
     ggplot2::xlab("Antigenic distance") +
     ggplot2::ylab("Titer") +
@@ -192,13 +192,12 @@ plot_sr_titers <- function(
     ) +
     ggplot2::scale_y_continuous(
       breaks = ylim[1]:ylim[2],
-      labels = 2 ^ (ylim[1]:ylim[2]) * 10
+      labels = 2^(ylim[1]:ylim[2]) * 10
     ) +
     ggplot_theme()
 
   if (.plot) plot(gp)
   gp
-
 }
 
 plotly_sr_titers <- function(
@@ -207,24 +206,21 @@ plotly_sr_titers <- function(
   xlim = NULL,
   ylim = NULL,
   optimization_number = 1
-  ) {
-
+) {
   plotly::ggplotly(
     plot_sr_titers(
-      map                 = map,
-      serum               = serum,
-      xlim                = xlim,
-      ylim                = ylim,
+      map = map,
+      serum = serum,
+      xlim = xlim,
+      ylim = ylim,
       optimization_number = optimization_number
     ),
     tooltip = "text"
   )
-
 }
 
 
 agMeanResiduals <- function(map) {
-
   residuals <- mapResiduals(map)
   residuals_nd_excluded <- residuals
   residuals_nd_excluded[titertypesTable(map) != 1] <- NA
@@ -235,12 +231,10 @@ agMeanResiduals <- function(map) {
   rownames(result) <- agNames(map)
   colnames(result) <- c("nd_included", "nd_excluded")
   result
-
 }
 
 
 srMeanResiduals <- function(map) {
-
   residuals <- mapResiduals(map)
   residuals_nd_excluded <- residuals
   residuals_nd_excluded[titertypesTable(map) != 1] <- NA
@@ -251,15 +245,18 @@ srMeanResiduals <- function(map) {
   rownames(result) <- srNames(map)
   colnames(result) <- c("nd_included", "nd_excluded")
   result
-
 }
 
 
 plot_agMeanResiduals <- function(map, exclude_nd = TRUE, .plot = TRUE) {
   hist_ggplot(
-    names  = agNames(map),
-    values = agMeanResiduals(map)[,ifelse(exclude_nd, "nd_excluded", "nd_included")],
-    title  = "Antigen mean residual error",
+    names = agNames(map),
+    values = agMeanResiduals(map)[, ifelse(
+      exclude_nd,
+      "nd_excluded",
+      "nd_included"
+    )],
+    title = "Antigen mean residual error",
     subtitle = ifelse(exclude_nd, "(nd excluded)", "(nd excluded)"),
     vline = 0,
     .plot = .plot
@@ -269,9 +266,13 @@ plot_agMeanResiduals <- function(map, exclude_nd = TRUE, .plot = TRUE) {
 
 plot_srMeanResiduals <- function(map, exclude_nd = TRUE, .plot = TRUE) {
   hist_ggplot(
-    names  = srNames(map),
-    values = srMeanResiduals(map)[,ifelse(exclude_nd, "nd_excluded", "nd_included")],
-    title  = "Serum mean residual error",
+    names = srNames(map),
+    values = srMeanResiduals(map)[, ifelse(
+      exclude_nd,
+      "nd_excluded",
+      "nd_included"
+    )],
+    title = "Serum mean residual error",
     subtitle = ifelse(exclude_nd, "(nd excluded)", "(nd excluded)"),
     vline = 0,
     .plot = .plot
@@ -283,57 +284,58 @@ plotly_agMeanResiduals <- function(...) plotlyfn(plot_agMeanResiduals)(...)
 plotly_srMeanResiduals <- function(...) plotlyfn(plot_srMeanResiduals)(...)
 
 
-
 plot_agStressPerTiter <- function(
   map,
   exclude_nd = TRUE,
   .plot = TRUE
-  ) {
-
+) {
   hist_ggplot(
-    names  = agNames(map),
-    values = agStressPerTiter(map)[,ifelse(exclude_nd, "nd_excluded", "nd_included")],
-    title  = "Antigen stress per titer",
+    names = agNames(map),
+    values = agStressPerTiter(map)[, ifelse(
+      exclude_nd,
+      "nd_excluded",
+      "nd_included"
+    )],
+    title = "Antigen stress per titer",
     subtitle = switch(
       exclude_nd,
-      "TRUE"  = "(< excluded)",
+      "TRUE" = "(< excluded)",
       "FALSE" = "(< included)"
     ),
     vline = 0,
     .plot = .plot
   )
-
 }
 
 
 plotly_agStressPerTiter <- function(...) plotlyfn(plot_agStressPerTiter)(...)
 
 
-
 plot_srStressPerTiter <- function(
   map,
   exclude_nd = TRUE,
   .plot = TRUE
-  ) {
-
+) {
   hist_ggplot(
-    names  = srNames(map),
-    values = srStressPerTiter(map)[,ifelse(exclude_nd, "nd_excluded", "nd_included")],
-    title  = "Serum stress per titer",
+    names = srNames(map),
+    values = srStressPerTiter(map)[, ifelse(
+      exclude_nd,
+      "nd_excluded",
+      "nd_included"
+    )],
+    title = "Serum stress per titer",
     subtitle = switch(
       exclude_nd,
-      "TRUE"  = "(< excluded)",
+      "TRUE" = "(< excluded)",
       "FALSE" = "(< included)"
     ),
     vline = 0,
     .plot = .plot
   )
-
 }
 
 
 plotly_srStressPerTiter <- function(...) plotlyfn(plot_srStressPerTiter)(...)
-
 
 
 # Generic function to output a histogram
@@ -344,38 +346,37 @@ hist_ggplot <- function(
   subtitle = "",
   vline = NULL,
   .plot = TRUE
-  ) {
-
+) {
   gp <- ggplot2::ggplot(
     data = data.frame(names, values),
     ggplot2::aes(
-      x    = values,
+      x = values,
       text = names
     )
   ) +
     ggplot2::geom_histogram(
-      fill  = "lightblue",
+      fill = "lightblue",
       color = "#3366cc",
-      size  = 0.25
+      size = 0.25
     ) +
     ggplot2::xlab(NULL) +
     ggplot2::ylab(NULL) +
     ggplot2::labs(
-      title    = title,
+      title = title,
       subtitle = subtitle
     ) +
     ggplot_theme() -> gp
 
   if (!is.null(vline)) {
-    gp <- gp + ggplot2::geom_vline(
-      xintercept = vline,
-      linetype = "dashed",
-      color = "grey20",
-      size = 0.25
-    )
+    gp <- gp +
+      ggplot2::geom_vline(
+        xintercept = vline,
+        linetype = "dashed",
+        color = "grey20",
+        size = 0.25
+      )
   }
 
   if (.plot) plot(gp)
   gp
-
 }

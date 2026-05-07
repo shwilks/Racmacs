@@ -1,4 +1,3 @@
-
 #' Edit antigen names in an acmap
 #'
 #' @param map The map data object to be updated
@@ -14,8 +13,7 @@ edit_agNames <- function(
   map,
   old_names,
   new_names
-  ) {
-
+) {
   # Check the length of the old and new names are the same
   if (length(old_names) != length(new_names)) {
     stop("The lengths of old names and new names must match")
@@ -29,7 +27,6 @@ edit_agNames <- function(
 
   # Return the updated map data
   map
-
 }
 
 
@@ -48,8 +45,7 @@ edit_srNames <- function(
   map,
   old_names,
   new_names
-  ) {
-
+) {
   # Check the length of the old and new names are the same
   if (length(old_names) != length(new_names)) {
     stop("The lengths of old names and new names must match")
@@ -63,7 +59,6 @@ edit_srNames <- function(
 
   # Return the updated map data
   map
-
 }
 
 
@@ -81,8 +76,7 @@ edit_srNames <- function(
 update_ferret_seraNames <- function(
   map,
   dictionary_file = NULL
-  ) {
-
+) {
   # Read from default dictionary if not supplied
   if (is.null(dictionary_file)) {
     dictionary_file <- system.file(
@@ -93,16 +87,15 @@ update_ferret_seraNames <- function(
 
   # Read in csv file
   dictionary <- utils::read.csv(
-    file   = dictionary_file,
+    file = dictionary_file,
     header = FALSE,
     stringsAsFactors = FALSE
   )
 
   # Update the map file
   edit_srNames(
-    map       = map,
+    map = map,
     old_names = dictionary[, 1],
     new_names = dictionary[, 2]
   )
-
 }

@@ -1,4 +1,3 @@
-
 #' Printing racmap objects
 #'
 #' Print information about a racmap object.
@@ -10,7 +9,6 @@
 #' @noRd
 #'
 print.acmap <- function(x, ...) {
-
   # Print short descriptor
   cat("<acmap>\n")
   mapname <- mapName(x)
@@ -20,7 +18,6 @@ print.acmap <- function(x, ...) {
   cat(sprintf("...%s sera\n", numSera(x)))
   cat(sprintf("...%s optimizations\n", numOptimizations(x)))
   invisible(x)
-
 }
 
 
@@ -92,24 +89,28 @@ view.acmap <- function(
   .jsCode = NULL,
   .jsData = NULL,
   select_ags = NULL,
-  select_sr  = NULL,
+  select_sr = NULL,
   show_procrustes = NULL,
   show_diagnostics = NULL,
   num_optimizations = 1,
   options = list()
-  ) {
-
+) {
   # Check input
   check.optnum(x, 1)
 
   # Pass on only the selected optimizations
   if (optimization_number > 1 && num_optimizations != 1) {
-    stop("Optimization number must be 1 when keeping more than one optimization")
+    stop(
+      "Optimization number must be 1 when keeping more than one optimization"
+    )
   } else if (optimization_number > 1) {
     x <- keepOptimizations(x, optimization_number)
     optimization_number <- 1
   } else {
-    x <- keepOptimizations(x, seq_len(min(c(numOptimizations(x), num_optimizations))))
+    x <- keepOptimizations(
+      x,
+      seq_len(min(c(numOptimizations(x), num_optimizations)))
+    )
   }
 
   # View the map data in the viewer
@@ -122,114 +123,93 @@ view.acmap <- function(
   # Make any antigen and serum selections
   if (!is.null(select_ags)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.selectAntigensByIndices(data) }",
-      data   = I(select_ags)
+      data = I(select_ags)
     )
   }
 
   if (!is.null(select_sr)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.selectSeraByIndices(data) }",
-      data   = I(select_sr)
+      data = I(select_sr)
     )
   }
 
   # Add any procrustes lines
-  if (
-    hasProcrustes(x, optimization_number)
-    && !isFALSE(show_procrustes)
-    ) {
-
+  if (hasProcrustes(x, optimization_number) && !isFALSE(show_procrustes)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.addProcrustesToBaseCoords(data) }",
-      data   = I(ptProcrustes(x, optimization_number))
+      data = I(ptProcrustes(x, optimization_number))
     )
-
   }
 
   # Show any blob data
   if (
-    hasTriangulationBlobs(x, optimization_number)
-    && !isFALSE(show_diagnostics)
-    ) {
-
+    hasTriangulationBlobs(x, optimization_number) && !isFALSE(show_diagnostics)
+  ) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.addTriangulationBlobs(data) }",
-      data   = I(ptBaseTriangulationBlobs(x, optimization_number))
+      data = I(ptBaseTriangulationBlobs(x, optimization_number))
     )
-
   }
 
   # Show any bootstrap data
-  if (
-    hasBootstrapData(x, optimization_number)
-    && !isFALSE(show_diagnostics)
-  ) {
-
+  if (hasBootstrapData(x, optimization_number) && !isFALSE(show_diagnostics)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.showBootstrapPoints(data) }",
-      data   = I(bootstrapData(x, optimization_number))
+      data = I(bootstrapData(x, optimization_number))
     )
-
   }
 
   # Show any bootstrap blob data
-  if (
-    hasBootstrapBlobs(x, optimization_number)
-    && !isFALSE(show_diagnostics)
-  ) {
-
+  if (hasBootstrapBlobs(x, optimization_number) && !isFALSE(show_diagnostics)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.addTriangulationBlobs(data) }",
-      data   = I(ptBaseBootstrapBlobs(x, optimization_number))
+      data = I(ptBaseBootstrapBlobs(x, optimization_number))
     )
-
   }
 
   # Show any hemisphering data
-  if (
-    hasHemisphering(x, optimization_number)
-    && !isFALSE(show_diagnostics)
-    ) {
-
+  if (hasHemisphering(x, optimization_number) && !isFALSE(show_diagnostics)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = "function(el, x, data) { el.viewer.showHemisphering(data) }",
-      data   = I(ptHemisphering(x, optimization_number))
+      data = I(ptHemisphering(x, optimization_number))
     )
-
   }
 
   # Add any map legends
   if (!is.null(x$legend)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
-      jsCode = sprintf("function(el, x, data) {
+      x = widget,
+      jsCode = sprintf(
+        "function(el, x, data) {
         var div = document.createElement('div');
         div.innerHTML      = `%s`;
         div.racviewer      = el.viewer;
         el.viewer.viewport.div.appendChild(div);
-      }", as.character(make_html_legend(x$legend))),
-      data   = NULL
+      }",
+        as.character(make_html_legend(x$legend))
+      ),
+      data = NULL
     )
   }
 
   # Execute any additional javascript code
   if (!is.null(.jsCode)) {
     widget <- htmlwidgets::onRender(
-      x      = widget,
+      x = widget,
       jsCode = .jsCode,
-      data   = .jsData
+      data = .jsData
     )
   }
 
   # Return the widget as an output
   widget
-
 }

@@ -1,4 +1,3 @@
-
 #' Optimize an acmap
 #'
 #' Take an acmap object with a table of titer data and perform optimization runs
@@ -53,13 +52,13 @@ optimizeMap <- function(
   titer_weights = NULL,
   sort_optimizations = TRUE,
   check_convergence = TRUE,
-  verbose  = TRUE,
+  verbose = TRUE,
   options = list()
-  ) {
-
+) {
   # Set default arguments
   if (is.null(fixed_column_bases)) fixed_column_bases <- rep(NA, numSera(map))
-  if (is.null(titer_weights)) titer_weights <- matrix(1, numAntigens(map), numSera(map))
+  if (is.null(titer_weights))
+    titer_weights <- matrix(1, numAntigens(map), numSera(map))
 
   # Warn about overwriting previous optimizations
   if (numOptimizations(map) > 0) {
@@ -84,19 +83,42 @@ optimizeMap <- function(
   ag_underconstrained <- ag_num_measured == number_of_dimensions
   sr_underconstrained <- sr_num_measured == number_of_dimensions
 
-  if (sum(ag_disconnected) > 0) warn_disconnected("ANTIGENS", agNames(map)[ag_disconnected], number_of_dimensions)
-  if (sum(sr_disconnected) > 0) warn_disconnected("SERA", srNames(map)[sr_disconnected], number_of_dimensions)
+  if (sum(ag_disconnected) > 0)
+    warn_disconnected(
+      "ANTIGENS",
+      agNames(map)[ag_disconnected],
+      number_of_dimensions
+    )
+  if (sum(sr_disconnected) > 0)
+    warn_disconnected(
+      "SERA",
+      srNames(map)[sr_disconnected],
+      number_of_dimensions
+    )
 
-  if (sum(ag_underconstrained) > 0) warn_underconstrained("ANTIGENS", agNames(map)[ag_underconstrained], number_of_dimensions)
-  if (sum(sr_underconstrained) > 0) warn_underconstrained("SERA", srNames(map)[sr_underconstrained], number_of_dimensions)
+  if (sum(ag_underconstrained) > 0)
+    warn_underconstrained(
+      "ANTIGENS",
+      agNames(map)[ag_underconstrained],
+      number_of_dimensions
+    )
+  if (sum(sr_underconstrained) > 0)
+    warn_underconstrained(
+      "SERA",
+      srNames(map)[sr_underconstrained],
+      number_of_dimensions
+    )
 
   # Check for unconnected sets of points
   if (!options$ignore_disconnected && mapDisconnected(map)) {
-    stop(singleline(
-    "Map contains disconnected points (points that are not connected through
+    stop(
+      singleline(
+        "Map contains disconnected points (points that are not connected through
      any path of detectable titers so cannot be coordinated relative to each other).
      To optimize anyway, rerun with 'options = list(ignore_disconnected = TRUE)'."
-    ), call. = F)
+      ),
+      call. = F
+    )
   }
 
   map <- ac_optimize_map(
@@ -114,8 +136,8 @@ optimizeMap <- function(
   if (!options$ignore_underconstrained) {
     for (n in seq_len(numOptimizations(map))) {
       opt_stress <- optStress(map, n)
-      agBaseCoords(map, n)[ag_disconnected,] <- NaN
-      srBaseCoords(map, n)[sr_disconnected,] <- NaN
+      agBaseCoords(map, n)[ag_disconnected, ] <- NaN
+      srBaseCoords(map, n)[sr_disconnected, ] <- NaN
       optStress(map, n) <- opt_stress
     }
   }
@@ -134,28 +156,32 @@ optimizeMap <- function(
 
   # Check procrustes of the top 2 runs to see if there is much difference between them
   if (check_convergence && numOptimizations(map) > 1) {
-
     pcmap <- map
     agNames(pcmap) <- paste("AG", seq_len(numAntigens(pcmap)))
     srNames(pcmap) <- paste("SR", seq_len(numSera(pcmap)))
 
-    procrustes_data <- procrustesData(pcmap, pcmap, comparison_optimization_number = 2)
+    procrustes_data <- procrustesData(
+      pcmap,
+      pcmap,
+      comparison_optimization_number = 2
+    )
     procrustes_dists <- c(procrustes_data$ag_dists, procrustes_data$sr_dists)
 
     if (max(procrustes_dists, na.rm = T) > 0.5) {
       warning(sprintf(
-        singleline("There is some variation (%s AU for one point) in the top runs,
+        singleline(
+          "There is some variation (%s AU for one point) in the top runs,
                    this may be an indication that more optimization runs could help
                    achieve a better optimum. If this still fails to help see
-                   ?unstableMaps for further possible causes.")
-      , round(max(procrustes_dists, na.rm = T), 2)))
+                   ?unstableMaps for further possible causes."
+        ),
+        round(max(procrustes_dists, na.rm = T), 2)
+      ))
     }
-
   }
 
   # Return the optimised map
   map
-
 }
 
 
@@ -188,20 +214,19 @@ optimizeMap <- function(
 #' @export
 #'
 make.acmap <- function(
-  titer_table             = NULL,
-  ag_names                = NULL,
-  sr_names                = NULL,
-  number_of_dimensions    = 2,
+  titer_table = NULL,
+  ag_names = NULL,
+  sr_names = NULL,
+  number_of_dimensions = 2,
   number_of_optimizations = 100,
-  minimum_column_basis    = "none",
-  fixed_column_bases      = NULL,
-  sort_optimizations      = TRUE,
-  check_convergence       = TRUE,
-  verbose                 = TRUE,
-  options                 = list(),
+  minimum_column_basis = "none",
+  fixed_column_bases = NULL,
+  sort_optimizations = TRUE,
+  check_convergence = TRUE,
+  verbose = TRUE,
+  options = list(),
   ...
-  ) {
-
+) {
   # Check arguments
   rlang::check_dots_used()
 
@@ -225,7 +250,6 @@ make.acmap <- function(
     verbose = verbose,
     options = options
   )
-
 }
 
 
@@ -279,7 +303,6 @@ RacOptimizer.options <- function(
   ignore_underconstrained = FALSE,
   progress_bar_length = options()$width
 ) {
-
   # Check input
   check.logical(dim_annealing)
   check.logical(ignore_disconnected)
@@ -303,7 +326,8 @@ RacOptimizer.options <- function(
   if (is.null(report_progress)) {
     report_progress <- length(
       utils::capture.output(message("a"), type = "message")
-    ) > 0
+    ) >
+      0
   }
 
   list(
@@ -324,7 +348,6 @@ RacOptimizer.options <- function(
     report_progress = report_progress,
     progress_bar_length = progress_bar_length
   )
-
 }
 
 
@@ -355,18 +378,19 @@ relaxMap <- function(
   fixed_sera = FALSE,
   titer_weights = NULL,
   options = list()
-  ) {
-
+) {
   # Get options
-  if (sum(!titerTable(map) %in% c("*", ".")) == 0) stop("Table has no measurable titers")
+  if (sum(!titerTable(map) %in% c("*", ".")) == 0)
+    stop("Table has no measurable titers")
   options <- do.call(RacOptimizer.options, options)
 
   # Set default arguments
-  if (is.null(titer_weights)) titer_weights <- matrix(1, numAntigens(map), numSera(map))
+  if (is.null(titer_weights))
+    titer_weights <- matrix(1, numAntigens(map), numSera(map))
 
   # Convert point references to indices
   fixed_antigens <- get_ag_indices(fixed_antigens, map)
-  fixed_sera     <- get_sr_indices(fixed_sera, map)
+  fixed_sera <- get_sr_indices(fixed_sera, map)
 
   # Run relaxation
   map$optimizations[[optimization_number]] <- ac_relaxOptimization(
@@ -381,7 +405,6 @@ relaxMap <- function(
 
   # Return the map
   map
-
 }
 
 
@@ -405,14 +428,13 @@ relaxMapOneStep <- function(
   fixed_sera = FALSE,
   options = list()
 ) {
-
   # Get options
   options <- do.call(RacOptimizer.options, options)
   options$maxit <- 1
 
   # Convert point references to indices
   fixed_antigens <- get_ag_indices(fixed_antigens, map)
-  fixed_sera     <- get_sr_indices(fixed_sera, map)
+  fixed_sera <- get_sr_indices(fixed_sera, map)
 
   # Update optimization
   map$optimizations[[optimization_number]] <- ac_relaxOptimization(
@@ -425,7 +447,6 @@ relaxMapOneStep <- function(
     dilution_stepsize = dilutionStepsize(map)
   )
   map
-
 }
 
 #' Randomize map coordinates
@@ -449,8 +470,7 @@ randomizeCoords <- function(
   map,
   optimization_number = 1,
   table_dist_factor = 2
-  ) {
-
+) {
   table_dists <- numeric_min_tabledists(
     tabledists = tableDistances(map, optimization_number = optimization_number),
     dilution_stepsize = dilutionStepsize(map)
@@ -468,19 +488,18 @@ randomizeCoords <- function(
   agBaseCoords(map, optimization_number) <- random_coords(
     nrow = numAntigens(map),
     ndim = mapDimensions(map, optimization_number = optimization_number),
-    min  = -(max_table_dist * table_dist_factor) / 2,
-    max  = (max_table_dist * table_dist_factor) / 2
+    min = -(max_table_dist * table_dist_factor) / 2,
+    max = (max_table_dist * table_dist_factor) / 2
   )
 
   srBaseCoords(map, optimization_number) <- random_coords(
     nrow = numSera(map),
     ndim = mapDimensions(map, optimization_number = optimization_number),
-    min  = -(max_table_dist * table_dist_factor) / 2,
-    max  = (max_table_dist * table_dist_factor) / 2
+    min = -(max_table_dist * table_dist_factor) / 2,
+    max = (max_table_dist * table_dist_factor) / 2
   )
 
   map
-
 }
 
 
@@ -500,8 +519,7 @@ mapRelaxed <- function(
   map,
   optimization_number = 1,
   options = list()
-  ) {
-
+) {
   # Check stress
   stress <- mapStress(map, optimization_number)
 
@@ -515,7 +533,6 @@ mapRelaxed <- function(
 
   # Compare stress
   isTRUE(stress - relaxed_stress < 0.0001)
-
 }
 
 
@@ -540,8 +557,7 @@ checkHemisphering <- function(
   grid_spacing = 0.25,
   stress_lim = 0.1,
   options = list()
-  ) {
-
+) {
   # Check map is relaxed
   if (!mapRelaxed(map, optimization_number, options)) {
     stop("Map optimization is not fully relaxed", call. = FALSE)
@@ -559,7 +575,10 @@ checkHemisphering <- function(
 
   # Message if any hemisphering points were found
   pt_diagnostics <- vapply(
-    c(agHemisphering(map, optimization_number), srHemisphering(map, optimization_number)),
+    c(
+      agHemisphering(map, optimization_number),
+      srHemisphering(map, optimization_number)
+    ),
     function(pt) {
       diagnosis <- unique(vapply(pt, function(x) x$diagnosis, character(1)))
       if (length(diagnosis) == 0) diagnosis <- ""
@@ -574,7 +593,11 @@ checkHemisphering <- function(
       name = c(agNames(map), srNames(map)),
       diagnosis = pt_diagnostics
     )
-    diagnosis_table <- diagnosis_table[diagnosis_table$diagnosis != "", , drop = F]
+    diagnosis_table <- diagnosis_table[
+      diagnosis_table$diagnosis != "",
+      ,
+      drop = F
+    ]
     warning(
       sprintf(
         "Hemisphering or trapped points found:\n\n%s\n",
@@ -587,7 +610,6 @@ checkHemisphering <- function(
 
   # Return the map
   map
-
 }
 
 
@@ -622,8 +644,7 @@ moveTrappedPoints <- function(
   grid_spacing = 0.25,
   max_iterations = 10,
   options = list()
-  ) {
-
+) {
   # Move trapped points in the optimization
   map$optimizations[[optimization_number]] <- ac_move_trapped_points(
     optimization = map$optimizations[[optimization_number]],
@@ -639,7 +660,6 @@ moveTrappedPoints <- function(
 
   # Return the map
   map
-
 }
 
 
@@ -651,10 +671,18 @@ srHemisphering <- function(map, optimization_number = 1) {
   lapply(srDiagnostics(map, optimization_number), function(sr) sr$hemi)
 }
 ptHemisphering <- function(map, optimization_number = 1) {
-  c(agHemisphering(map, optimization_number), srHemisphering(map, optimization_number))
+  c(
+    agHemisphering(map, optimization_number),
+    srHemisphering(map, optimization_number)
+  )
 }
 hasHemisphering <- function(map, optimization_number = 1) {
-  sum(vapply(ptHemisphering(map, optimization_number), function(x) length(x) > 0, logical(1))) > 0
+  sum(vapply(
+    ptHemisphering(map, optimization_number),
+    function(x) length(x) > 0,
+    logical(1)
+  )) >
+    0
 }
 
 
@@ -662,9 +690,11 @@ hasHemisphering <- function(map, optimization_number = 1) {
 warn_underconstrained <- function(type, strains, number_of_dimensions) {
   strain_list_warning(
     sprintf(
-      singleline("The following %s have do not have enough titrations to position
+      singleline(
+        "The following %s have do not have enough titrations to position
                     in %s dimensions. Coordinates were still optimized but positions
-                    will be unreliable"),
+                    will be unreliable"
+      ),
       type,
       number_of_dimensions
     ),
@@ -675,8 +705,10 @@ warn_underconstrained <- function(type, strains, number_of_dimensions) {
 warn_disconnected <- function(type, strains, number_of_dimensions) {
   strain_list_warning(
     sprintf(
-      singleline("The following %s are too underconstrained to position in %s dimensions
-                 and coordinates have been set to NaN:"),
+      singleline(
+        "The following %s are too underconstrained to position in %s dimensions
+                 and coordinates have been set to NaN:"
+      ),
       type,
       number_of_dimensions
     ),
@@ -686,37 +718,30 @@ warn_disconnected <- function(type, strains, number_of_dimensions) {
 
 # Calculate map connectivity
 mapConnectivityGraph <- function(map) {
-
   ags <- seq_len(numAntigens(map))
   srs <- seq_len(numSera(map))
 
   titertypes <- titertypesTable(map)
   edges <- as.matrix(expand.grid(ags, srs))
   edge_titertypes <- apply(edges, 1, function(x) titertypes[x[1], x[2]])
-  edges[,2] <- edges[,2] + numAntigens(map)
+  edges[, 2] <- edges[, 2] + numAntigens(map)
 
   edges <- edges[edge_titertypes == 1, , drop = F]
   igraph::graph_from_edgelist(edges, directed = FALSE)
-
 }
 
 mapConnectivityDistances <- function(map) {
-
   graph <- mapConnectivityGraph(map)
   igraph::distances(graph)
-
 }
 
 mapDisconnected <- function(map) {
-
   max(mapConnectivityDistances(map)) == Inf
-
 }
 
 #' @rdname mapCohesion
 #' @export
 agCohesion <- function(map) {
-
   graph <- mapConnectivityGraph(map)
   ag_cohesion <- matrix(NA, numAntigens(map), numAntigens(map))
   for (ag1 in seq_len(numAntigens(map))) {
@@ -727,25 +752,26 @@ agCohesion <- function(map) {
     }
   }
   ag_cohesion
-
 }
 
 #' @rdname mapCohesion
 #' @export
 srCohesion <- function(map) {
-
   graph <- mapConnectivityGraph(map)
   sr_cohesion <- matrix(NA, numSera(map), numSera(map))
   nags <- numAntigens(map)
   for (sr1 in seq_len(numSera(map))) {
     for (sr2 in seq_len(numSera(map))) {
       if (sr1 != sr2) {
-        sr_cohesion[sr1, sr2] <- igraph::vertex_connectivity(graph, sr1 + nags, sr2 + nags)
+        sr_cohesion[sr1, sr2] <- igraph::vertex_connectivity(
+          graph,
+          sr1 + nags,
+          sr2 + nags
+        )
       }
     }
   }
   sr_cohesion
-
 }
 
 
@@ -773,10 +799,8 @@ srCohesion <- function(map) {
 #' @family map diagnostic functions
 #'
 mapCohesion <- function(map) {
-
   graph <- mapConnectivityGraph(map)
   igraph::vertex_connectivity(graph)
-
 }
 
 
@@ -803,5 +827,3 @@ mapCohesion <- function(map) {
 #' @family map diagnostic functions
 #'
 NULL
-
-

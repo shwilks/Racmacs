@@ -1,4 +1,3 @@
-
 #' Perform dimension testing on a map object
 #'
 #' Take a map object and perform cross-validation, seeing how well titers are
@@ -38,15 +37,14 @@
 #'
 dimensionTestMap <- function(
   map,
-  dimensions_to_test       = 1:5,
-  test_proportion          = 0.1,
-  minimum_column_basis     = "none",
-  fixed_column_bases       = rep(NA, numSera(map)),
-  number_of_optimizations  = 1000,
+  dimensions_to_test = 1:5,
+  test_proportion = 0.1,
+  minimum_column_basis = "none",
+  fixed_column_bases = rep(NA, numSera(map)),
+  number_of_optimizations = 1000,
   replicates_per_dimension = 100,
-  options                  = list()
-  ) {
-
+  options = list()
+) {
   # Perform the dimension test
   result <- runDimensionTestMap(
     map = map,
@@ -63,23 +61,21 @@ dimensionTestMap <- function(
   summary_result <- dimtest_summary(result)
   summary_result$replicates <- replicates_per_dimension
   summary_result
-
 }
 
 
 # Run dimtest result
 runDimensionTestMap <- function(
   map,
-  dimensions_to_test        = 1:5,
-  test_proportion           = 0.1,
-  minimum_column_basis      = "none",
-  fixed_column_bases        = rep(NA, numSera(map)),
+  dimensions_to_test = 1:5,
+  test_proportion = 0.1,
+  minimum_column_basis = "none",
+  fixed_column_bases = rep(NA, numSera(map)),
   ag_reactivity_adjustments = rep(0, numAntigens(map)),
-  number_of_optimizations   = 1000,
-  replicates_per_dimension  = 100,
-  options                   = list()
-  ) {
-
+  number_of_optimizations = 1000,
+  replicates_per_dimension = 100,
+  options = list()
+) {
   # Set optimizer options
   options <- do.call(RacOptimizer.options, options)
 
@@ -93,14 +89,14 @@ runDimensionTestMap <- function(
   # Get results
   results <- lapply(seq_len(replicates_per_dimension), function(x) {
     result <- ac_dimension_test_map(
-      titer_table               = titerTable(map),
-      dimensions_to_test        = dimensions_to_test,
-      test_proportion           = test_proportion,
-      minimum_column_basis      = minimum_column_basis,
-      fixed_column_bases        = fixed_column_bases,
+      titer_table = titerTable(map),
+      dimensions_to_test = dimensions_to_test,
+      test_proportion = test_proportion,
+      minimum_column_basis = minimum_column_basis,
+      fixed_column_bases = fixed_column_bases,
       ag_reactivity_adjustments = ag_reactivity_adjustments,
-      num_optimizations         = number_of_optimizations,
-      options                   = options
+      num_optimizations = number_of_optimizations,
+      options = options
     )
     ac_update_progress(progress, x)
     result
@@ -118,7 +114,6 @@ runDimensionTestMap <- function(
     results = results,
     dilution_stepsize = dilutionStepsize(map)
   )
-
 }
 
 
@@ -127,14 +122,13 @@ dimtest_summary <- function(
   object,
   ...
 ) {
-
   # Get actual log titers
   measured_logtiters <- log_titers(object$titers, object$dilution_stepsize)
-  titer_types        <- titer_types_int(object$titers)
-  results            <- object$results
-  dims_tested        <- as.vector(results[[1]]$dim)
-  num_test_runs      <- length(results)
-  num_tested         <- length(results[[1]]$test_indices)
+  titer_types <- titer_types_int(object$titers)
+  results <- object$results
+  dims_tested <- as.vector(results[[1]]$dim)
+  num_test_runs <- length(results)
+  num_tested <- length(results[[1]]$test_indices)
 
   # Get a matrix of log titers for each run
   logtiters_per_run <- matrix(NA, num_test_runs, num_tested)
@@ -149,13 +143,12 @@ dimtest_summary <- function(
   }
 
   # Get summary statistics for each dimension
-  mean_rmse_detectable    <- rep(NA, length(dims_tested))
-  var_rmse_detectable     <- rep(NA, length(dims_tested))
+  mean_rmse_detectable <- rep(NA, length(dims_tested))
+  var_rmse_detectable <- rep(NA, length(dims_tested))
   mean_rmse_nondetectable <- rep(NA, length(dims_tested))
-  var_rmse_nondetectable  <- rep(NA, length(dims_tested))
+  var_rmse_nondetectable <- rep(NA, length(dims_tested))
 
   for (x in seq_along(dims_tested)) {
-
     # Get a matrix of predicted log titers for each run
     predictions_per_run <- matrix(NA, num_test_runs, num_tested)
     for (run in seq_len(num_test_runs)) {
@@ -171,7 +164,8 @@ dimtest_summary <- function(
 
     predictions_detectable_rmses <- apply(
       predictions_detectable_per_run - logtiters_per_run,
-      1, function(x) {
+      1,
+      function(x) {
         sqrt(mean(x^2, na.rm = T))
       }
     )
@@ -179,16 +173,24 @@ dimtest_summary <- function(
       predictions_nondetectable_per_run - logtiters_per_run,
       1,
       function(x) {
-      sqrt(mean(x^2, na.rm = T))
+        sqrt(mean(x^2, na.rm = T))
       }
     )
 
     # Store the results
-    mean_rmse_detectable[x]    <- mean(predictions_detectable_rmses, na.rm = T)
-    var_rmse_detectable[x]     <- stats::var(predictions_detectable_rmses, na.rm = T)
-    mean_rmse_nondetectable[x] <- mean(predictions_nondetectable_rmses, na.rm = T)
-    var_rmse_nondetectable[x]  <- stats::var(predictions_nondetectable_rmses, na.rm = T)
-
+    mean_rmse_detectable[x] <- mean(predictions_detectable_rmses, na.rm = T)
+    var_rmse_detectable[x] <- stats::var(
+      predictions_detectable_rmses,
+      na.rm = T
+    )
+    mean_rmse_nondetectable[x] <- mean(
+      predictions_nondetectable_rmses,
+      na.rm = T
+    )
+    var_rmse_nondetectable[x] <- stats::var(
+      predictions_nondetectable_rmses,
+      na.rm = T
+    )
   }
 
   data.frame(
@@ -198,5 +200,4 @@ dimtest_summary <- function(
     mean_rmse_nondetectable = mean_rmse_nondetectable,
     var_rmse_nondetectable = var_rmse_nondetectable
   )
-
 }

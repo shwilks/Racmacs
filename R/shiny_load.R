@@ -1,7 +1,5 @@
-
 # Load map data
 server_loadMapData <- function(env) {
-
   shiny::showNotification(
     ui = "Loading map data...",
     duration = NULL,
@@ -23,12 +21,10 @@ server_loadMapData <- function(env) {
     type = "message",
     session = env$session
   )
-
 }
 
 # Load table data
 server_loadTableData <- function(env) {
-
   shiny::showNotification(
     ui = "Loading table data...",
     duration = NULL,
@@ -51,13 +47,11 @@ server_loadTableData <- function(env) {
     type = "message",
     session = env$session
   )
-
 }
 
 
 # Load point style data
 server_loadPointStyleData <- function(env) {
-
   shiny::showNotification(
     ui = "Loading point styles... ",
     duration = NULL,
@@ -86,5 +80,4 @@ server_loadPointStyleData <- function(env) {
     type = "message",
     session = env$session
   )
-
 }

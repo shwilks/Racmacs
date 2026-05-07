@@ -1,7 +1,5 @@
-
-mapGUI_server <- function(map = NULL){
+mapGUI_server <- function(map = NULL) {
   function(input, output, session) {
-
     # Set application environment
     env <- environment()
 
@@ -9,7 +7,7 @@ mapGUI_server <- function(map = NULL){
     ## Create a reactive values object for storing data that will change
     ## during the user session
     storage <- shiny::reactiveValues(
-      map = map,       # The map object of a loaded map
+      map = map, # The map object of a loaded map
       opt_selected = 1 # The optimization number currently selected
     )
 
@@ -30,21 +28,23 @@ mapGUI_server <- function(map = NULL){
 
     ## Setup for save listeners
     shinyFiles::shinyFileSave(
-      input, "mapDataSaved",
+      input,
+      "mapDataSaved",
       session = session,
       roots = save_volumes
     )
     shinyFiles::shinyFileSave(
-      input, "tableDataSaved",
+      input,
+      "tableDataSaved",
       session = session,
       roots = save_volumes
     )
     shinyFiles::shinyFileSave(
-      input, "coordsDataSaved",
+      input,
+      "coordsDataSaved",
       session = session,
       roots = save_volumes
     )
-
 
     # Event listeners
     ## Loading a map file
@@ -160,6 +160,5 @@ mapGUI_server <- function(map = NULL){
       input$pointStyleDataLoaded,
       server_loadPointStyleData(env)
     )
-
   }
 }

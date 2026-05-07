@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 context("Optimizing maps")
@@ -7,11 +6,11 @@ set.seed(100)
 # Generate some toy data
 ag_coords <- cbind(-4:4, runif(9, -1, 1))
 sr_coords <- cbind(runif(9, -1, 1), -4:4)
-colbases  <- round(runif(9, 3, 6))
+colbases <- round(runif(9, 3, 6))
 colbasesmat <- matrix(colbases, 9, 9, byrow = T)
 distmat <- as.matrix(dist(rbind(ag_coords, sr_coords)))[seq_len(9), -seq_len(9)]
 logtiters <- colbasesmat - distmat
-titers <- 2 ^ logtiters * 10
+titers <- 2^logtiters * 10
 mode(titers) <- "character"
 
 # Create a perfect representation of the toy data
@@ -24,11 +23,14 @@ perfect_map <- acmap(
 # Generate some 3D toy data
 ag_coords3d <- cbind(runif(9, -4, 4), runif(9, -4, 4), runif(9, -4, 4))
 sr_coords3d <- cbind(runif(9, -4, 4), runif(9, -4, 4), runif(9, -4, 4))
-colbases3d  <- round(runif(9, 3, 6))
+colbases3d <- round(runif(9, 3, 6))
 colbasesmat3d <- matrix(colbases3d, 9, 9, byrow = T)
-distmat3d <- as.matrix(dist(rbind(ag_coords3d, sr_coords3d)))[seq_len(9), -seq_len(9)]
+distmat3d <- as.matrix(dist(rbind(ag_coords3d, sr_coords3d)))[
+  seq_len(9),
+  -seq_len(9)
+]
 logtiters3d <- colbasesmat3d - distmat3d
-titers3d <- 2 ^ logtiters3d * 10
+titers3d <- 2^logtiters3d * 10
 mode(titers3d) <- "character"
 
 # Create a perfect representation of the toy data
@@ -40,7 +42,6 @@ perfect_map3d <- acmap(
 
 # Setup a perfect optimization to test
 test_that("Optimizing a perfect map", {
-
   # Try the perfect map with optimization
   perfect_map_opt <- optimizeMap(
     map = perfect_map,
@@ -71,12 +72,10 @@ test_that("Optimizing a perfect map", {
 
   # Check stresses are calculated correctly
   expect_lt(optStress(perfect_map_opt, 1), 0.001)
-
 })
 
 # Setup a perfect optimization to test
 test_that("Optimizing with weights", {
-
   # Optimize the map setting weights in different ways
   set.seed(200)
   map1 <- optimizeMap(
@@ -103,7 +102,7 @@ test_that("Optimizing with weights", {
   map3 <- realignMap(map3, map1)
 
   titer_weights <- matrix(
-    runif(numAntigens(perfect_map)*numSera(perfect_map)),
+    runif(numAntigens(perfect_map) * numSera(perfect_map)),
     numAntigens(perfect_map),
     numSera(perfect_map)
   )
@@ -121,12 +120,10 @@ test_that("Optimizing with weights", {
   expect_equal(ptCoords(map1), ptCoords(map2))
   expect_equal(ptCoords(map1), ptCoords(map3), tolerance = 1e-5)
   expect_false(isTRUE(all.equal(ptCoords(map1), ptCoords(map4))))
-
 })
 
 # Setup a perfect optimization to test
 test_that("Optimizing a perfect map with dimensional annealing", {
-
   # Try the perfect map with optimization
   perfect_map_opt <- optimizeMap(
     map = perfect_map,
@@ -147,12 +144,10 @@ test_that("Optimizing a perfect map with dimensional annealing", {
 
   # Check stresses are calculated correctly
   expect_lt(optStress(perfect_map_opt, 1), 0.001)
-
 })
 
 # Multi-point blobs
 test_that("Calculating number of blobs", {
-
   hemi_map_ag <- perfect_map3d
   titerTable(hemi_map_ag)[3, -c(4, 5, 8)] <- "*"
 
@@ -163,14 +158,16 @@ test_that("Calculating number of blobs", {
     fixed_column_bases = colbases
   ))
 
-  hemi_map_ag <- triangulationBlobs(hemi_map_ag, stress_lim = 0.25, grid_spacing = 0.25)
+  hemi_map_ag <- triangulationBlobs(
+    hemi_map_ag,
+    stress_lim = 0.25,
+    grid_spacing = 0.25
+  )
   expect_equal(length(agTriangulationBlobs(hemi_map_ag)[[3]]), 2)
-
 })
 
 # Finding trapped points
 test_that("Finding hemisphering points", {
-
   # Create an antigen hemisphering point
   hemi_map_ag <- perfect_map
   titerTable(hemi_map_ag)[1, -c(2, 7)] <- "*"
@@ -226,13 +223,11 @@ test_that("Finding hemisphering points", {
     view(hemi_map_sr),
     "hemisphering_sr.html"
   )
-
 })
 
 
 # Finding trapped points
 test_that("Finding hemisphering points 3d", {
-
   # Create an antigen hemisphering point
   hemi_map_ag3d <- perfect_map3d
   titerTable(hemi_map_ag3d)[1, -c(2, 7)] <- "*"
@@ -253,9 +248,7 @@ test_that("Finding hemisphering points 3d", {
     view(hemi_map_ag3d),
     "hemisphering_ags3d.html"
   )
-
 })
-
 
 
 # Read testmap
@@ -273,7 +266,6 @@ colbase_matrix <- matrix(
 mapDistances(map) + colbase_matrix
 
 test_that("Getting numeric titers", {
-
   titers <- titerTable(map)
   titers <- gsub("[<>]", "", titers)
   titers[titers == "*"] <- NA
@@ -283,11 +275,9 @@ test_that("Getting numeric titers", {
     unname(titers),
     numerictiterTable(map)
   )
-
 })
 
 test_that("Calculating table distances", {
-
   colbases <- ac_table_colbases(
     titer_table = titerTable(map),
     fixed_col_bases = rep(NA, numSera(map)),
@@ -315,11 +305,12 @@ test_that("Calculating table distances", {
     colbase_matrix - log2(numeric_titers / 10),
     table_dists
   )
-
 })
 
 
-titertable <- read.titerTable(test_path("../testdata/titer_tables/titer_table1.csv"))
+titertable <- read.titerTable(test_path(
+  "../testdata/titer_tables/titer_table1.csv"
+))
 
 test_that("Optimizing a map with just a table", {
   map <- acmap(titer_table = titertable)
@@ -333,7 +324,6 @@ test_that("Optimizing a map with just a table", {
 })
 
 test_that("Optimizing a map with a random seed", {
-
   map <- acmap(titer_table = titertable)
   set.seed(100)
   map1 <- optimizeMap(
@@ -352,7 +342,6 @@ test_that("Optimizing a map with a random seed", {
   )
   expect_equal(agCoords(map1), agCoords(map2))
   expect_equal(srCoords(map1), srCoords(map2))
-
 })
 
 test_that("Optimizing a map with just a data frame", {
@@ -371,63 +360,96 @@ largemap <- read.acmap(test_path("../testdata/testmap_large.ace"))
 
 
 # Relax existing maps
-map_relax      <- map
+map_relax <- map
 largemap_relax <- largemap
 
 test_that("Relax existing maps", {
-
-  agCoords(map_relax)    <- agCoords(map_relax) + 1
+  agCoords(map_relax) <- agCoords(map_relax) + 1
   agCoords(map_relax, 2) <- agCoords(map_relax, 2) - 1
 
-  stress1        <- mapStress(map_relax)
-  stress1_2      <- mapStress(map_relax, 2)
+  stress1 <- mapStress(map_relax)
+  stress1_2 <- mapStress(map_relax, 2)
 
-  map_relax     <- relaxMap(map_relax)
-  map_relax     <- relaxMap(map_relax, 2)
+  map_relax <- relaxMap(map_relax)
+  map_relax <- relaxMap(map_relax, 2)
 
-  stress2        <- mapStress(map_relax)
-  stress2_2      <- mapStress(map_relax, 2)
+  stress2 <- mapStress(map_relax)
+  stress2_2 <- mapStress(map_relax, 2)
 
   expect_equal(stress2, 95.0448, tolerance = 1e-4)
   expect_equal(stress2_2, 95.0448, tolerance = 1e-4)
 
   expect_lt(stress2, stress1)
   expect_lt(stress2_2, stress1_2)
-
 })
 
 
 # Optimizing with fixed points
 test_that("Relax a map with fixed coords", {
-
-  map_unrelaxed      <- map
-  agCoords(map_unrelaxed)    <- agCoords(map_unrelaxed) + 1
-  srCoords(map_unrelaxed)    <- srCoords(map_unrelaxed) - 1
+  map_unrelaxed <- map
+  agCoords(map_unrelaxed) <- agCoords(map_unrelaxed) + 1
+  srCoords(map_unrelaxed) <- srCoords(map_unrelaxed) - 1
 
   map_relaxed_fixed_ags <- relaxMap(map_unrelaxed, fixed_antigens = TRUE)
-  expect_true(isTRUE(all.equal(agCoords(map_unrelaxed), agCoords(map_relaxed_fixed_ags))))
-  expect_false(isTRUE(all.equal(srCoords(map_unrelaxed), srCoords(map_relaxed_fixed_ags))))
+  expect_true(isTRUE(all.equal(
+    agCoords(map_unrelaxed),
+    agCoords(map_relaxed_fixed_ags)
+  )))
+  expect_false(isTRUE(all.equal(
+    srCoords(map_unrelaxed),
+    srCoords(map_relaxed_fixed_ags)
+  )))
 
-  map_relaxed_fixed_sr  <- relaxMap(map_unrelaxed, fixed_sera = TRUE)
-  expect_false(isTRUE(all.equal(agCoords(map_unrelaxed), agCoords(map_relaxed_fixed_sr))))
-  expect_true(isTRUE(all.equal(srCoords(map_unrelaxed), srCoords(map_relaxed_fixed_sr))))
+  map_relaxed_fixed_sr <- relaxMap(map_unrelaxed, fixed_sera = TRUE)
+  expect_false(isTRUE(all.equal(
+    agCoords(map_unrelaxed),
+    agCoords(map_relaxed_fixed_sr)
+  )))
+  expect_true(isTRUE(all.equal(
+    srCoords(map_unrelaxed),
+    srCoords(map_relaxed_fixed_sr)
+  )))
 
-  map_relaxed_fixed_all <- relaxMap(map_unrelaxed, fixed_antigens = TRUE, fixed_sera = TRUE)
-  expect_true(all.equal(agCoords(map_unrelaxed), agCoords(map_relaxed_fixed_all)))
-  expect_true(all.equal(srCoords(map_unrelaxed), srCoords(map_relaxed_fixed_all)))
+  map_relaxed_fixed_all <- relaxMap(
+    map_unrelaxed,
+    fixed_antigens = TRUE,
+    fixed_sera = TRUE
+  )
+  expect_true(all.equal(
+    agCoords(map_unrelaxed),
+    agCoords(map_relaxed_fixed_all)
+  ))
+  expect_true(all.equal(
+    srCoords(map_unrelaxed),
+    srCoords(map_relaxed_fixed_all)
+  ))
 
-  map_relaxed_fixed_specific <- relaxMap(map_unrelaxed, fixed_antigens = c(2, 3), fixed_sera = c(1, 4))
-  expect_true(isTRUE(all.equal(agCoords(map_unrelaxed)[c(2, 3), ], agCoords(map_relaxed_fixed_specific)[c(2, 3), ])))
-  expect_true(isTRUE(all.equal(srCoords(map_unrelaxed)[c(1, 4), ], srCoords(map_relaxed_fixed_specific)[c(1, 4), ])))
-  expect_false(isTRUE(all.equal(agCoords(map_unrelaxed)[-c(2, 3), ], agCoords(map_relaxed_fixed_specific)[-c(2, 3), ])))
-  expect_false(isTRUE(all.equal(srCoords(map_unrelaxed)[-c(1, 4), ], srCoords(map_relaxed_fixed_specific)[-c(1, 4), ])))
-
+  map_relaxed_fixed_specific <- relaxMap(
+    map_unrelaxed,
+    fixed_antigens = c(2, 3),
+    fixed_sera = c(1, 4)
+  )
+  expect_true(isTRUE(all.equal(
+    agCoords(map_unrelaxed)[c(2, 3), ],
+    agCoords(map_relaxed_fixed_specific)[c(2, 3), ]
+  )))
+  expect_true(isTRUE(all.equal(
+    srCoords(map_unrelaxed)[c(1, 4), ],
+    srCoords(map_relaxed_fixed_specific)[c(1, 4), ]
+  )))
+  expect_false(isTRUE(all.equal(
+    agCoords(map_unrelaxed)[-c(2, 3), ],
+    agCoords(map_relaxed_fixed_specific)[-c(2, 3), ]
+  )))
+  expect_false(isTRUE(all.equal(
+    srCoords(map_unrelaxed)[-c(1, 4), ],
+    srCoords(map_relaxed_fixed_specific)[-c(1, 4), ]
+  )))
 })
 
 
 # Relax a newly created map
 test_that("Relax a map with no titers", {
-
   testmap <- acmap(
     ag_coords = matrix(1:10, 5, 2),
     sr_coords = matrix(1:10, 5, 2)
@@ -437,22 +459,19 @@ test_that("Relax a map with no titers", {
     relaxMap(testmap),
     "Table has no measurable titers"
   )
-
 })
 
 
 # Optimizing existing maps
 test_that("Optimizing existing maps", {
-
   # Doing new optimizations
   new_map <- expect_warning(optimizeMap(
-    map                          = map,
-    number_of_dimensions         = 3,
-    minimum_column_basis         = "none",
-    number_of_optimizations      = 2
+    map = map,
+    number_of_dimensions = 3,
+    minimum_column_basis = "none",
+    number_of_optimizations = 2
   ))
   expect_equal(numOptimizations(new_map), 2)
-
 })
 
 
@@ -460,7 +479,6 @@ test_that("Optimizing existing maps", {
 map4 <- map
 largemap4 <- largemap
 test_that("Moving trapped points", {
-
   map4 <- relaxMap(map4)
 
   agcoords1 <- agCoords(map4)
@@ -481,13 +499,11 @@ test_that("Moving trapped points", {
     mapStress(largemap4moved),
     mapStress(largemap4)
   )
-
 })
 
 
 # Randomizing coordinates
 test_that("Randomize map coordinates", {
-
   orig_stress <- mapStress(map)
   rmap <- randomizeCoords(map)
   new_stress <- mapStress(rmap)
@@ -496,17 +512,15 @@ test_that("Randomize map coordinates", {
   expect_true(sum(srCoords(map) - srCoords(rmap)) != 0)
   expect_gt(new_stress, orig_stress)
   expect_true(is.na(optStress(rmap)))
-
 })
 
 
 # Making a 1D map
 test_that("Make a 1D map", {
-
   # generate random test data
   coord <- matrix(rep(runif(10, 0, 10), times = 2), ncol = 2, byrow = T)
   dist <- as.matrix(dist(coord)) + rnorm(100)
-  max_mat <- matrix(apply(round(dist),2,max), ncol = 10, nrow = 10, byrow = T)
+  max_mat <- matrix(apply(round(dist), 2, max), ncol = 10, nrow = 10, byrow = T)
   tab1 <- 10 * 2^round(max_mat - dist)
 
   # make map
@@ -522,13 +536,11 @@ test_that("Make a 1D map", {
     ncol(agCoords(map1)),
     1
   )
-
 })
 
 
 # Adjusting antigen reactivity
 test_that("Adjust antigen reactivity", {
-
   map <- read.acmap(test_path("../testdata/testmap.ace"))
   expect_equal(
     agReactivityAdjustments(map),
@@ -561,13 +573,11 @@ test_that("Adjust antigen reactivity", {
   expect_lt(new_stress, original_stress)
   expect_false(isTRUE(all.equal(original_coords, new_coords)))
   expect_equal(agReactivityAdjustments(map2)[2], 1.12)
-
 })
 
 
 # Setting a different dilution stepsize
 test_that("Setting dilution stepsize", {
-
   map <- read.acmap(test_path("../testdata/testmap.ace"))
   map <- randomizeCoords(map)
 
@@ -585,25 +595,21 @@ test_that("Setting dilution stepsize", {
   expect_equal(dilutionStepsize(map), 1)
   expect_false(isTRUE(all.equal(ptCoords(map1), ptCoords(map2a))))
   expect_true(isTRUE(all.equal(ptCoords(map1), ptCoords(map2b))))
-
 })
 
 
 # Setting a different dilution stepsize
 test_that("Setting high min column bases", {
-
   map <- read.acmap(test_path("../testdata/testmap.ace"))
   map <- optimizeMap(map, 2, 1, "10240")
   expect_equal(numOptimizations(map), 1)
-
 })
 
 
 # Relaxing a map with NA coords
 test_that("Relaxing a map with NA coords", {
-
   map <- read.acmap(test_path("../testdata/testmap.ace"))
-  agCoords(map)[2:3,] <- NA
+  agCoords(map)[2:3, ] <- NA
   map_relaxed <- relaxMap(map)
 
   expect_lt(
@@ -615,29 +621,25 @@ test_that("Relaxing a map with NA coords", {
     mapStress(map_relaxed),
     0
   )
-
 })
 
 
 # Errors for disconnected maps
 test_that("Error when optimizing a map with disconnected points", {
-
-  dat <- matrix(rep(40, 90), ncol=9)
-  dat[6:10,1:5] <- "*"
-  dat[1:5,6:9] <- "*"
+  dat <- matrix(rep(40, 90), ncol = 9)
+  dat[6:10, 1:5] <- "*"
+  dat[1:5, 6:9] <- "*"
   map <- acmap(titer_table = dat)
   expect_error(
     optimizeMap(map, 2, 10, "none"),
     "Map contains disconnected points.*"
   )
-
 })
 
 
 # Errors for disconnected maps
 test_that("Optimizing a map with duplicate antigen or serum names", {
-
-  dat <- matrix(rep(40, 90), ncol=9)
+  dat <- matrix(rep(40, 90), ncol = 9)
   ag_names <- rep("AG", nrow(dat))
   sr_names <- rep("SR", ncol(dat))
   rownames(dat) <- ag_names
@@ -648,7 +650,4 @@ test_that("Optimizing a map with duplicate antigen or serum names", {
   expect_equal(srNames(map), sr_names)
   expect_equal(sum(is.na(agCoords(map))), 0)
   expect_equal(sum(is.na(srCoords(map))), 0)
-
 })
-
-

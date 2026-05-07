@@ -1,4 +1,3 @@
-
 ## These are functions relating to autogenerating the roxygen documentation
 ## there may be a neater way than this but it is to help avoid having to
 ## write out many of the same functions for getting and setting e.g.
@@ -27,7 +26,6 @@ roxygen_tags <- function(
   args,
   returns = NULL
 ) {
-
   # Work out which are setter functions
   setters <- grepl("<-$", methods)
 
@@ -40,7 +38,6 @@ roxygen_tags <- function(
   # The @usage tags for example usage
   usagetags <- c("@usage")
   for (x in seq_along(methods)) {
-
     tag <- sprintf(
       "%s(%s)",
       methods[x],
@@ -56,7 +53,6 @@ roxygen_tags <- function(
       usagetags,
       tag
     )
-
   }
 
   # Determine which arguments to include based on if the method is a settable
@@ -84,14 +80,12 @@ roxygen_tags <- function(
 
   # Return all parameters
   c(paramtags, usagetags, exporttags, returnstag)
-
 }
 
 
 # This is a small utility function for outputting an inline image of one of the
 # viewer buttons when writing vignettes that refer to them
 btn_img <- function(btn) {
-
   # Check base64enc package installed
   package_required("base64enc")
 
@@ -128,6 +122,8 @@ tab_img <- function(tab) {
     "padding: 2px 4px;",
     "color: #fff;",
     "font-size:80%;",
-    "'>", tab, "</span>"
+    "'>",
+    tab,
+    "</span>"
   )
 }

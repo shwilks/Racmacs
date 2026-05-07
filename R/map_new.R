@@ -1,4 +1,3 @@
-
 #' Generate a new acmap object
 #'
 #' This function generates a new acmap object, the base object for storing map
@@ -37,29 +36,28 @@ acmap <- function(
   check_duplicates = TRUE,
   ...
 ) {
-
   # Check input
   rlang::check_dots_used()
   titer_table <- table_arg_deprecated(titer_table, ...)
 
   # Infer the number of antigens and sera
   num_antigens <- NULL
-  num_sera     <- NULL
+  num_sera <- NULL
   if (!is.null(ag_names)) num_antigens <- length(ag_names)
-  if (!is.null(sr_names)) num_sera     <- length(sr_names)
+  if (!is.null(sr_names)) num_sera <- length(sr_names)
   if (!is.null(titer_table)) {
     num_antigens <- nrow(titer_table)
-    num_sera     <- ncol(titer_table)
+    num_sera <- ncol(titer_table)
   }
   if (is.null(num_antigens)) num_antigens <- nrow(ag_coords)
-  if (is.null(num_sera))     num_sera     <- nrow(sr_coords)
+  if (is.null(num_sera)) num_sera <- nrow(sr_coords)
   if (is.null(num_antigens)) stop("Could not infer number of antigens")
-  if (is.null(num_sera))     stop("Could not infer number of sera")
+  if (is.null(num_sera)) stop("Could not infer number of sera")
 
   # Generate a new racmap object
   map <- acmap.new(
     num_antigens = num_antigens,
-    num_sera     = num_sera
+    num_sera = num_sera
   )
 
   # Populate the map
@@ -92,13 +90,14 @@ acmap <- function(
 
   # Check for duplicate names
   if (check_duplicates) {
-    if (sum(duplicated(agNames(map))) > 0) warning("Map contains duplicate antigen names")
-    if (sum(duplicated(srNames(map))) > 0) warning("Map contains duplicate sera names")
+    if (sum(duplicated(agNames(map))) > 0)
+      warning("Map contains duplicate antigen names")
+    if (sum(duplicated(srNames(map))) > 0)
+      warning("Map contains duplicate sera names")
   }
 
   # Return the new map
   map
-
 }
 
 ##
@@ -107,8 +106,7 @@ acmap <- function(
 acmap.new <- function(
   num_antigens,
   num_sera
-  ) {
-
+) {
   # Setup racmap object which is fundementally a list
   map <- list()
   class(map) <- c("acmap", "list")
@@ -126,5 +124,4 @@ acmap.new <- function(
   titerTable(map) <- matrix("*", num_antigens, num_sera)
 
   map
-
 }

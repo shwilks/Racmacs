@@ -1,4 +1,3 @@
-
 ## Some utility functions to help with plotting
 
 # A function to convert a function that returns a ggplot to one that returns an
@@ -15,25 +14,24 @@ plotlyfn <- function(fn) {
 # A function that converts a ggplot object to a plotly plot object. It is built
 # on plotly::ggplotly, but does a few extra bits to improve conversion
 as.plotly <- function(gp, tooltip = "text", scaling = NULL) {
-
   # Check plotly available
   package_required("plotly")
 
   if (!is.null(scaling)) {
-
     # Scale axis text
-    gp <- gp + ggplot2::theme(
-      axis.text  = ggplot2::element_text(size = 12 * scaling),
-      axis.ticks.length = ggplot2::unit(0.1 * scaling, "inches"),
-      plot.margin = ggplot2::unit(
-        c(2, 1, 1, 1) * scaling,
-        units = "cm"
-      ),
-      plot.title    = ggplot2::element_text(size = 14 * scaling),
-      plot.subtitle = ggplot2::element_text(size = 10 * scaling),
-      axis.title    = ggplot2::element_text(size = 12 * scaling),
-      line = ggplot2::element_line(size = 0.5 * scaling)
-    )
+    gp <- gp +
+      ggplot2::theme(
+        axis.text = ggplot2::element_text(size = 12 * scaling),
+        axis.ticks.length = ggplot2::unit(0.1 * scaling, "inches"),
+        plot.margin = ggplot2::unit(
+          c(2, 1, 1, 1) * scaling,
+          units = "cm"
+        ),
+        plot.title = ggplot2::element_text(size = 14 * scaling),
+        plot.subtitle = ggplot2::element_text(size = 10 * scaling),
+        axis.title = ggplot2::element_text(size = 12 * scaling),
+        line = ggplot2::element_line(size = 0.5 * scaling)
+      )
 
     # Scale geoms
     ggplot2::update_geom_defaults(
@@ -43,22 +41,23 @@ as.plotly <- function(gp, tooltip = "text", scaling = NULL) {
       )
     )
 
-    ggplot2::update_geom_defaults("hline",  list(size = 0.5 * scaling))
+    ggplot2::update_geom_defaults("hline", list(size = 0.5 * scaling))
     ggplot2::update_geom_defaults("abline", list(size = 0.5 * scaling))
-    ggplot2::update_geom_defaults("point",  list(size = 1 * scaling))
-
+    ggplot2::update_geom_defaults("point", list(size = 1 * scaling))
   }
 
   if (!is.null(gp$labels$subtitle)) {
     gp$labels$title <- paste0(
       gp$labels$title,
       "<br>",
-      "<span style='font-size:80%'>", gp$labels$subtitle, "</span>"
+      "<span style='font-size:80%'>",
+      gp$labels$subtitle,
+      "</span>"
     )
   }
 
   gp <- plotly::ggplotly(
-    p       = gp,
+    p = gp,
     tooltip = tooltip
   )
 
@@ -78,7 +77,6 @@ as.plotly <- function(gp, tooltip = "text", scaling = NULL) {
   )
 
   gp
-
 }
 
 

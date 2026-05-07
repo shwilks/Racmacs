@@ -1,43 +1,48 @@
-
 # Function factory for sera getter functions
 sera_getter <- function(fn) {
   eval(
-    substitute(env = list(
-      fn = fn
-    ), expr = {
-      function(map) {
-        check.acmap(map)
-        sapply(map$sera, fn)
+    substitute(
+      env = list(
+        fn = fn
+      ),
+      expr = {
+        function(map) {
+          check.acmap(map)
+          sapply(map$sera, fn)
+        }
       }
-    })
+    )
   )
 }
 
 # Function factory for sera setter functions
 sera_setter <- function(fn, type) {
   eval(
-    substitute(env = list(
-      fn = fn,
-      type = type
-    ), expr = {
-      function(map, value) {
-        if (is.null(value)) stop("Cannot set null value")
-        check.acmap(map)
-        value <- switch(
-          type,
-          character = check.charactervector(value),
-          numeric = check.numericvector(value),
-          integerlist = check.integerlist(value)
-        )
-        if (length(value) != numSera(map)) {
-          stop("Length of the value must equal the number of sera in the map")
+    substitute(
+      env = list(
+        fn = fn,
+        type = type
+      ),
+      expr = {
+        function(map, value) {
+          if (is.null(value)) stop("Cannot set null value")
+          check.acmap(map)
+          value <- switch(
+            type,
+            character = check.charactervector(value),
+            numeric = check.numericvector(value),
+            integerlist = check.integerlist(value)
+          )
+          if (length(value) != numSera(map)) {
+            stop("Length of the value must equal the number of sera in the map")
+          }
+          map$sera <- lapply(seq_along(map$sera), function(x) {
+            fn(map$sera[[x]], unlist(value[x]))
+          })
+          map
         }
-        map$sera <- lapply(seq_along(map$sera), function(x) {
-          fn(map$sera[[x]], unlist(value[x]))
-        })
-        map
       }
-    })
+    )
   )
 }
 
@@ -66,30 +71,30 @@ sera_setter <- function(fn, type) {
 #'   args    = c("map")
 #' )
 #'
-srIDs               <- sera_getter(ac_sr_get_id)
-srDates             <- sera_getter(ac_sr_get_date)
-srReference         <- sera_getter(ac_sr_get_reference)
-srNames             <- sera_getter(ac_sr_get_name)
-srExtra             <- sera_getter(ac_sr_get_extra)
-srPassage           <- sera_getter(ac_sr_get_passage)
-srLineage           <- sera_getter(ac_sr_get_lineage)
-srReassortant       <- sera_getter(ac_sr_get_reassortant)
-srStrings           <- sera_getter(ac_sr_get_strings)
-srSpecies           <- sera_getter(ac_sr_get_species)
-srGroupValues       <- sera_getter(ac_sr_get_group) # Not exported
-srMatchIDs          <- sera_getter(ac_sr_get_match_id) # Not exported
+srIDs <- sera_getter(ac_sr_get_id)
+srDates <- sera_getter(ac_sr_get_date)
+srReference <- sera_getter(ac_sr_get_reference)
+srNames <- sera_getter(ac_sr_get_name)
+srExtra <- sera_getter(ac_sr_get_extra)
+srPassage <- sera_getter(ac_sr_get_passage)
+srLineage <- sera_getter(ac_sr_get_lineage)
+srReassortant <- sera_getter(ac_sr_get_reassortant)
+srStrings <- sera_getter(ac_sr_get_strings)
+srSpecies <- sera_getter(ac_sr_get_species)
+srGroupValues <- sera_getter(ac_sr_get_group) # Not exported
+srMatchIDs <- sera_getter(ac_sr_get_match_id) # Not exported
 
-`srIDs<-`               <- sera_setter(ac_sr_set_id, "character")
-`srDates<-`             <- sera_setter(ac_sr_set_date, "character")
-`srReference<-`         <- sera_setter(ac_sr_set_reference, "character")
-`srNames<-`             <- sera_setter(ac_sr_set_name, "character")
-`srExtra<-`             <- sera_setter(ac_sr_set_extra, "character")
-`srPassage<-`           <- sera_setter(ac_sr_set_passage, "character")
-`srLineage<-`           <- sera_setter(ac_sr_set_lineage, "character")
-`srReassortant<-`       <- sera_setter(ac_sr_set_reassortant, "character")
-`srStrings<-`           <- sera_setter(ac_sr_set_strings, "character")
-`srSpecies<-`           <- sera_setter(ac_sr_set_species, "character")
-`srGroupValues<-`       <- sera_setter(ac_sr_set_group, "numeric")
+`srIDs<-` <- sera_setter(ac_sr_set_id, "character")
+`srDates<-` <- sera_setter(ac_sr_set_date, "character")
+`srReference<-` <- sera_setter(ac_sr_set_reference, "character")
+`srNames<-` <- sera_setter(ac_sr_set_name, "character")
+`srExtra<-` <- sera_setter(ac_sr_set_extra, "character")
+`srPassage<-` <- sera_setter(ac_sr_set_passage, "character")
+`srLineage<-` <- sera_setter(ac_sr_set_lineage, "character")
+`srReassortant<-` <- sera_setter(ac_sr_set_reassortant, "character")
+`srStrings<-` <- sera_setter(ac_sr_set_strings, "character")
+`srSpecies<-` <- sera_setter(ac_sr_set_species, "character")
+`srGroupValues<-` <- sera_setter(ac_sr_set_group, "numeric")
 
 
 #' Get and set homologous antigens for sera
@@ -112,7 +117,8 @@ srHomologousAgs <- function(map) {
 #' @rdname srHomologousAgs
 #' @export
 `srHomologousAgs<-` <- function(map, value) {
-  if (sum(is.na(unlist(value))) > 0) stop("Homologous sera indices cannot contain NA values", call. = FALSE)
+  if (sum(is.na(unlist(value))) > 0)
+    stop("Homologous sera indices cannot contain NA values", call. = FALSE)
   srHomologousAgsReindexed(map) <- lapply(value, function(x) x - 1)
   map
 }
@@ -142,19 +148,19 @@ srHomologousAgsReindexed <- function(map) {
 #' @family antigen and sera attribute functions
 #' @export
 agHomologousSr <- function(map) {
-
   # Get homologous serum information
   homologous_sr <- srHomologousAgs(map)
 
   # Cycle through each antigen and collect which sera are listed as homologous to it
   lapply(seq_len(numAntigens(map)), function(ag_num) {
-
-    which(vapply(homologous_sr, function(ag_nums) {
-      ag_num %in% ag_nums
-    }, logical(1)))
-
+    which(vapply(
+      homologous_sr,
+      function(ag_nums) {
+        ag_num %in% ag_nums
+      },
+      logical(1)
+    ))
   })
-
 }
 
 
@@ -173,7 +179,6 @@ agHomologousSr <- function(map) {
 #' @rdname srGroups
 #' @export
 srGroups <- function(map) {
-
   check.acmap(map)
   srlevels <- map$sr_group_levels
   if (length(srlevels) == 0) return(NULL)
@@ -181,13 +186,11 @@ srGroups <- function(map) {
     x = srlevels[srGroupValues(map) + 1],
     levels = srlevels
   )
-
 }
 
 #' @rdname srGroups
 #' @export
 `srGroups<-` <- function(map, value) {
-
   check.acmap(map)
   if (is.null(value)) {
     srGroupValues(map) <- rep(0, numSera(map))
@@ -198,7 +201,6 @@ srGroups <- function(map) {
     map$sr_group_levels <- levels(value)
   }
   map
-
 }
 
 
@@ -220,13 +222,11 @@ srGroups <- function(map) {
 #' @rdname srSequences
 #' @export
 srSequences <- function(map, missing_value = ".") {
-
   check.acmap(map)
   seqs <- get_pts_sequence_matrix(map$sera, missing_value)
   rownames(seqs) <- srNames(map)
   colnames(seqs) <- seq_len(ncol(seqs))
   seqs
-
 }
 
 #' @rdname srSequences

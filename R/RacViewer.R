@@ -1,4 +1,3 @@
-
 #' Create a RacViewer widget
 #'
 #' This creates an html widget for viewing antigenic maps.
@@ -25,15 +24,13 @@ RacViewer <- function(
   map,
   show_procrustes = FALSE,
   show_group_legend = FALSE,
-  options   = list(),
-  width     = NULL,
-  height    = NULL,
+  options = list(),
+  width = NULL,
+  height = NULL,
   elementId = NULL
-  ) {
-
+) {
   # Get map data as json
-  if (is.null(map)) mapdata <- NULL
-  else              mapdata <- as.json(map)
+  if (is.null(map)) mapdata <- NULL else mapdata <- as.json(map)
 
   # Parse options
   options <- do.call(RacViewer.options, options)
@@ -46,7 +43,7 @@ RacViewer <- function(
 
   # Forward data using x
   x <- list(
-    mapData  = mapdata,
+    mapData = mapdata,
     plotdata = jsonlite::toJSON(
       map$plot
     ),
@@ -54,7 +51,7 @@ RacViewer <- function(
       map$light,
       null = "null"
     ),
-    options  = jsonlite::toJSON(
+    options = jsonlite::toJSON(
       options,
       auto_unbox = TRUE,
       null = "null"
@@ -70,8 +67,8 @@ RacViewer <- function(
     package = "Racmacs",
     elementId = elementId,
     sizingPolicy = htmlwidgets::sizingPolicy(
-      viewer.padding  = 0,
-      browser.fill    = TRUE,
+      viewer.padding = 0,
+      browser.fill = TRUE,
       browser.padding = 0
     )
   )
@@ -102,7 +99,8 @@ RacViewerOutput <- function(outputId, width = "100%", height = "100%") {
   htmlwidgets::shinyWidgetOutput(
     outputId,
     "RacViewer",
-    width, height,
+    width,
+    height,
     package = "Racmacs"
   )
 }
@@ -114,4 +112,3 @@ renderRacViewer <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) expr <- substitute(expr) # force quoted
   htmlwidgets::shinyRenderWidget(expr, RacViewerOutput, env, quoted = TRUE)
 }
-

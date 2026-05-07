@@ -1,4 +1,3 @@
-
 library(Racmacs)
 library(testthat)
 
@@ -14,22 +13,21 @@ fns <- gsub("[\"]*\\)$", "", fns)
 
 # Exclude some functions
 excluded_fns <- c(
-  "runGUI",           # Starts shiny app
-  "RacViewerOutput",  # Boilerplate function
-  "view",             # S3 method
+  "runGUI", # Starts shiny app
+  "RacViewerOutput", # Boilerplate function
+  "view", # S3 method
   "agStressBlobSize", # Deprecated
   "srStressBlobSize", # Deprecated
-  "stressBlobs"       # Deprecated
+  "stressBlobs" # Deprecated
 )
 fns <- fns[!fns %in% excluded_fns]
 
 # Test each function
 for (fn_name in fns) {
-
   # if(fn_name == "titerTable<-") browser()
   test_that(
-    sprintf("Function '%s' fails gracefully with incorrect input", fn_name), {
-
+    sprintf("Function '%s' fails gracefully with incorrect input", fn_name),
+    {
       # Check function
       fn <- get(fn_name)
       args <- names(formals(fn))
@@ -42,8 +40,6 @@ for (fn_name in fns) {
       # Check NULL
       vals <- lapply(vals, function(x) NULL)
       expect_error(do.call(fn, vals))
-
     }
   )
-
 }
