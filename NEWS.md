@@ -1,3 +1,9 @@
+# Racmacs 1.2.10
+* Add option to not set underconstrained point coordinates to NaN
+* Add new attributes to acmap `mapAssay()`, `mapDetails()`, `mapVirus()`, `mapLaboratory()`, `mapRBCs()`, `mapType()`, `mapSubtype()`, `mapCreated()`, `mapDescription()`
+* Add new `agComments()` attribute
+* Add function to subset a map to distinct full connected groups of antigens and sera
+
 # Racmacs 1.2.9
 * Use a safer format for errors and messages
 * Remove `ellipsis` dependency and use `rlang` instead
