@@ -56,9 +56,12 @@ optimizeMap <- function(
   options = list()
 ) {
   # Set default arguments
-  if (is.null(fixed_column_bases)) fixed_column_bases <- rep(NA, numSera(map))
-  if (is.null(titer_weights))
+  if (is.null(fixed_column_bases)) {
+    fixed_column_bases <- rep(NA, numSera(map))
+  }
+  if (is.null(titer_weights)) {
     titer_weights <- matrix(1, numAntigens(map), numSera(map))
+  }
 
   # Warn about overwriting previous optimizations
   if (numOptimizations(map) > 0) {
@@ -68,7 +71,9 @@ optimizeMap <- function(
 
   # Get optimizer options
   options <- do.call(RacOptimizer.options, options)
-  if (!verbose) options$report_progress <- FALSE
+  if (!verbose) {
+    options$report_progress <- FALSE
+  }
 
   # Perform the optimization runs
   tstart <- Sys.time()
@@ -83,31 +88,35 @@ optimizeMap <- function(
   ag_underconstrained <- ag_num_measured == number_of_dimensions
   sr_underconstrained <- sr_num_measured == number_of_dimensions
 
-  if (sum(ag_disconnected) > 0)
+  if (sum(ag_disconnected) > 0) {
     warn_disconnected(
       "ANTIGENS",
       agNames(map)[ag_disconnected],
       number_of_dimensions
     )
-  if (sum(sr_disconnected) > 0)
+  }
+  if (sum(sr_disconnected) > 0) {
     warn_disconnected(
       "SERA",
       srNames(map)[sr_disconnected],
       number_of_dimensions
     )
+  }
 
-  if (sum(ag_underconstrained) > 0)
+  if (sum(ag_underconstrained) > 0) {
     warn_underconstrained(
       "ANTIGENS",
       agNames(map)[ag_underconstrained],
       number_of_dimensions
     )
-  if (sum(sr_underconstrained) > 0)
+  }
+  if (sum(sr_underconstrained) > 0) {
     warn_underconstrained(
       "SERA",
       srNames(map)[sr_underconstrained],
       number_of_dimensions
     )
+  }
 
   # Check for unconnected sets of points
   if (!options$ignore_disconnected && mapDisconnected(map)) {
@@ -309,8 +318,12 @@ RacOptimizer.options <- function(
   check.string(method)
   check.numeric(maxit)
   check.numeric(progress_bar_length)
-  if (!is.null(report_progress)) check.logical(report_progress)
-  if (!is.null(num_cores)) check.integer(num_cores)
+  if (!is.null(report_progress)) {
+    check.logical(report_progress)
+  }
+  if (!is.null(num_cores)) {
+    check.integer(num_cores)
+  }
 
   # Set default number of cores to 2
   if (is.null(num_cores)) {
@@ -380,13 +393,15 @@ relaxMap <- function(
   options = list()
 ) {
   # Get options
-  if (sum(!titerTable(map) %in% c("*", ".")) == 0)
+  if (sum(!titerTable(map) %in% c("*", ".")) == 0) {
     stop("Table has no measurable titers")
+  }
   options <- do.call(RacOptimizer.options, options)
 
   # Set default arguments
-  if (is.null(titer_weights))
+  if (is.null(titer_weights)) {
     titer_weights <- matrix(1, numAntigens(map), numSera(map))
+  }
 
   # Convert point references to indices
   fixed_antigens <- get_ag_indices(fixed_antigens, map)
@@ -581,7 +596,9 @@ checkHemisphering <- function(
     ),
     function(pt) {
       diagnosis <- unique(vapply(pt, function(x) x$diagnosis, character(1)))
-      if (length(diagnosis) == 0) diagnosis <- ""
+      if (length(diagnosis) == 0) {
+        diagnosis <- ""
+      }
       diagnosis
     },
     character(1)
@@ -801,6 +818,50 @@ srCohesion <- function(map) {
 mapCohesion <- function(map) {
   graph <- mapConnectivityGraph(map)
   igraph::vertex_connectivity(graph)
+}
+
+mapConnectedGroups <- function(map) {
+  map_connectivity <- Racmacs:::mapConnectivityGraph(map)
+  map_components <- igraph::components(map_connectivity)
+  # Order the groups by size, and assign group numbers to each point
+  membership <- map_components$membership
+  group_size <- map_components$csize
+  rank(-group_size, ties.method = "first")[membership]
+}
+
+agConnectedGroups <- function(map) {
+  mapConnectedGroups(map)[seq_len(numAntigens(map))]
+}
+
+srConnectedGroups <- function(map) {
+  mapConnectedGroups(map)[-seq_len(numAntigens(map))]
+}
+
+#' Subset the map to a single connected group
+#'
+#' Sometimes a map may have multiple different connected groups of points.
+#' Where some groups of antigens and sera are not connected to each other by
+#' any path of measurable titers, which will be default throw an error when
+#' you try and optimize the map. For maps of this type, this function can be
+#' used to subset the map to a single connected group of antigens and sera.
+#'
+#' @param map An antigenic map object
+#' @param group_number The number of the connected group to subset to. Connected'
+#'   groups are ordered by size, so group 1 is the largest connected group of points
+#'   in the map.
+#' @return A subsetted map object containing only the antigens and sera in
+#'   the specified connected group.
+#'
+#' @export
+subsetMapToConnectedGroup <- function(
+  map,
+  group_number = 1
+) {
+  subsetMap(
+    map,
+    antigens = agNames(map)[agConnectedGroups(map) == group_number],
+    sera = srNames(map)[srConnectedGroups(map) == group_number]
+  )
 }
 
 
