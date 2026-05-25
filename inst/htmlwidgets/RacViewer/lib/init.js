@@ -1,11 +1,11 @@
 
-if(typeof Racmacs === "undefined"){
+if (typeof Racmacs === "undefined") {
     Racmacs = {};
 }
 
 Racmacs.utils = {};
 Racmacs.App = class RacApp extends R3JS.Viewer {
-    constructor(container, settings = {}){
+    constructor(container, settings = {}) {
         super(container, settings);
     }
 }
@@ -13,20 +13,20 @@ Racmacs.App = class RacApp extends R3JS.Viewer {
 Racmacs.Viewer = class RacViewer extends Racmacs.App {
 
     // Constructor function
-    constructor(container, settings = {}){
+    constructor(container, settings = {}) {
 
         // Initiate the base R3JS viewer
         var r3jssettings = {
-            rectangularSelection : true,
-            startAnimation : false,
-            initiate : true
+            rectangularSelection: true,
+            startAnimation: false,
+            initiate: true
         }
         super(container, r3jssettings);
         container.viewer = this;
 
         // Set a placeholder image
         let placeholder = Racmacs.icons.logo();
-        placeholder.style.maxWidth  = "100%";
+        placeholder.style.maxWidth = "100%";
         placeholder.style.maxHeight = "100%";
         placeholder.style.opacity = 0.2;
         this.viewport.setPlaceholder(
@@ -37,13 +37,14 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
         new Racmacs.Data(this);
 
         // Set defaults
-        this.contentLoaded    = false;
+        this.contentLoaded = false;
         this.performance_mode = true;
-        this.animated         = false;
+        this.animated = false;
         this.setDefaultStyleset();
 
         // Keep record of selected and animated points
         this.selected_pts = [];
+        this.hovered_pts = [];
         this.animated_points = [];
 
         // Keep browser record
@@ -57,13 +58,13 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
         this.addMapButtons();
 
         // Add the function to popout a new version of the viewer
-        this.viewport.popOutViewer = function(){
-            
+        this.viewport.popOutViewer = function () {
+
             // Fetch the container
-            var viewer    = this.viewer;
+            var viewer = this.viewer;
             var container = this.viewer.container;
             var viewerdiv = container.children[0];
-            var data = document.querySelectorAll('[data-for='+container.id+']');
+            var data = document.querySelectorAll('[data-for=' + container.id + ']');
 
             // Popout a new window
             // var popout = window.open("", "", "height=800,width=800");
@@ -72,14 +73,14 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
             // Copy style and scripts
             popout.document.write(
                 `<head>` +
-                document.head.innerHTML + 
+                document.head.innerHTML +
                 `</head>` +
                 `<body style='margin:0'></body>`
             );
 
             // When the other document is ready move the viewer across
-            var switchpopout = function(){
-                if(popout.document.body === null){
+            var switchpopout = function () {
+                if (popout.document.body === null) {
                     window.setTimeout(switchpopout, 100);
                 } else {
                     container.style.backgroundColor = "#fafafa";
@@ -88,14 +89,14 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
                 }
             }
             switchpopout();
-            
+
             // Link resize events
-            popout.onresize = function(){
+            popout.onresize = function () {
                 viewer.viewport.onwindowresize();
             }
 
             // Add an event to switch back to the main viewer on window close
-            popout.onbeforeunload = function(){
+            popout.onbeforeunload = function () {
                 container.appendChild(viewerdiv);
                 viewer.viewport.onwindowresize();
             }
@@ -114,24 +115,24 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
         holder.setAttribute("tabindex", 1);
         holder.style.outline = "none";
         holder.style.border = "solid 4px #eeeeee";
-        holder.addEventListener('mouseup', function(e){
+        holder.addEventListener('mouseup', function (e) {
             this.focus();
         });
-        holder.addEventListener('focus', function(e){
+        holder.addEventListener('focus', function (e) {
             this.style.border = "solid 4px #bde7ef";
         });
-        holder.addEventListener('blur', function(e){
+        holder.addEventListener('blur', function (e) {
             this.style.border = "solid 4px #eeeeee";
         });
 
         // Add focus if this is a standalone page
-        if(this.fullpage()){
-            holder.focus(); 
+        if (this.fullpage()) {
+            holder.focus();
         }
 
         // Add keystroke shortcuts
         holder.addEventListener('keyup', e => {
-            switch(e.key){
+            switch (e.key) {
                 case "e":
                     this.toggleErrorLines();
                     break;
@@ -188,32 +189,32 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
         // Dispatch a viewer loaded event
         var viewer = this;
         window.dispatchEvent(
-            new CustomEvent('racViewerLoaded', { detail : viewer })
+            new CustomEvent('racViewerLoaded', { detail: viewer })
         );
 
         // Start animation loop
         var viewer = this;
         function animate() {
 
-            if(viewer.animated){
-                if(viewer.animated_points.length > 0){
-                    viewer.animated_points.map( x => x.stepToCoords() );
+            if (viewer.animated) {
+                if (viewer.animated_points.length > 0) {
+                    viewer.animated_points.map(x => x.stepToCoords());
                     viewer.pointsMoved = true;
                     viewer.sceneChange = true;
                 }
-                if(viewer.optimizing) {
+                if (viewer.optimizing) {
                     viewer.stepOptimizer();
                     viewer.pointsMoved = true;
                     viewer.sceneChange = true;
                 }
-                if(viewer.raytraceNeeded || viewer.sceneChange || viewer.scene.sceneChange){
+                if (viewer.raytraceNeeded || viewer.sceneChange || viewer.scene.sceneChange) {
                     viewer.raytraceNeeded = false;
                     viewer.raytrace();
                 }
-                if(viewer.pointsMoved) {
+                if (viewer.pointsMoved) {
                     viewer.updateFrustrum();
                 }
-                if(viewer.sceneChange || viewer.scene.sceneChange){
+                if (viewer.sceneChange || viewer.scene.sceneChange) {
                     viewer.sceneChange = false;
                     viewer.scene.sceneChange = false;
                     viewer.pointsMoved = false;
@@ -230,20 +231,20 @@ Racmacs.Viewer = class RacViewer extends Racmacs.App {
 };
 
 // Check if viewer is full screen or not
-Racmacs.Viewer.prototype.isFullScreen = function() {
-    return(
+Racmacs.Viewer.prototype.isFullScreen = function () {
+    return (
         this.container.offsetHeight == window.innerHeight &&
         this.container.offsetWidth == window.innerWidth
     );
 }
 
 // Reset the scroll focus function
-Racmacs.Viewer.prototype.scrollFocus = function() {  
+Racmacs.Viewer.prototype.scrollFocus = function () {
     return this.isFullScreen() || this.viewport.holder.matches(':focus');
 };
 
 // Update the viewport frustrum
-Racmacs.Viewer.prototype.updateFrustrum = function() {
+Racmacs.Viewer.prototype.updateFrustrum = function () {
 
     if (this.camera && this.camera.frustrum && this.mapdims && this.mapdims.dimensions) {
 
@@ -252,7 +253,7 @@ Racmacs.Viewer.prototype.updateFrustrum = function() {
         var frustrum_height = frustrum.top - frustrum.bottom;
         var matworld = this.scene.plotPoints.matrixWorld;
         var inverse_matworld = this.scene.plotPoints.matrixWorld.clone().invert();
-        
+
         if (this.points) {
             this.points.map(p => {
 
@@ -260,8 +261,8 @@ Racmacs.Viewer.prototype.updateFrustrum = function() {
 
                     var radius = p.element.radius() - 0.01;
                     pvec.fromArray(p.coords3)
-                    .applyMatrix4(matworld)
-                    .project(this.camera.camera);
+                        .applyMatrix4(matworld)
+                        .project(this.camera.camera);
 
                     if (pvec.x + radius < -1) {
 
@@ -289,7 +290,7 @@ Racmacs.Viewer.prototype.updateFrustrum = function() {
                         }
 
                     } else if (pvec.x - radius > 1) {
-                        
+
                         pvec.x = 1;
                         if (pvec.y > 1) {
                             // Top right
@@ -328,29 +329,29 @@ Racmacs.Viewer.prototype.updateFrustrum = function() {
                         p.element.setShape(5);
                         p.element.setRotation(-3.14);
                     } else {
-                        
+
                         // Restore coords
                         p.element.setCoords(p.coords3[0], p.coords3[1], p.coords3[2]);
 
                         // Restore shape
-                        switch(p.shape) {
-                          case "CIRCLE":
-                            p.element.setShape(0);
-                            break;
-                          case "BOX":
-                            p.element.setShape(1);
-                            break;
-                          case "TRIANGLE":
-                            p.element.setShape(2);
-                            break;
-                          case "EGG":
-                            p.element.setShape(3);
-                            break;
-                          case "UGLYEGG":
-                            p.element.setShape(4);
-                            break;
-                          default:
-                            p.element.setShape(0);
+                        switch (p.shape) {
+                            case "CIRCLE":
+                                p.element.setShape(0);
+                                break;
+                            case "BOX":
+                                p.element.setShape(1);
+                                break;
+                            case "TRIANGLE":
+                                p.element.setShape(2);
+                                break;
+                            case "EGG":
+                                p.element.setShape(3);
+                                break;
+                            case "UGLYEGG":
+                                p.element.setShape(4);
+                                break;
+                            default:
+                                p.element.setShape(0);
                         };
 
                         // Restore rotation
