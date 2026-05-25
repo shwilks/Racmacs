@@ -86,16 +86,21 @@ RacViewer.options <- function(
 #'
 #' @export
 #'
-export_viewer <- function(map, file, selfcontained = TRUE, ...) {
+export_viewer <- function(
+  map,
+  file,
+  selfcontained = TRUE,
+  ...
+) {
   # Check file has .html extension
   if (!grepl("\\.html$", file)) {
     stop("File extension must be '.html'")
   }
 
-  # Export the widget to a temporary file first
-  tmp_file <- tempfile(fileext = ".html")
+  # Create the viewer widget
   widget <- view(map, ...)
 
+  # Get the map name for the title, or use the widget class if no name is set
   name <- Racmacs::mapName(map)
   if (is.null(name)) {
     title <- class(widget)[[1]]
@@ -103,22 +108,35 @@ export_viewer <- function(map, file, selfcontained = TRUE, ...) {
     title <- paste("RacViewer", name, sep = " - ")
   }
 
-  widget <- htmlwidgets::saveWidget(
-    widget = widget,
-    file = tmp_file,
-    selfcontained = selfcontained,
-    title = title
-  )
+  if (selfcontained) {
+    # Export the widget to a temporary file first
+    tmp_file <- tempfile(fileext = ".html")
 
-  # Move the file to the proper location
-  file.copy(
-    from = tmp_file,
-    to = file,
-    overwrite = TRUE
-  )
+    widget <- htmlwidgets::saveWidget(
+      widget = widget,
+      file = tmp_file,
+      selfcontained = TRUE,
+      title = title
+    )
 
-  # Remove the temporary file
-  unlink(tmp_file)
+    # Move the file to the proper location
+    file.copy(
+      from = tmp_file,
+      to = file,
+      overwrite = TRUE
+    )
+
+    # Remove the temporary file
+    unlink(tmp_file)
+  } else {
+    # Export the widget directly to the specified file
+    widget <- htmlwidgets::saveWidget(
+      widget = widget,
+      file = file,
+      selfcontained = FALSE,
+      title = title
+    )
+  }
 
   # Return the widget
   invisible(widget)
